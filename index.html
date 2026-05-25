@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#e50914"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CineLog"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<title>CineLog</title>
+<style>
+:root{--bg:#0d0d0f;--bg2:#111114;--bg3:#1a1a1f;--border:#2a2a2f;--text:#e8e8e8;--text2:#aaa;--text3:#666;--text4:#444;--accent:#e50914;--purple:#7c3aed;--gold:#f5c518;--green:#4ade80;--blue:#60a5fa;--red:#f87171;}
+.light{--bg:#f0f0f2;--bg2:#fff;--bg3:#e8e8ec;--border:#ddd;--text:#111;--text2:#555;--text3:#888;--text4:#bbb;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;transition:background .2s,color .2s;}
+a{color:var(--blue);}
+input,textarea,button,select{font-family:inherit;}
+
+/* API screen */
+#api-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.api-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:460px;width:90%;text-align:center;}
+.api-box h1{font-size:22px;color:var(--text);margin-bottom:8px;}
+.api-box p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
+.api-err{background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px 14px;color:var(--red);font-size:13px;margin-bottom:14px;text-align:left;display:none;}
+.api-err.show{display:block;}
+
+/* App shell */
+#app{display:none;flex-direction:column;min-height:100vh;}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;}
+.logo{font-size:20px;font-weight:800;color:var(--text);}
+nav{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap;}
+.tab-btn{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:13px;background:transparent;color:var(--text2);}
+.tab-btn.active{background:var(--accent);}
+.tab-btn span{filter:grayscale(1) brightness(2);}
+.key-btn{margin-left:4px;background:none;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;}
+main{max-width:1200px;margin:0 auto;padding:20px 16px;flex:1;width:100%;}
+
+/* Tabs — only one shown at a time */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* Shared */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.fsel{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:13px;outline:none;}
+.search-wrap{position:relative;margin-bottom:14px;}
+.s-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text3);pointer-events:none;}
+.s-input{width:100%;padding:12px 40px 12px 42px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:15px;outline:none;}
+.s-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;display:none;}
+.s-clear.show{display:block;}
+.err-bar{background:var(--bg3);border:1px solid #3a1a1a;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.err-bar.show{display:flex;}
+.err-bar span{color:var(--red);font-size:14px;}
+.sec-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.badge-movie{background:#1a3a5c;color:var(--blue);}
+.badge-tv{background:#1a3a2a;color:var(--green);}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;background:var(--accent);color:#fff;}
+.btn-sec{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.btn-danger{background:#5a1a1a;color:var(--red);border:1px solid #7a2a2a;}
+.btn-purple{background:var(--purple);color:#fff;border:none;}
+.btn-wide{width:100%;padding:12px;font-size:15px;margin-top:12px;}
+.tinput{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;}
+.loading{color:var(--text3);text-align:center;padding:48px;}
+.no-res{color:var(--text3);text-align:center;padding:48px;}
+select option{background:var(--bg2);color:var(--text);}
+
+/* Browse grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.card{border-radius:12px;overflow:hidden;background:var(--bg3);cursor:pointer;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.card img,.rev-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;}
+.card-no-img{width:100%;aspect-ratio:2/3;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:36px;}
+.card-body{padding:8px 10px 12px;}
+.card-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-meta{display:flex;justify-content:space-between;align-items:center;}
+.pagination{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.page-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:13px;}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.page-btn:disabled{opacity:.4;cursor:default;}
+
+/* My Reviews */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px;}
+.rev-card{border-radius:12px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
+.rev-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.rev-card-no-img{width:100%;aspect-ratio:2/3;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:32px;}
+.rev-card-body{padding:8px 10px 10px;}
+.rev-card-title{font-size:12px;font-weight:700;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px;}
+.rev-badge-overlay{position:absolute;top:6px;left:6px;}
+.folders-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+.folder-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;}
+.folder-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.folder-del{margin-left:3px;color:var(--text3);cursor:pointer;font-size:10px;}
+.folder-del:hover{color:var(--red);}
+.empty{color:var(--text3);text-align:center;padding:60px 20px;}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+.ms-bar{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+.ms-bar.show{display:flex;}
+
+/* Overlays */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;overflow-y:auto;display:none;}
+.overlay.show{display:block;}
+.modal{background:var(--bg2);max-width:860px;margin:40px auto;border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative;}
+.close-btn{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;z-index:10;}
+.backdrop{width:100%;height:200px;background:var(--bg3) center/cover;position:relative;}
+.backdrop-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg2),transparent 60%);}
+.modal-body{padding:18px 24px 28px;}
+.modal-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.modal-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text2);margin-bottom:10px;}
+.genre-tag{background:var(--bg3);padding:2px 8px;border-radius:20px;font-size:11px;}
+.overview{font-size:13px;line-height:1.7;color:var(--text2);margin-bottom:10px;}
+.prow{font-size:12px;color:var(--text2);margin-bottom:6px;}
+.modal-poster{width:80px;border-radius:10px;border:2px solid var(--border);flex-shrink:0;margin-top:-44px;box-shadow:0 8px 24px rgba(0,0,0,.6);}
+.mhr{display:flex;gap:14px;align-items:flex-start;margin-bottom:8px;}
+.rev-box{background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border);margin-top:16px;}
+.rev-box h3{font-size:14px;color:var(--text);margin-bottom:12px;}
+.rev-ta{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px;resize:vertical;outline:none;margin-top:10px;}
+.save-row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+.fa-sel{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;outline:none;}
+
+/* Star rater */
+.star-wrap-outer{display:inline-flex;gap:2px;align-items:center;}
+.sw{position:relative;display:inline-block;width:30px;height:30px;font-size:26px;line-height:30px;text-align:center;user-select:none;}
+.sw-l,.sw-r{position:absolute;top:0;height:100%;width:50%;z-index:2;}
+.sw-l{left:0;cursor:pointer;}
+.sw-r{right:0;cursor:pointer;}
+
+/* Rev detail */
+.rdm{background:var(--bg2);max-width:520px;margin:60px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative;}
+.rdm-back{width:100%;height:140px;background:var(--bg3) center/cover;position:relative;}
+.rdm-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg2),transparent 60%);}
+.rdm-body{padding:16px 22px 24px;}
+.rdm-hdr{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+.rdm-poster{width:60px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;margin-top:-36px;box-shadow:0 4px 16px rgba(0,0,0,.5);}
+.rdm-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.rdm-meta{font-size:12px;color:var(--text2);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
+.rdm-pr{font-size:12px;color:var(--text2);margin-bottom:4px;line-height:1.5;}
+.rdm-rs{background:var(--bg3);border-radius:10px;padding:14px;margin-top:12px;border:1px solid var(--border);}
+.rdm-rt{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
+.rdm-acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;}
+.rdm-edit-ta{width:100%;min-height:80px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 12px;resize:vertical;outline:none;margin-top:8px;}
+
+/* Folder popup */
+.sm-modal{background:var(--bg2);max-width:380px;margin:120px auto;border-radius:14px;border:1px solid var(--border);padding:24px;position:relative;}
+.sm-modal h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.fl{font-size:12px;color:var(--text2);margin-bottom:4px;}
+.sinput{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;margin-bottom:12px;}
+
+/* Settings */
+.s-sec{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;}
+.s-sec h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.s-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;}
+.s-row:last-child{border-bottom:none;}
+.s-lbl{font-size:14px;color:var(--text);}
+.s-lbl small{display:block;font-size:11px;color:var(--text3);margin-top:2px;}
+.toggle{width:44px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;position:relative;border:none;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--accent);}
+.toggle::after{content:"";position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;}
+.toggle.on::after{left:23px;}
+.av-wrap{display:flex;align-items:center;gap:14px;}
+.av-img{width:72px;height:72px;border-radius:50%;border:2px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;}
+.sinput-sm{padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;max-width:220px;width:100%;}
+</style>
+</head>
+<body>
+
+<!-- API Screen -->
+<div id="api-screen" style="display:none">	
+  <div class="api-box">
+    <div style="font-size:40px;margin-bottom:12px">🎬</div>
+    <h1>CineLog</h1>
+    <p>Enter your free TMDB API key to get started.<br>
+      <a href="https://www.themoviedb.org/settings/api" target="_blank">Get a free key here →</a></p>
+    <div class="api-err" id="api-err"></div>
+    <input class="tinput" id="api-key-input" placeholder="Paste your TMDB API key…" type="text"/>
+    <button class="btn btn-wide" id="connect-btn">Connect</button>
+    <p style="font-size:11px;color:var(--text4);margin-top:14px">Saved in your browser's localStorage automatically.</p>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" style="display:flex">
+  <header>
+    <div style="display:flex;align-items:center;gap:8px">
+      <img src="icon.svg" style="width:30px;height:30px;border-radius:6px" onerror="this.style.display='none'"/>
+      <div class="logo">CineLog</div>
+    </div>
+    <nav>
+      <button class="tab-btn" id="nav-browse" title="Browse"><span>🔍</span></button>
+      <button class="tab-btn" id="nav-reviews" title="My Reviews"><span>⭐</span></button>
+      <button class="tab-btn" id="nav-settings" title="Settings"><span>⚙️</span></button>
+    </nav>
+  </header>
+  <main>
+
+    <!-- BROWSE -->
+    <div class="tab-panel" id="tab-browse">
+      <div class="search-wrap">
+        <span class="s-icon">🔍</span>
+        <input class="s-input" id="b-search" placeholder="Search movies and TV shows…"/>
+        <button class="s-clear" id="b-clear">✕</button>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" data-btype="all">All</button>
+        <button class="filter-btn" data-btype="movie">Movies</button>
+        <button class="filter-btn" data-btype="tv">TV Shows</button>
+        <select class="fsel" id="genre-sel"><option value="">All Genres</option></select>
+      </div>
+      <div class="err-bar" id="err-bar">
+        <span id="err-msg"></span>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="retry-btn">Retry</button>
+        </div>
+      </div>
+      <div class="sec-title" id="b-title">🔥 Popular Right Now</div>
+      <div id="b-loading" class="loading" style="display:none">Loading…</div>
+      <div id="b-nores" class="no-res" style="display:none">No results found.</div>
+      <div class="grid" id="b-grid"></div>
+      <div class="pagination" id="b-pages"></div>
+    </div>
+
+    <!-- MY REVIEWS -->
+    <div class="tab-panel" id="tab-reviews">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+        <div class="sec-title" style="margin-bottom:0">📋 My Reviews</div>
+        <button class="btn btn-purple" id="manage-folders-btn" style="font-size:16px;padding:7px 12px" title="Manage Folders">📁</button>
+      </div>
+      <div class="folders-bar" id="folders-bar"></div>
+      <div class="search-wrap" style="margin-bottom:12px">
+        <span class="s-icon">🔍</span>
+        <input class="s-input" id="r-search" placeholder="Search your reviews…" style="font-size:14px;padding:10px 36px 10px 40px"/>
+        <button class="s-clear" id="r-clear">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+        <button class="filter-btn active" data-rtype="all" id="rtype-all">All</button>
+        <button class="filter-btn" data-rtype="movie" id="rtype-movie">Movies</button>
+        <button class="filter-btn" data-rtype="tv" id="rtype-tv">TV Shows</button>
+        <select class="fsel" id="sort-sel">
+          <option value="date">Date (Newest)</option>
+          <option value="rd">Rating ↓</option>
+          <option value="ra">Rating ↑</option>
+        </select>
+        <button class="btn btn-sec" id="sel-mode-btn" style="font-size:12px;padding:6px 14px">☑ Select</button>
+      </div>
+      <div class="ms-bar" id="ms-bar">
+        <span id="ms-count" style="font-size:13px;color:var(--text2);flex:1">0 selected</span>
+        <select class="fa-sel" id="ms-folder"><option value="">Move to folder…</option></select>
+        <button class="btn" id="ms-move-btn" style="font-size:12px;padding:6px 14px">Move</button>
+        <button class="btn btn-danger" id="ms-del-btn" style="font-size:12px;padding:6px 14px">🗑 Delete</button>
+        <button class="btn btn-sec" id="ms-cancel-btn" style="font-size:12px;padding:6px 14px">Cancel</button>
+      </div>
+      <div id="r-empty" class="empty" style="display:none"><div class="empty-icon">🎥</div><div>No reviews yet.</div></div>
+      <div class="rev-grid" id="r-grid"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="sec-title">⚙️ Settings</div>
+      <div class="s-sec">
+        <h3>Profile</h3>
+        <div class="s-row">
+          <div class="s-lbl">Profile Picture</div>
+          <div class="av-wrap">
+            <div class="av-img" id="av-preview">🎬</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <input type="file" id="av-file" accept="image/*" style="display:none"/>
+              <button class="btn btn-sec" onclick="document.getElementById('av-file').click()" style="font-size:12px;padding:6px 12px">Upload</button>
+              <button class="btn btn-sec" id="av-reset-btn" style="font-size:12px;padding:6px 12px">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">Display Name</div>
+          <input class="sinput-sm" id="sname" placeholder="Your name…"/>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">Bio</div>
+          <input class="sinput-sm" id="sbio" placeholder="A short bio…"/>
+        </div>
+      </div>
+      <div class="s-sec">
+        <h3>Appearance</h3>
+        <div class="s-row">
+          <div class="s-lbl">Dark Mode<small>Toggle light/dark theme</small></div>
+          <button class="toggle on" id="dark-toggle"></button>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">Interface Language</div>
+          <select class="fsel" id="lang-sel" style="min-width:120px">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">TMDB API Key<small>Reset and enter a new API key</small></div>
+          <button class="btn btn-sec" onclick="showKeyScreen()" style="font-size:12px;padding:7px 14px">🔑 Change Key</button>
+        </div>
+      </div>
+      <div class="s-sec">
+        <h3>Data & Backup</h3>
+        <div class="s-row">
+          <div class="s-lbl">Export Reviews<small>Download all your reviews as a JSON file</small></div>
+          <button class="btn btn-sec" id="export-btn" style="font-size:12px;padding:7px 14px">⬇ Export</button>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">Import Reviews<small>Restore from a previously exported file</small></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="file" id="import-file" accept=".json" style="display:none"/>
+            <button class="btn btn-sec" id="import-btn" style="font-size:12px;padding:7px 14px">⬆ Import</button>
+          </div>
+        </div>
+        <div class="s-row">
+          <div class="s-lbl">Storage Used<small id="storage-used-lbl">Calculating…</small></div>
+          <button class="btn btn-sec" id="calc-storage-btn" style="font-size:12px;padding:7px 14px">Check</button>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:4px">
+        <button class="btn" id="save-settings-btn" style="font-size:13px">Save Settings</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- BROWSE DETAIL MODAL -->
+<div class="overlay" id="det-overlay">
+  <div class="modal">
+    <button class="close-btn" id="det-close">✕</button>
+    <div class="backdrop" id="det-back"><div class="backdrop-fade"></div></div>
+    <div class="modal-body">
+      <div id="det-loading" class="loading">Loading…</div>
+      <div id="det-content" style="display:none">
+        <div class="mhr">
+          <div style="flex:1">
+            <div class="modal-title" id="det-title"></div>
+            <div class="modal-meta" id="det-meta"></div>
+          </div>
+          <img class="modal-poster" id="det-poster" src="" alt="" style="display:none"/>
+        </div>
+        <p class="overview" id="det-overview"></p>
+        <div class="prow" id="det-director"></div>
+        <div class="prow" id="det-cast"></div>
+        <div class="rev-box">
+          <h3>✍️ My Review</h3>
+          <div id="det-stars" class="star-wrap-outer"></div>
+          <textarea class="rev-ta" id="det-text" placeholder="Write your thoughts…"></textarea>
+          <div class="save-row">
+            <button class="btn" id="det-save-btn">Save</button>
+            <select class="fa-sel" id="det-folder"><option value="">No folder</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW DETAIL MODAL -->
+<div class="overlay" id="rdm-overlay">
+  <div class="rdm">
+    <button class="close-btn" id="rdm-close">✕</button>
+    <div class="rdm-back" id="rdm-back"><div class="rdm-fade"></div></div>
+    <div class="rdm-body">
+      <div class="rdm-hdr">
+        <img id="rdm-poster" src="" alt="" class="rdm-poster" style="display:none"/>
+        <div style="flex:1">
+          <div class="rdm-title" id="rdm-title"></div>
+          <div class="rdm-meta" id="rdm-meta"></div>
+          <div class="rdm-pr" id="rdm-dir"></div>
+          <div class="rdm-pr" id="rdm-cast"></div>
+          <div class="rdm-pr" id="rdm-genres"></div>
+        </div>
+      </div>
+      <div class="rdm-rs">
+        <div id="rdm-stars" class="star-wrap-outer" style="margin-bottom:10px"></div>
+        <div id="rdm-view"><div class="rdm-rt" id="rdm-text"></div></div>
+        <div id="rdm-edit" style="display:none">
+          <textarea class="rdm-edit-ta" id="rdm-edit-text" placeholder="Write your thoughts…"></textarea>
+          <div style="margin-top:8px">
+            <select class="fa-sel" id="rdm-edit-folder"><option value="">No folder</option></select>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text4);margin-top:10px" id="rdm-date"></div>
+      <div class="rdm-acts">
+        <button class="btn btn-sec" id="rdm-edit-btn" style="font-size:12px">✏️ Edit</button>
+        <button class="btn" id="rdm-save-btn" style="font-size:12px;display:none">💾 Save</button>
+        <button class="btn btn-sec" id="rdm-cancel-btn" style="font-size:12px;display:none">Cancel</button>
+        <button class="btn btn-danger" id="rdm-del-btn" style="font-size:12px">🗑 Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOLDER MANAGER POPUP -->
+<div class="overlay" id="folder-overlay">
+  <div class="sm-modal" style="max-width:440px">
+    <button class="close-btn" id="folder-close" style="background:var(--bg3);color:var(--text)">✕</button>
+    <h3 style="margin-bottom:14px">📁 Manage Folders</h3>
+    <!-- Add new folder -->
+    <div style="display:flex;gap:8px;margin-bottom:6px">
+      <input class="sinput" id="f-name" placeholder="New folder name…" style="margin-bottom:0;flex:1"/>
+      <button class="btn btn-purple" id="f-create-btn" style="font-size:13px;padding:8px 14px;white-space:nowrap">+ Add</button>
+    </div>
+    <div id="f-warn" style="display:none;color:var(--red);font-size:12px;margin-bottom:8px"></div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Drag to reorder • Click name to rename • ✕ to delete</div>
+    <!-- Folder list -->
+    <div id="folder-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────
+function getKey(){ return localStorage.getItem("cl:key") || ""; }
+var IMG  = "https://image.tmdb.org/t/p/w500";
+var IMGB = "https://image.tmdb.org/t/p/w1280";
+var reviews  = JSON.parse(localStorage.getItem("cl:reviews")  || "{}");
+var folders  = JSON.parse(localStorage.getItem("cl:folders")  || "[]");
+var cfg      = JSON.parse(localStorage.getItem("cl:cfg")      || "{}");
+var dark     = cfg.dark !== false;
+var lang     = cfg.lang  || "en";
+var bType    = "all", bGenre = "", bPage = 1, bTotalPages = 1;
+var aFolder  = "all", rType  = "all", rQuery = "";
+var curItem  = null, curRevKey = null;
+var bSearchT = null;
+// THE rating globals — plain, no closures
+var detRating = 0;
+var rdmRating = 0;
+var selMode   = false;
+var selKeys   = {};
+
+// ── TMDB ───────────────────────────────────────────────
+function eid(id){ return document.getElementById(id); }
+function setClick(id, fn){ var el=eid(id); if(el) el.onclick=fn; }
+function setChange(id, fn){ var el=eid(id); if(el) el.onchange=fn; }
+function addEvent(id, ev, fn){ var el=eid(id); if(el) el.addEventListener(ev,fn); }
+async function api(path){
+  var k = getKey();
+  if(!k) throw new Error("No API key");
+  var sep = path.includes("?") ? "&" : "?";
+  var r = await fetch("https://api.themoviedb.org/3" + path + sep + "api_key=" + k.trim());
+  if(!r.ok){ var e = await r.json().catch(function(){return{};}); throw new Error(e.status_message || "HTTP "+r.status); }
+  return r.json();
+}
+
+// ── TRANSLATIONS ──────────────────────────────────────
+var TT = {
+  en:{ notrated:"Not rated", notext:"(No written review)", reviewedon:"Reviewed on ",
+       director:"Director", creator:"Creator", cast:"Cast", genres:"Genres",
+       date:"Date (Newest)", rd:"Rating ↓", ra:"Rating ↑",
+       selected:"selected", movefolder:"Move to folder…", nofolder:"No folder",
+       all:"All", deleteconfirm:"Delete this review?", deletemulti:"Delete {n} review(s)?" },
+  ko:{ notrated:"평가 없음", notext:"(작성된 리뷰 없음)", reviewedon:"리뷰 날짜: ",
+       director:"감독", creator:"제작", cast:"출연", genres:"장르",
+       date:"날짜 (최신)", rd:"평점 ↓", ra:"평점 ↑",
+       selected:"개 선택됨", movefolder:"폴더로 이동…", nofolder:"폴더 없음",
+       all:"전체", deleteconfirm:"이 리뷰를 삭제할까요?", deletemulti:"{n}개의 리뷰를 삭제할까요?" }
+};
+function T(k){ return (TT[lang]||TT.en)[k] || k; }
+
+// ── THEME ─────────────────────────────────────────────
+function applyTheme(){
+  document.body.classList.toggle("light", !dark);
+  document.getElementById("dark-toggle").classList.toggle("on", dark);
+}
+document.getElementById("dark-toggle").onclick = function(){
+  dark = !dark; applyTheme(); cfg.dark = dark; saveCfg();
+};
+
+// ── API KEY ───────────────────────────────────────────
+var _cb = document.getElementById("connect-btn");
+if(_cb) _cb.onclick = function(){ startApp(); };
+var _ki = document.getElementById("api-key-input");
+if(_ki) _ki.addEventListener("keydown", function(e){ if(e.key==="Enter") startApp(); });
+
+function showKeyScreen(){
+  document.getElementById("api-screen").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+  document.getElementById("api-key-input").value = "";
+  localStorage.removeItem("cl:key");
+}
+// change-key-btn removed from header, now only in settings
+
+// ── START APP ─────────────────────────────────────────
+function startApp(){
+  document.getElementById("api-screen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  applyTheme();
+  loadProfileUI();
+  initGenres();
+  switchTab("browse");
+  loadContent(1);
+}
+
+// ── TABS ──────────────────────────────────────────────
+function switchTab(name){
+  document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+  ["browse","reviews","settings"].forEach(function(t){
+    document.getElementById("nav-"+t).classList.remove("active");
+  });
+  document.getElementById("tab-"+name).classList.add("active");
+  document.getElementById("nav-"+name).classList.add("active");
+  if(name === "reviews"){ renderFolders(); renderReviews(); }
+  if(name === "settings"){ loadProfileUI(); }
+}
+document.getElementById("nav-browse").onclick   = function(){ switchTab("browse"); };
+document.getElementById("nav-reviews").onclick  = function(){ switchTab("reviews"); };
+document.getElementById("nav-settings").onclick = function(){ switchTab("settings"); };
+
+// ── GENRES ────────────────────────────────────────────
+async function initGenres(){
+  try{
+    var res = await Promise.all([api("/genre/movie/list"), api("/genre/tv/list")]);
+    var all = {};
+    (res[0].genres||[]).forEach(function(g){ all[g.id] = g.name; });
+    (res[1].genres||[]).forEach(function(g){ all[g.id] = g.name; });
+    var sel = document.getElementById("genre-sel");
+    sel.innerHTML = "<option value=''>All Genres</option>";
+    Object.entries(all).sort(function(a,b){ return a[1].localeCompare(b[1]); }).forEach(function(e){
+      var o = document.createElement("option"); o.value = e[0]; o.textContent = e[1]; sel.appendChild(o);
+    });
+  } catch(e){ console.warn("Genres failed", e); }
+}
+document.getElementById("genre-sel").onchange = function(){ bGenre = this.value; loadContent(1); };
+
+document.querySelectorAll(".filters .filter-btn[data-btype]").forEach(function(btn){
+  btn.onclick = function(){
+    document.querySelectorAll(".filters .filter-btn[data-btype]").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active"); bType = btn.dataset.btype; loadContent(1);
+  };
+});
+
+// ── BROWSE SEARCH ─────────────────────────────────────
+document.getElementById("b-search").addEventListener("input", function(){
+  var q = this.value.trim();
+  document.getElementById("b-clear").classList.toggle("show", q.length > 0);
+  clearTimeout(bSearchT);
+  document.getElementById("b-title").textContent = q ? '"'+q+'" results' : "🔥 Popular Right Now";
+  if(!q){ loadContent(1); return; }
+  bSearchT = setTimeout(function(){ loadContent(1); }, 450);
+});
+document.getElementById("b-clear").onclick = function(){
+  document.getElementById("b-search").value = "";
+  this.classList.remove("show");
+  document.getElementById("b-title").textContent = "🔥 Popular Right Now";
+  loadContent(1);
+};
+
+// ── LOAD CONTENT ──────────────────────────────────────
+async function loadContent(page){
+  bPage = page;
+  document.getElementById("b-loading").style.display = "block";
+  document.getElementById("b-nores").style.display = "none";
+  document.getElementById("err-bar").classList.remove("show");
+  var q = document.getElementById("b-search").value.trim();
+  try{
+    if(q) await doSearch(q, page);
+    else   await doDiscover(page);
+  } catch(e){
+    document.getElementById("err-msg").textContent = "⚠️ " + (e.message || "Could not load.");
+    document.getElementById("err-bar").classList.add("show");
+  }
+  document.getElementById("b-loading").style.display = "none";
+}
+
+async function doDiscover(page){
+  var fetches = [];
+  var pg = "&page=" + page;
+  if(bType==="all"||bType==="movie") fetches.push(api("/discover/movie?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(function(d){ return {results:(d.results||[]).map(function(x){return Object.assign({},x,{media_type:"movie"});}),pages:d.total_pages}; }));
+  if(bType==="all"||bType==="tv")    fetches.push(api("/discover/tv?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(function(d){ return {results:(d.results||[]).map(function(x){return Object.assign({},x,{media_type:"tv"});}),pages:d.total_pages}; }));
+  var arrs = await Promise.all(fetches);
+  var items = [].concat.apply([], arrs.map(function(a){ return a.results; })).sort(function(a,b){ return b.popularity-a.popularity; });
+  bTotalPages = Math.min(arrs[0] ? arrs[0].pages : 1, 20);
+  renderGrid(items); renderPagination();
+}
+
+async function doSearch(q, page){
+  var pg = "&page=" + page;
+  var personRes = await api("/search/person?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
+  var titleRes;
+  if(bType==="all") titleRes = await api("/search/multi?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
+  else              titleRes = await api("/search/"+bType+"?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
+  var pages = titleRes.total_pages || 1;
+  var pItems = [];
+  (personRes.results||[]).slice(0,3).forEach(function(p){
+    (p.known_for||[]).forEach(function(m){ if(m.media_type==="movie"||m.media_type==="tv") pItems.push(m); });
+  });
+  if((personRes.results||[]).length > 0){
+    try{
+      var cr = await api("/person/"+personRes.results[0].id+"/combined_credits");
+      var extra = (cr.cast||[]).concat((cr.crew||[]).filter(function(x){ return x.job==="Director"||x.job==="Creator"; })).slice(0,20).map(function(x){ return Object.assign({},x,{media_type:x.media_type||"movie"}); });
+      pItems = pItems.concat(extra);
+    } catch(e){}
+  }
+  var tItems = (titleRes.results||[]);
+  if(bType==="all") tItems = tItems.filter(function(x){ return x.media_type==="movie"||x.media_type==="tv"; });
+  else              tItems = tItems.map(function(x){ return Object.assign({},x,{media_type:bType}); });
+  var seen = {};
+  var results = pItems.concat(tItems).filter(function(x){ var id=x.media_type+":"+x.id; if(seen[id]) return false; seen[id]=true; return true; });
+  if(bGenre) results = results.filter(function(x){ return (x.genre_ids||[]).includes(parseInt(bGenre)); });
+  bTotalPages = Math.min(pages, 20);
+  renderGrid(results); renderPagination();
+  document.getElementById("b-nores").style.display = results.length===0 ? "block" : "none";
+}
+document.getElementById("retry-btn").onclick = function(){ loadContent(bPage); };
+
+// ── GRID ──────────────────────────────────────────────
+function renderGrid(items){
+  var grid = document.getElementById("b-grid"); grid.innerHTML = "";
+  document.getElementById("b-nores").style.display = "none";
+  items.forEach(function(item){
+    var key = item.media_type+":"+item.id, rev = reviews[key];
+    var card = document.createElement("div"); card.className = "card";
+    card.innerHTML =
+      (item.poster_path ? "<img src='"+IMG+item.poster_path+"' alt='' loading='lazy'/>" : "<div class='card-no-img'>🎬</div>") +
+      "<div class='card-body'><div class='card-title'>"+(item.title||item.name)+"</div>" +
+      "<div class='card-meta'><span class='badge badge-"+item.media_type+"'>"+(item.media_type==="movie"?"Movie":"TV")+"</span>" +
+      (rev&&rev.rating ? "<span style='color:var(--gold);font-size:12px'>★ "+rev.rating+"</span>" : "") +
+      "</div></div>";
+    card.onclick = function(){ openDetail(item); };
+    grid.appendChild(card);
+  });
+}
+
+// ── PAGINATION ────────────────────────────────────────
+function renderPagination(){
+  var pg = document.getElementById("b-pages"); pg.innerHTML = "";
+  if(bTotalPages <= 1) return;
+  function mk(label, page, active, disabled){
+    var b = document.createElement("button"); b.className = "page-btn"+(active?" active":""); b.textContent = label; b.disabled = disabled;
+    if(!disabled) b.onclick = function(){ loadContent(page); window.scrollTo(0,0); };
+    return b;
+  }
+  pg.appendChild(mk("←", bPage-1, false, bPage===1));
+  var s = Math.max(1,bPage-2), e = Math.min(bTotalPages,bPage+2);
+  if(s>1){ pg.appendChild(mk("1",1,false,false)); if(s>2){ var sp=document.createElement("span"); sp.textContent="…"; sp.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp); } }
+  for(var p=s;p<=e;p++) pg.appendChild(mk(p,p,p===bPage,false));
+  if(e<bTotalPages){ if(e<bTotalPages-1){ var sp2=document.createElement("span"); sp2.textContent="…"; sp2.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp2); } pg.appendChild(mk(bTotalPages,bTotalPages,false,false)); }
+  pg.appendChild(mk("→", bPage+1, false, bPage===bTotalPages));
+}
+
+// ── STARS ─────────────────────────────────────────────
+// Draws interactive or readonly stars. For interactive, click updates a named global.
+function drawStars(containerId, value, interactive){
+  var c = document.getElementById(containerId); if(!c) return;
+  c.innerHTML = "";
+  for(var i=1; i<=5; i++){
+    (function(star){
+      var div = document.createElement("div"); div.className = "sw";
+      var fill = value>=star ? "★" : (value>=star-0.5 ? "⯨" : "☆");
+      div.textContent = fill;
+      div.style.color = value>=star-0.5 ? "#f5c518" : "#555";
+      if(interactive){
+        var lz = document.createElement("div"); lz.className = "sw-l";
+        var rz = document.createElement("div"); rz.className = "sw-r";
+        // Use IIFE to capture star and containerId
+        lz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s-0.5; else rdmRating=s-0.5; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
+        rz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s; else rdmRating=s; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
+        div.appendChild(lz); div.appendChild(rz);
+      }
+      c.appendChild(div);
+    })(i);
+  }
+  var lbl = document.createElement("span");
+  lbl.style.cssText = "font-size:12px;color:"+(interactive?"var(--gold)":"var(--text2)")+";margin-left:6px;";
+  lbl.textContent = value > 0 ? value+"/5" : T("notrated");
+  c.appendChild(lbl);
+}
+
+// ── DETAIL MODAL ──────────────────────────────────────
+async function openDetail(item){
+  curItem = item;
+  var key = item.media_type+":"+item.id;
+  var rev = reviews[key];
+  detRating = (rev && rev.rating) ? rev.rating : 0;
+  document.getElementById("det-text").value  = rev ? (rev.text||"") : "";
+  document.getElementById("det-loading").style.display  = "block";
+  document.getElementById("det-content").style.display  = "none";
+  document.getElementById("det-overlay").classList.add("show");
+  drawStars("det-stars", detRating, true);
+  updateFolderSel("det-folder", key);
+  try{
+    var res = await Promise.all([api("/"+item.media_type+"/"+item.id), api("/"+item.media_type+"/"+item.id+"/credits")]);
+    var d = res[0], cr = res[1];
+    document.getElementById("det-back").style.background = d.backdrop_path ? "url("+IMGB+d.backdrop_path+") center/cover" : "var(--bg3)";
+    var poster = document.getElementById("det-poster");
+    if(d.poster_path){ poster.src=IMG+d.poster_path; poster.style.display="block"; } else poster.style.display="none";
+    document.getElementById("det-title").textContent = d.title||d.name;
+    var meta = "<span class='badge badge-"+item.media_type+"'>"+(item.media_type==="movie"?"Movie":"TV")+"</span>";
+    var yr = ((d.release_date||d.first_air_date||"")).slice(0,4);
+    if(yr) meta += "<span>"+yr+"</span>";
+    if(d.runtime) meta += "<span>"+d.runtime+" min</span>";
+    if(d.number_of_seasons) meta += "<span>"+d.number_of_seasons+" season"+(d.number_of_seasons>1?"s":"")+"</span>";
+    if(d.vote_average>0) meta += "<span>⭐ "+d.vote_average.toFixed(1)+"</span>";
+    (d.genres||[]).slice(0,4).forEach(function(g){ meta+="<span class='genre-tag'>"+g.name+"</span>"; });
+    document.getElementById("det-meta").innerHTML = meta;
+    document.getElementById("det-overview").textContent = d.overview||"";
+    var dirs = (cr.crew||[]).filter(function(c){ return c.job==="Director"; }).map(function(c){ return c.name; });
+    var crs  = (d.created_by||[]).map(function(c){ return c.name; });
+    var dn   = item.media_type==="movie" ? dirs : crs;
+    var dl   = item.media_type==="movie" ? T("director") : T("creator");
+    document.getElementById("det-director").innerHTML = dn.length ? "<strong style='color:var(--text)'>"+dl+": </strong>"+dn.join(", ") : "";
+    var castNames = (cr.cast||[]).slice(0,6).map(function(c){ return c.name; }).join(", ");
+    document.getElementById("det-cast").innerHTML = castNames ? "<strong style='color:var(--text)'>"+T("cast")+": </strong>"+castNames : "";
+    // Cache enrichment data into review record
+    if(!reviews[key]) reviews[key] = {id:item.id,media_type:item.media_type,title:item.title||item.name,poster:item.poster_path,rating:0,text:"",savedAt:new Date().toISOString()};
+    reviews[key]._dir   = dn.join(", "); reviews[key]._dl = dl;
+    reviews[key]._cast  = castNames;
+    reviews[key]._genres= (d.genres||[]).map(function(g){return g.name;}).join(", ");
+    reviews[key]._year  = yr;
+    reviews[key]._vote  = d.vote_average>0 ? d.vote_average.toFixed(1) : "";
+    reviews[key]._back  = d.backdrop_path||"";
+    document.getElementById("det-loading").style.display = "none";
+    document.getElementById("det-content").style.display = "block";
+  } catch(e){ document.getElementById("det-loading").textContent = "Failed to load details."; }
+}
+
+function closeDetail(){ document.getElementById("det-overlay").classList.remove("show"); }
+document.getElementById("det-close").onclick   = closeDetail;
+document.getElementById("det-overlay").onclick = function(e){ if(e.target===this) closeDetail(); };
+
+// ── SAVE REVIEW ───────────────────────────────────────
+document.getElementById("det-save-btn").onclick = function(){
+  if(!curItem) return;
+  var key = curItem.media_type+":"+curItem.id;
+  var existing = reviews[key] || {};
+  reviews[key] = Object.assign({}, existing, {
+    rating:   detRating,
+    text:     document.getElementById("det-text").value,
+    id:       curItem.id,
+    media_type: curItem.media_type,
+    title:    curItem.title||curItem.name,
+    poster:   curItem.poster_path,
+    folder:   document.getElementById("det-folder").value,
+    savedAt:  existing.savedAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  closeDetail();
+  loadContent(bPage);
+};
+
+// ── FOLDER SELECT HELPERS ─────────────────────────────
+function updateFolderSel(selId, key){
+  var sel = document.getElementById(selId);
+  sel.innerHTML = "<option value=''>"+T("nofolder")+"</option>";
+  folders.forEach(function(f){
+    var o = document.createElement("option"); o.value = f.name; o.textContent = f.name;
+    if(reviews[key] && reviews[key].folder === f.name) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+// ── FOLDERS ───────────────────────────────────────────
+function saveFolders(){ localStorage.setItem("cl:folders", JSON.stringify(folders)); }
+
+function renderFolders(){
+  var bar = document.getElementById("folders-bar"); bar.innerHTML = "";
+  function mkBtn(label, folder, active){
+    var btn = document.createElement("button"); btn.className = "folder-btn"+(active?" active":""); btn.textContent = label;
+    btn.onclick = function(){ aFolder = folder; renderFolders(); renderReviews(); };
+    return btn;
+  }
+  bar.appendChild(mkBtn(T("all"), "all", aFolder==="all"));
+  folders.forEach(function(f){
+    var wrap = document.createElement("span"); wrap.style.cssText = "display:inline-flex;align-items:center;gap:2px;";
+    wrap.appendChild(mkBtn(f.name, f.name, aFolder===f.name));
+    var del = document.createElement("span"); del.className = "folder-del"; del.textContent = "✕"; del.title = "Delete folder (use Manage Folders instead)";
+    del.style.display = "none";
+    del.onclick = function(e){
+      e.stopPropagation();
+      if(!confirm("Delete folder \""+f.name+"\"?")) return;
+      folders = folders.filter(function(x){ return x.name !== f.name; });
+      Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
+      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+      saveFolders(); if(aFolder===f.name) aFolder="all";
+      renderFolders(); renderReviews();
+    };
+    wrap.appendChild(del); bar.appendChild(wrap);
+  });
+  // Delete current folder button when inside a folder — REMOVED
+}
+
+// Folder manager popup
+document.getElementById("manage-folders-btn").onclick = openFolderManager;
+function openFolderManager(){
+  document.getElementById("f-name").value = "";
+  document.getElementById("f-warn").style.display = "none";
+  renderFolderList();
+  document.getElementById("folder-overlay").classList.add("show");
+}
+function closeFolderPopup(){
+  document.getElementById("folder-overlay").classList.remove("show");
+  renderFolders(); renderReviews();
+}
+document.getElementById("folder-close").onclick   = closeFolderPopup;
+document.getElementById("folder-overlay").onclick = function(e){ if(e.target===this) closeFolderPopup(); };
+
+document.getElementById("f-create-btn").onclick = function(){
+  var name = document.getElementById("f-name").value.trim();
+  var warn = document.getElementById("f-warn");
+  if(!name){ warn.textContent = lang==="ko"?"폴더 이름을 입력해주세요.":"Please enter a folder name."; warn.style.display="block"; return; }
+  if(folders.find(function(f){ return f.name.toLowerCase()===name.toLowerCase(); })){
+    warn.textContent = lang==="ko"?"이미 존재하는 폴더 이름입니다.":"A folder with this name already exists.";
+    warn.style.display = "block"; return;
+  }
+  warn.style.display = "none";
+  folders.push({name:name, desc:""}); saveFolders();
+  document.getElementById("f-name").value = "";
+  renderFolderList();
+};
+document.getElementById("f-name").addEventListener("keydown", function(e){ if(e.key==="Enter") document.getElementById("f-create-btn").click(); });
+
+// Drag state
+var dragIdx = null;
+
+function renderFolderList(){
+  var list = document.getElementById("folder-list"); list.innerHTML = "";
+  if(folders.length === 0){
+    var empty = document.createElement("div");
+    empty.style.cssText = "color:var(--text3);font-size:13px;text-align:center;padding:20px";
+    empty.textContent = lang==="ko" ? "폴더가 없습니다." : "No folders yet.";
+    list.appendChild(empty); return;
+  }
+  folders.forEach(function(f, idx){
+    var row = document.createElement("div");
+    row.draggable = true;
+    row.dataset.idx = idx;
+    row.style.cssText = "display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:grab;";
+
+    // Drag handle
+    var handle = document.createElement("span");
+    handle.textContent = "⠿"; handle.style.cssText = "color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0;";
+    row.appendChild(handle);
+
+    // Folder name (editable on click)
+    var nameEl = document.createElement("span");
+    nameEl.textContent = f.name;
+    nameEl.style.cssText = "flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:text;";
+    nameEl.title = lang==="ko"?"클릭하여 이름 변경":"Click to rename";
+    nameEl.onclick = function(){
+      var inp = document.createElement("input");
+      inp.value = f.name;
+      inp.style.cssText = "flex:1;font-size:13px;font-weight:600;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;color:var(--text);padding:2px 6px;outline:none;width:100%;";
+      row.replaceChild(inp, nameEl);
+      inp.focus(); inp.select();
+      function commitRename(){
+        var newName = inp.value.trim();
+        if(newName && newName !== f.name){
+          if(folders.find(function(x,i){ return i!==idx && x.name.toLowerCase()===newName.toLowerCase(); })){
+            inp.style.borderColor = "var(--red)"; return;
+          }
+          // update reviews that reference old folder name
+          Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=newName; });
+          localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+          if(aFolder === f.name) aFolder = newName;
+          folders[idx].name = newName; saveFolders();
+        }
+        row.replaceChild(nameEl, inp);
+        nameEl.textContent = folders[idx].name;
+      }
+      inp.addEventListener("blur", commitRename);
+      inp.addEventListener("keydown", function(e){ if(e.key==="Enter"){ inp.blur(); } if(e.key==="Escape"){ inp.removeEventListener("blur",commitRename); row.replaceChild(nameEl,inp); } });
+    };
+    row.appendChild(nameEl);
+
+    // Desc badge
+    if(f.desc){
+      var desc = document.createElement("span");
+      desc.textContent = f.desc; desc.style.cssText = "font-size:11px;color:var(--text3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+      row.appendChild(desc);
+    }
+
+    // Count
+    var cnt = Object.values(reviews).filter(function(r){ return r.folder===f.name; }).length;
+    var cntEl = document.createElement("span");
+    cntEl.textContent = cnt; cntEl.style.cssText = "font-size:11px;color:var(--text3);min-width:18px;text-align:center;";
+    row.appendChild(cntEl);
+
+    // Delete
+    var del = document.createElement("button");
+    del.textContent = "✕"; del.style.cssText = "background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;";
+    del.onmouseenter = function(){ del.style.color="var(--red)"; };
+    del.onmouseleave = function(){ del.style.color="var(--text3)"; };
+    del.onclick = function(e){
+      e.stopPropagation();
+      if(!confirm((lang==="ko"?"\""+f.name+"\" 폴더를 삭제할까요?":"Delete folder \""+f.name+"\"?"))) return;
+      folders.splice(idx,1);
+      Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
+      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+      saveFolders(); if(aFolder===f.name) aFolder="all";
+      renderFolderList();
+    };
+    row.appendChild(del);
+
+    // Drag events
+    row.addEventListener("dragstart", function(){ dragIdx = idx; row.style.opacity="0.4"; });
+    row.addEventListener("dragend",   function(){ dragIdx = null; row.style.opacity="1"; });
+    row.addEventListener("dragover",  function(e){ e.preventDefault(); row.style.background="var(--bg2)"; });
+    row.addEventListener("dragleave", function(){ row.style.background="var(--bg3)"; });
+    row.addEventListener("drop", function(e){
+      e.preventDefault(); row.style.background="var(--bg3)";
+      if(dragIdx===null || dragIdx===idx) return;
+      var moved = folders.splice(dragIdx,1)[0];
+      folders.splice(idx,0,moved);
+      saveFolders(); renderFolderList();
+    });
+
+    list.appendChild(row);
+  });
+}
+
+// ── REVIEWS SEARCH + FILTER ───────────────────────────
+document.getElementById("r-search").addEventListener("input", function(){
+  rQuery = this.value.trim();
+  document.getElementById("r-clear").classList.toggle("show", rQuery.length > 0);
+  renderReviews();
+});
+document.getElementById("r-clear").onclick = function(){
+  document.getElementById("r-search").value = ""; rQuery = "";
+  this.classList.remove("show"); renderReviews();
+};
+["all","movie","tv"].forEach(function(tp){
+  document.getElementById("rtype-"+tp).onclick = function(){
+    document.querySelectorAll("#tab-reviews .filter-btn[data-rtype]").forEach(function(b){ b.classList.remove("active"); });
+    this.classList.add("active"); rType = tp; renderReviews();
+  };
+});
+document.getElementById("sort-sel").onchange = function(){ renderReviews(); };
+
+function renderReviews(){
+  var grid = document.getElementById("r-grid"), empty = document.getElementById("r-empty");
+  grid.innerHTML = "";
+  var sort = document.getElementById("sort-sel").value;
+  var entries = Object.entries(reviews);
+  if(rType !== "all")    entries = entries.filter(function(e){ return e[1].media_type===rType; });
+  if(aFolder !== "all")  entries = entries.filter(function(e){ return e[1].folder===aFolder; });
+  if(rQuery)             entries = entries.filter(function(e){ return (e[1].title||"").toLowerCase().includes(rQuery.toLowerCase()); });
+  if(sort==="date")      entries.sort(function(a,b){ return new Date(b[1].savedAt)-new Date(a[1].savedAt); });
+  else if(sort==="rd")   entries.sort(function(a,b){ return (b[1].rating||0)-(a[1].rating||0); });
+  else if(sort==="ra")   entries.sort(function(a,b){ return (a[1].rating||0)-(b[1].rating||0); });
+  empty.style.display = entries.length===0 ? "block" : "none";
+  entries.forEach(function(entry){
+    var key = entry[0], rev = entry[1];
+    var card = document.createElement("div"); card.className = "rev-card";
+    var isSelected = selMode && selKeys[key];
+    card.style.outline = isSelected ? "3px solid var(--accent)" : "none";
+    var starsH = "";
+    for(var i=1;i<=5;i++) starsH += "<span style='color:"+(rev.rating>=i-0.5?"#f5c518":"#555")+"'>"+(rev.rating>=i?"★":(rev.rating>=i-0.5?"⯨":"☆"))+"</span>";
+    card.innerHTML =
+      (rev.poster ? "<img src='"+IMG+rev.poster+"' alt='' loading='lazy'/>" : "<div class='rev-card-no-img'>🎬</div>") +
+      (selMode ? "<div style='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:"+(isSelected?"var(--accent)":"rgba(0,0,0,.5)")+";border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff'>"+(isSelected?"✓":"")+"</div>" : "") +
+      "<div class='rev-badge-overlay'><span class='badge badge-"+rev.media_type+"'>"+(rev.media_type==="movie"?"Movie":"TV")+"</span></div>" +
+      "<div class='rev-card-body'><div class='rev-card-title'>"+rev.title+"</div><div style='font-size:13px'>"+starsH+"</div></div>";
+    card.onclick = function(){
+      if(selMode){ selKeys[key]=!selKeys[key]; updateMSBar(); renderReviews(); }
+      else        openRevDetail(key, rev);
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ── MULTI-SELECT ──────────────────────────────────────
+function updateMSBar(){
+  var keys = Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
+  var bar  = document.getElementById("ms-bar");
+  bar.classList.toggle("show", selMode);
+  document.getElementById("ms-count").textContent = keys.length + " " + T("selected");
+  var sel = document.getElementById("ms-folder");
+  sel.innerHTML = "<option value=''>"+T("movefolder")+"</option>";
+  folders.forEach(function(f){ var o=document.createElement("option"); o.value=f.name; o.textContent=f.name; sel.appendChild(o); });
+}
+document.getElementById("sel-mode-btn").onclick = function(){
+  selMode = !selMode; selKeys = {};
+  this.style.background = selMode ? "var(--accent)" : ""; this.style.color = selMode ? "#fff" : "";
+  updateMSBar(); renderReviews();
+};
+document.getElementById("ms-cancel-btn").onclick = function(){
+  selMode = false; selKeys = {};
+  document.getElementById("sel-mode-btn").style.background = ""; document.getElementById("sel-mode-btn").style.color = "";
+  updateMSBar(); renderReviews();
+};
+document.getElementById("ms-move-btn").onclick = function(){
+  var folder = document.getElementById("ms-folder").value;
+  if(!folder){ alert(lang==="ko"?"폴더를 선택해주세요.":"Please select a folder first."); return; }
+  Object.keys(selKeys).filter(function(k){ return selKeys[k]; }).forEach(function(k){ if(reviews[k]) reviews[k].folder=folder; });
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  selKeys = {}; updateMSBar(); renderFolders(); renderReviews();
+};
+document.getElementById("ms-del-btn").onclick = function(){
+  var keys = Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
+  if(!keys.length) return;
+  var msg = T("deletemulti").replace("{n}", keys.length);
+  if(!confirm(msg)) return;
+  keys.forEach(function(k){ delete reviews[k]; });
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  selKeys = {}; updateMSBar(); renderReviews();
+};
+
+// ── REVIEW DETAIL ─────────────────────────────────────
+function openRevDetail(key, rev){
+  curRevKey = key;
+  var editOn = false;
+  showRdmMode(false);
+  document.getElementById("rdm-back").style.background = rev._back ? "url("+IMGB+rev._back+") center/cover" : "var(--bg3)";
+  var poster = document.getElementById("rdm-poster");
+  if(rev.poster){ poster.src=IMG+rev.poster; poster.style.display="block"; } else poster.style.display="none";
+  document.getElementById("rdm-title").textContent = rev.title;
+  var meta = "<span class='badge badge-"+rev.media_type+"'>"+(rev.media_type==="movie"?"Movie":"TV")+"</span>";
+  if(rev._year) meta += "<span>"+rev._year+"</span>";
+  if(rev._vote) meta += "<span>⭐ "+rev._vote+"</span>";
+  document.getElementById("rdm-meta").innerHTML = meta;
+  document.getElementById("rdm-dir").innerHTML    = rev._dir    ? "<strong style='color:var(--text)'>"+(rev._dl||T("director"))+": </strong>"+rev._dir    : "";
+  document.getElementById("rdm-cast").innerHTML   = rev._cast   ? "<strong style='color:var(--text)'>"+T("cast")+": </strong>"+rev._cast   : "";
+  document.getElementById("rdm-genres").innerHTML = rev._genres ? "<strong style='color:var(--text)'>"+T("genres")+": </strong>"+rev._genres : "";
+  drawStars("rdm-stars", rev.rating||0, false);
+  document.getElementById("rdm-text").textContent = rev.text || T("notext");
+  document.getElementById("rdm-date").textContent = T("reviewedon") + new Date(rev.savedAt).toLocaleDateString(lang==="ko"?"ko-KR":"en-US",{year:"numeric",month:"long",day:"numeric"});
+  document.getElementById("rdm-overlay").classList.add("show");
+}
+
+function showRdmMode(editing){
+  document.getElementById("rdm-view").style.display   = editing ? "none"  : "block";
+  document.getElementById("rdm-edit").style.display   = editing ? "block" : "none";
+  document.getElementById("rdm-edit-btn").style.display   = editing ? "none"  : "inline-flex";
+  document.getElementById("rdm-save-btn").style.display   = editing ? "inline-flex" : "none";
+  document.getElementById("rdm-cancel-btn").style.display = editing ? "inline-flex" : "none";
+  if(editing){
+    var rev = reviews[curRevKey]; if(!rev) return;
+    rdmRating = rev.rating || 0;
+    document.getElementById("rdm-edit-text").value = rev.text || "";
+    drawStars("rdm-stars", rdmRating, true);
+    updateFolderSel("rdm-edit-folder", curRevKey);
+  } else {
+    var rev2 = reviews[curRevKey]; if(rev2) drawStars("rdm-stars", rev2.rating||0, false);
+  }
+}
+
+document.getElementById("rdm-edit-btn").onclick   = function(){ showRdmMode(true); };
+document.getElementById("rdm-cancel-btn").onclick = function(){ showRdmMode(false); };
+document.getElementById("rdm-save-btn").onclick   = function(){
+  if(!curRevKey) return;
+  reviews[curRevKey].rating    = rdmRating;
+  reviews[curRevKey].text      = document.getElementById("rdm-edit-text").value;
+  reviews[curRevKey].folder    = document.getElementById("rdm-edit-folder").value;
+  reviews[curRevKey].updatedAt = new Date().toISOString();
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  document.getElementById("rdm-text").textContent = reviews[curRevKey].text || T("notext");
+  drawStars("rdm-stars", rdmRating, false);
+  showRdmMode(false);
+  renderReviews();
+};
+document.getElementById("rdm-del-btn").onclick = function(){
+  if(!curRevKey) return;
+  if(!confirm(T("deleteconfirm"))) return;
+  delete reviews[curRevKey];
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  document.getElementById("rdm-overlay").classList.remove("show");
+  curRevKey = null; renderReviews();
+};
+function closeRdm(){ document.getElementById("rdm-overlay").classList.remove("show"); }
+document.getElementById("rdm-close").onclick   = closeRdm;
+document.getElementById("rdm-overlay").onclick = function(e){ if(e.target===this) closeRdm(); };
+
+// ── SETTINGS ──────────────────────────────────────────
+function saveCfg(){ localStorage.setItem("cl:cfg", JSON.stringify(cfg)); }
+function loadProfileUI(){
+  document.getElementById("sname").value = cfg.name || "";
+  document.getElementById("sbio").value  = cfg.bio  || "";
+  var av = document.getElementById("av-preview");
+  av.innerHTML = cfg.avatar ? "<img src='"+cfg.avatar+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>" : "🎬";
+  document.getElementById("lang-sel").value = lang;
+  applyTheme();
+}
+document.getElementById("av-file").onchange = function(){
+  var file = this.files[0]; if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    cfg.avatar = e.target.result;
+    document.getElementById("av-preview").innerHTML = "<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
+    document.getElementById("hdr-avatar").innerHTML = "<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
+  };
+  reader.readAsDataURL(file);
+};
+document.getElementById("av-reset-btn").onclick = function(){
+  cfg.avatar = "";
+  document.getElementById("av-preview").innerHTML  = "🎬";
+  document.getElementById("hdr-avatar").innerHTML  = "🎬";
+};
+document.getElementById("save-settings-btn").onclick = function(){
+  cfg.name = document.getElementById("sname").value.trim();
+  cfg.bio  = document.getElementById("sbio").value.trim();
+  cfg.lang = document.getElementById("lang-sel").value;
+  cfg.dark = dark;
+  lang = cfg.lang;
+  saveCfg();
+  document.getElementById("hdr-name") && (document.getElementById("hdr-name").textContent = cfg.name || "CineLog");
+  applyTheme();
+  // Update sort dropdown labels for new language
+  var ss = document.getElementById("sort-sel");
+  if(ss.options[0]) ss.options[0].text = lang==="ko"?"날짜 (최신)":"Date (Newest)";
+  if(ss.options[1]) ss.options[1].text = lang==="ko"?"평점 ↓":"Rating ↓";
+  if(ss.options[2]) ss.options[2].text = lang==="ko"?"평점 ↑":"Rating ↑";
+  var btn = document.getElementById("save-settings-btn");
+  btn.textContent = lang==="ko"?"저장됨 ✓":"Saved ✓";
+  setTimeout(function(){ btn.textContent = lang==="ko"?"설정 저장":"Save Settings"; }, 1500);
+};
+
+// ── PWA SETUP ─────────────────────────────────────────
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(function(e){ console.warn("SW:", e); });
+}
+
+// ── EXPORT / IMPORT / STORAGE ─────────────────────────
+document.getElementById("export-btn").onclick = function(){
+  var data = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    reviews: reviews,
+    folders: folders,
+    cfg: cfg
+  };
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement("a");
+  a.href   = url;
+  a.download = "cinelog-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById("import-btn").onclick = function(){
+  document.getElementById("import-file").click();
+};
+
+document.getElementById("import-file").onchange = function(){
+  var file = this.files[0]; if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var data = JSON.parse(e.target.result);
+      if(!data.reviews) throw new Error("Invalid backup file.");
+      var msg = lang==="ko"
+        ? "기존 리뷰를 불러온 데이터로 교체할까요? 현재 데이터는 사라집니다."
+        : "Replace all current data with the imported backup? This cannot be undone.";
+      if(!confirm(msg)) return;
+      reviews = data.reviews || {};
+      folders = data.folders || [];
+      if(data.cfg){ cfg = data.cfg; dark = cfg.dark!==false; lang = cfg.lang||"en"; }
+      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+      localStorage.setItem("cl:folders", JSON.stringify(folders));
+      localStorage.setItem("cl:cfg",     JSON.stringify(cfg));
+      applyTheme(); loadProfileUI();
+      alert(lang==="ko" ? "가져오기 완료!" : "Import successful!");
+    } catch(err){
+      alert((lang==="ko"?"가져오기 실패: ":"Import failed: ") + err.message);
+    }
+  };
+  reader.readAsText(file);
+  this.value = "";
+};
+
+document.getElementById("calc-storage-btn").onclick = function(){
+  var total = 0;
+  for(var k in localStorage) if(localStorage.hasOwnProperty(k)) total += (localStorage[k].length + k.length) * 2;
+  var kb   = (total / 1024).toFixed(1);
+  var mb   = (total / 1048576).toFixed(2);
+  var pct  = ((total / (5*1024*1024)) * 100).toFixed(1);
+  var rCount = Object.keys(reviews).length;
+  var lbl  = document.getElementById("storage-used-lbl");
+  lbl.textContent = kb + " KB (" + mb + " MB) — " + pct + "% of 5MB used · " + rCount + " reviews";
+};
+
+// ── INIT ──────────────────────────────────────────────
+applyTheme();
+var _savedKey = localStorage.getItem("cl:key");
+if(_savedKey && _savedKey.trim()){
+  document.getElementById("api-screen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  initGenres();
+  switchTab("browse");
+  loadContent(1);
+} else {
+  document.getElementById("api-screen").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+}
+</script>
+</body>
+</html>
