@@ -471,9 +471,27 @@ document.getElementById("dark-toggle").onclick = function(){
 
 // ── API KEY ───────────────────────────────────────────
 var _cb = document.getElementById("connect-btn");
-if(_cb) _cb.onclick = function(){ startApp(); };
-var _ki = document.getElementById("api-key-input");
-if(_ki) _ki.addEventListener("keydown", function(e){ if(e.key==="Enter") startApp(); });
+if(_cb) _cb.onclick = async function(){
+  var k = document.getElementById("api-key-input").value.trim();
+  if(!k) return;
+  this.textContent = "Connecting…"; this.disabled = true;
+  var errEl = document.getElementById("api-err"); errEl.classList.remove("show");
+  try{
+    var r = await fetch("https://api.themoviedb.org/3/movie/550?api_key=" + k);
+    var d = await r.json();
+    if(d.success === false) throw new Error(d.status_message);
+    localStorage.setItem("cl:key", k);
+    document.getElementById("api-screen").style.display = "none";
+    document.getElementById("app").style.display = "flex";
+    initGenres();
+    switchTab("browse");
+    loadContent(1);
+  } catch(e){
+    errEl.textContent = "⚠️ " + (e.message || "Connection failed.");
+    errEl.classList.add("show");
+  }
+  this.textContent = "Connect"; this.disabled = false;
+};
 
 function showKeyScreen(){
   document.getElementById("api-screen").style.display = "flex";
