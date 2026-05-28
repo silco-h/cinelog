@@ -2,13 +2,13 @@
   "name": "CineLog",
   "short_name": "CineLog",
   "description": "Your personal movie & TV review tracker",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d0d0f",
   "theme_color": "#e50914",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
