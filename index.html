@@ -391,7 +391,7 @@ window._fbGetUser = function(){ return auth.currentUser; };
 onAuthStateChanged(auth, function(user){
   window._fbUser = user;
   window._authResolved = true;
-  window.dispatchEvent(new CustomEvent("auth-change", { detail: user }));
+  window._authChanged = true;
 });
 
 window._fbReady = true;
@@ -596,9 +596,17 @@ document.getElementById("signout-btn").onclick = async function(){
   await window._fbSignOut();
 };
 
-// Listen for auth state changes
-window.addEventListener("auth-change", async function(e){
-  var user = e.detail;
+// Poll for auth state changes since module events don't cross reliably
+var _lastAuthUser = undefined;
+setInterval(async function(){
+  if(!window._authResolved) return;
+  var user = window._fbUser;
+  // Check if auth state actually changed
+  var uid = user ? user.uid : null;
+  var lastUid = _lastAuthUser === undefined ? undefined : (_lastAuthUser ? _lastAuthUser.uid : null);
+  if(uid === lastUid) return;
+  _lastAuthUser = user;
+
   var authScreen = document.getElementById("auth-screen");
   var apiScreen  = document.getElementById("api-screen");
   var appEl      = document.getElementById("app");
@@ -608,9 +616,7 @@ window.addEventListener("auth-change", async function(e){
     authScreen.style.display = "none";
     apiScreen.style.display  = "none";
     var loaded = await loadFromCloud();
-    if(!loaded){
-      reviews = {}; folders = []; cfg = {}; dark = true; lang = "en";
-    }
+    if(!loaded){ reviews={}; folders=[]; cfg={}; dark=true; lang="en"; }
     var k = localStorage.getItem("cl:key");
     if(k && k.trim()){
       appEl.style.display = "flex";
@@ -620,12 +626,12 @@ window.addEventListener("auth-change", async function(e){
       apiScreen.style.display = "flex";
     }
   } else {
-    if(appEl)      appEl.style.display      = "none";
-    if(apiScreen)  apiScreen.style.display  = "none";
-    if(authScreen) authScreen.style.display = "flex";
-    reviews = {}; folders = []; cfg = {};
+    appEl.style.display      = "none";
+    apiScreen.style.display  = "none";
+    authScreen.style.display = "flex";
+    reviews={}; folders=[]; cfg={};
   }
-});
+}, 300);
 async function saveToCloud(){
   if(!window._fbSave) return;
   await window._fbSave({ reviews: reviews, folders: folders, cfg: cfg });
