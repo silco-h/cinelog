@@ -160,8 +160,42 @@ select option{background:var(--bg2);color:var(--text);}
   </div>
 </div>
 
-<!-- App -->
-<div id="app" style="display:flex">
+<!-- Auth Screen -->
+<div id="auth-screen" style="display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+      <img src="icon.svg" style="width:36px;height:36px;border-radius:8px" onerror="this.style.display='none'"/>
+      <div style="font-size:26px;font-weight:800;color:var(--text)">CineLog</div>
+    </div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:28px">Your personal movie & TV review tracker</div>
+
+    <!-- Tabs -->
+    <div style="display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:24px;gap:4px">
+      <button id="auth-tab-login" onclick="showAuthTab('login')" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:var(--accent);color:#fff;transition:all .2s">Sign In</button>
+      <button id="auth-tab-signup" onclick="showAuthTab('signup')" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:transparent;color:var(--text2);transition:all .2s">Sign Up</button>
+    </div>
+
+    <div id="auth-err" style="display:none;background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px 14px;color:var(--red);font-size:13px;margin-bottom:14px;text-align:left"></div>
+
+    <!-- Sign In Form -->
+    <div id="auth-login-form">
+      <input id="login-email" type="email" placeholder="Email" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
+      <input id="login-password" type="password" placeholder="Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:16px;box-sizing:border-box"/>
+      <button id="login-btn" onclick="doSignIn()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Sign In</button>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="auth-signup-form" style="display:none">
+      <input id="signup-username" type="text" placeholder="Username" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
+      <input id="signup-email" type="email" placeholder="Email (for account recovery)" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
+      <input id="signup-password" type="password" placeholder="Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
+      <input id="signup-password2" type="password" placeholder="Confirm Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:16px;box-sizing:border-box"/>
+      <button id="signup-btn" onclick="doSignUp()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Create Account</button>
+    </div>
+
+    <p style="font-size:11px;color:var(--text4);margin-top:16px">Your data is private and only accessible by you.</p>
+  </div>
+</div>
   <header>
     <div style="display:flex;align-items:center;gap:8px">
       <img src="icon.svg" style="width:30px;height:30px;border-radius:6px" onerror="this.style.display='none'"/>
@@ -171,6 +205,7 @@ select option{background:var(--bg2);color:var(--text);}
       <button class="tab-btn" id="nav-browse" title="Browse"><span>🔍</span></button>
       <button class="tab-btn" id="nav-reviews" title="My Reviews"><span>⭐</span></button>
       <button class="tab-btn" id="nav-settings" title="Settings"><span>⚙️</span></button>
+      <button class="key-btn" id="signout-btn" title="Sign Out" style="margin-left:8px">↩ Sign Out</button>
     </nav>
   </header>
   <main>
@@ -304,7 +339,64 @@ select option{background:var(--bg2);color:var(--text);}
   </main>
 </div>
 
-<!-- BROWSE DETAIL MODAL -->
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBf7VYCKnj1gHj2vRRtxsfz6HEtEUM_Esc",
+  authDomain: "cinelog-7d421.firebaseapp.com",
+  projectId: "cinelog-7d421",
+  storageBucket: "cinelog-7d421.firebasestorage.app",
+  messagingSenderId: "549878936607",
+  appId: "1:549878936607:web:9976da400a12b5596c912a"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db    = getFirestore(fbApp);
+const auth  = getAuth(fbApp);
+
+function userDoc(uid){ return doc(db, "cinelog", uid, "data", "main"); }
+
+window._fbSave = async function(data){
+  var u = auth.currentUser; if(!u) return;
+  try{ await setDoc(userDoc(u.uid), data); } catch(e){ console.warn("Firebase save failed:", e); }
+};
+
+window._fbLoad = async function(){
+  var u = auth.currentUser; if(!u) return null;
+  try{
+    var snap = await getDoc(userDoc(u.uid));
+    if(snap.exists()) return snap.data();
+  } catch(e){ console.warn("Firebase load failed:", e); }
+  return null;
+};
+
+window._fbSignUp = async function(email, password, username){
+  var cred = await createUserWithEmailAndPassword(auth, email, password);
+  await updateProfile(cred.user, { displayName: username });
+  return cred.user;
+};
+
+window._fbSignIn = async function(email, password){
+  var cred = await signInWithEmailAndPassword(auth, email, password);
+  return cred.user;
+};
+
+window._fbSignOut = async function(){ await signOut(auth); };
+window._fbGetUser = function(){ return auth.currentUser; };
+
+onAuthStateChanged(auth, function(user){
+  window._fbUser = user;
+  window._authResolved = true;
+  window.dispatchEvent(new CustomEvent("auth-change", { detail: user }));
+});
+
+window._fbReady = true;
+window.dispatchEvent(new Event("fb-ready"));
+</script>
 <div class="overlay" id="det-overlay">
   <div class="modal">
     <button class="close-btn" id="det-close">✕</button>
@@ -407,7 +499,151 @@ var rdmRating = 0;
 var selMode   = false;
 var selKeys   = {};
 
-// ── TMDB ───────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────
+function showAuthTab(tab){
+  var isLogin = tab === "login";
+  document.getElementById("auth-login-form").style.display  = isLogin ? "block" : "none";
+  document.getElementById("auth-signup-form").style.display = isLogin ? "none"  : "block";
+  document.getElementById("auth-tab-login").style.background  = isLogin ? "var(--accent)" : "transparent";
+  document.getElementById("auth-tab-login").style.color       = isLogin ? "#fff" : "var(--text2)";
+  document.getElementById("auth-tab-signup").style.background = isLogin ? "transparent" : "var(--accent)";
+  document.getElementById("auth-tab-signup").style.color      = isLogin ? "var(--text2)" : "#fff";
+  document.getElementById("auth-err").style.display = "none";
+}
+
+function authErr(msg){
+  var el = document.getElementById("auth-err");
+  el.textContent = msg; el.style.display = "block";
+}
+
+function setAuthLoading(btnId, loading){
+  var btn = document.getElementById(btnId);
+  if(!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? "Please wait…" : (btnId === "login-btn" ? "Sign In" : "Create Account");
+}
+
+function waitForFb(){
+  return new Promise(function(resolve){
+    if(window._fbReady){ resolve(); return; }
+    window.addEventListener("fb-ready", function(){ resolve(); }, { once: true });
+    setTimeout(resolve, 5000); // max 5s wait
+  });
+}
+
+async function doSignIn(){
+  var email = document.getElementById("login-email").value.trim();
+  var pass  = document.getElementById("login-password").value;
+  if(!email || !pass){ authErr("Please fill in all fields."); return; }
+  setAuthLoading("login-btn", true);
+  await waitForFb();
+  if(!window._fbSignIn){
+    authErr("Could not connect to authentication service. Try refreshing.");
+    setAuthLoading("login-btn", false); return;
+  }
+  try{
+    await window._fbSignIn(email, pass);
+  } catch(e){
+    var msg = e.code === "auth/invalid-credential"     ? "Incorrect email or password." :
+              e.code === "auth/user-not-found"          ? "No account found with this email." :
+              e.code === "auth/wrong-password"          ? "Incorrect password." :
+              e.code === "auth/invalid-email"           ? "Invalid email address." :
+              e.code === "auth/network-request-failed"  ? "Network error. Check your connection." :
+              e.code === "auth/too-many-requests"       ? "Too many attempts. Try again later." :
+              e.message;
+    authErr(msg);
+    setAuthLoading("login-btn", false);
+  }
+}
+
+async function doSignUp(){
+  var username = document.getElementById("signup-username").value.trim();
+  var email    = document.getElementById("signup-email").value.trim();
+  var pass     = document.getElementById("signup-password").value;
+  var pass2    = document.getElementById("signup-password2").value;
+  if(!username || !email || !pass || !pass2){ authErr("Please fill in all fields."); return; }
+  if(pass !== pass2){ authErr("Passwords do not match."); return; }
+  if(pass.length < 6){ authErr("Password must be at least 6 characters."); return; }
+  setAuthLoading("signup-btn", true);
+  await waitForFb();
+  if(!window._fbSignUp){
+    authErr("Could not connect to authentication service. Try refreshing.");
+    setAuthLoading("signup-btn", false); return;
+  }
+  try{
+    await window._fbSignUp(email, pass, username);
+  } catch(e){
+    var msg = e.code === "auth/email-already-in-use"   ? "An account with this email already exists." :
+              e.code === "auth/invalid-email"           ? "Invalid email address." :
+              e.code === "auth/weak-password"           ? "Password is too weak." :
+              e.code === "auth/network-request-failed"  ? "Network error. Check your connection." :
+              e.message;
+    authErr(msg);
+    setAuthLoading("signup-btn", false);
+  }
+}
+
+// Allow Enter key on all auth inputs
+["login-email","login-password"].forEach(function(id){
+  var el = document.getElementById(id); if(el) el.addEventListener("keydown", function(e){ if(e.key==="Enter") doSignIn(); });
+});
+["signup-username","signup-email","signup-password","signup-password2"].forEach(function(id){
+  var el = document.getElementById(id); if(el) el.addEventListener("keydown", function(e){ if(e.key==="Enter") doSignUp(); });
+});
+
+document.getElementById("signout-btn").onclick = async function(){
+  if(!confirm("Sign out of CineLog?")) return;
+  await window._fbSignOut();
+};
+
+// Listen for auth state changes
+window.addEventListener("auth-change", async function(e){
+  var user = e.detail;
+  var authScreen = document.getElementById("auth-screen");
+  var apiScreen  = document.getElementById("api-screen");
+  var appEl      = document.getElementById("app");
+  if(!authScreen || !apiScreen || !appEl) return;
+
+  if(user){
+    authScreen.style.display = "none";
+    apiScreen.style.display  = "none";
+    var loaded = await loadFromCloud();
+    if(!loaded){
+      reviews = {}; folders = []; cfg = {}; dark = true; lang = "en";
+    }
+    var k = localStorage.getItem("cl:key");
+    if(k && k.trim()){
+      appEl.style.display = "flex";
+      applyTheme(); loadProfileUI();
+      initGenres(); switchTab("browse"); loadContent(1);
+    } else {
+      apiScreen.style.display = "flex";
+    }
+  } else {
+    if(appEl)      appEl.style.display      = "none";
+    if(apiScreen)  apiScreen.style.display  = "none";
+    if(authScreen) authScreen.style.display = "flex";
+    reviews = {}; folders = []; cfg = {};
+  }
+});
+async function saveToCloud(){
+  if(!window._fbSave) return;
+  await window._fbSave({ reviews: reviews, folders: folders, cfg: cfg });
+}
+
+async function loadFromCloud(){
+  if(!window._fbLoad) return false;
+  var data = await window._fbLoad();
+  if(!data) return false;
+  if(data.reviews) reviews = data.reviews;
+  if(data.folders) folders = data.folders;
+  if(data.cfg){ cfg = data.cfg; dark = cfg.dark!==false; lang = cfg.lang||"en"; }
+  // Sync to localStorage as cache
+  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  localStorage.setItem("cl:folders", JSON.stringify(folders));
+  localStorage.setItem("cl:cfg",     JSON.stringify(cfg));
+  return true;
+}
 async function api(path){
   var k = getKey();
   if(!k) throw new Error("No API key");
@@ -748,6 +984,7 @@ document.getElementById("det-save-btn").onclick = function(){
     updatedAt: new Date().toISOString(),
   });
   localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  saveToCloud();
   closeDetail(); loadContent(bPage);
 };
 
@@ -763,7 +1000,7 @@ function updateFolderSel(selId, key){
 }
 
 // ── FOLDERS ───────────────────────────────────────────
-function saveFolders(){ localStorage.setItem("cl:folders", JSON.stringify(folders)); }
+function saveFolders(){ localStorage.setItem("cl:folders", JSON.stringify(folders)); saveToCloud(); }
 
 function renderFolders(){
   var bar = document.getElementById("folders-bar"); bar.innerHTML = "";
@@ -923,13 +1160,13 @@ document.getElementById("ms-move-btn").onclick=function(){
   var folder=document.getElementById("ms-folder").value;
   if(!folder){ alert(lang==="ko"?"폴더를 선택해주세요.":"Please select a folder first."); return; }
   Object.keys(selKeys).filter(function(k){ return selKeys[k]; }).forEach(function(k){ if(reviews[k]) reviews[k].folder=folder; });
-  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); selKeys={}; updateMSBar(); renderFolders(); renderReviews();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud(); selKeys={}; updateMSBar(); renderFolders(); renderReviews();
 };
 document.getElementById("ms-del-btn").onclick=function(){
   var keys=Object.keys(selKeys).filter(function(k){ return selKeys[k]; }); if(!keys.length) return;
   if(!confirm(T("deletemulti").replace("{n}",keys.length))) return;
   keys.forEach(function(k){ delete reviews[k]; });
-  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); selKeys={}; updateMSBar(); renderReviews();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud(); selKeys={}; updateMSBar(); renderReviews();
 };
 
 // ── REVIEW DETAIL ─────────────────────────────────────
@@ -967,12 +1204,14 @@ document.getElementById("rdm-save-btn").onclick=function(){
   reviews[curRevKey].rating=rdmRating; reviews[curRevKey].text=document.getElementById("rdm-edit-text").value;
   reviews[curRevKey].folder=document.getElementById("rdm-edit-folder").value; reviews[curRevKey].updatedAt=new Date().toISOString();
   localStorage.setItem("cl:reviews",JSON.stringify(reviews));
+  saveToCloud();
   document.getElementById("rdm-text").textContent=reviews[curRevKey].text||T("notext");
   drawStars("rdm-stars",rdmRating,false); showRdmMode(false); renderReviews();
 };
 document.getElementById("rdm-del-btn").onclick=function(){
   if(!curRevKey) return; if(!confirm(T("deleteconfirm"))) return;
   delete reviews[curRevKey]; localStorage.setItem("cl:reviews",JSON.stringify(reviews));
+  saveToCloud();
   document.getElementById("rdm-overlay").classList.remove("show"); curRevKey=null; renderReviews();
 };
 function closeRdm(){ document.getElementById("rdm-overlay").classList.remove("show"); }
@@ -1070,7 +1309,7 @@ function applySettingsLang(){
 }
 
 // ── SETTINGS ──────────────────────────────────────────
-function saveCfg(){ localStorage.setItem("cl:cfg", JSON.stringify(cfg)); }
+function saveCfg(){ localStorage.setItem("cl:cfg", JSON.stringify(cfg)); saveToCloud(); }
 function loadProfileUI(){
   document.getElementById("sname").value = cfg.name || "";
   document.getElementById("sbio").value  = cfg.bio  || "";
@@ -1152,15 +1391,14 @@ document.getElementById("calc-storage-btn").onclick = function(){
 
 // ── INIT ──────────────────────────────────────────────
 applyTheme();
-var _savedKey = localStorage.getItem("cl:key");
-if(_savedKey && _savedKey.trim()){
-  document.getElementById("api-screen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
-  initGenres(); switchTab("browse"); loadContent(1);
-} else {
-  document.getElementById("api-screen").style.display = "flex";
-  document.getElementById("app").style.display = "none";
-}
+document.addEventListener("DOMContentLoaded", function(){
+  var authScreen = document.getElementById("auth-screen");
+  var appEl      = document.getElementById("app");
+  var apiScreen  = document.getElementById("api-screen");
+  if(authScreen) authScreen.style.display = "flex";
+  if(appEl)      appEl.style.display      = "none";
+  if(apiScreen)  apiScreen.style.display  = "none";
+});
 </script>
 </body>
 </html>
