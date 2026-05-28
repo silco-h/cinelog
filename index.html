@@ -627,27 +627,47 @@ function renderPagination(){
 }
 
 // ── STARS ─────────────────────────────────────────────
+function makeSVGStar(size, fill){
+  // fill: "full", "half", "empty"
+  var id = "clip"+Math.random().toString(36).slice(2);
+  var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" style="display:inline-block;vertical-align:middle;flex-shrink:0">';
+  if(fill==="half"){
+    svg += '<defs><clipPath id="'+id+'"><rect x="0" y="0" width="12" height="24"/></clipPath></defs>';
+  }
+  // Grey base
+  svg += '<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="'+(fill==="full"?"#f5c518":"#444")+'" stroke="none"/>';
+  // Gold half overlay
+  if(fill==="half"){
+    svg += '<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#f5c518" clip-path="url(#'+id+')" stroke="none"/>';
+  }
+  svg += '</svg>';
+  return svg;
+}
+
 function drawStars(containerId, value, interactive){
   var c = document.getElementById(containerId); if(!c) return;
   c.innerHTML = "";
+  var size = containerId==="det-stars" ? 28 : 22;
   for(var i=1; i<=5; i++){
     (function(star){
-      var div = document.createElement("div"); div.className = "sw";
-      var fill = value>=star ? "★" : (value>=star-0.5 ? "⯨" : "☆");
-      div.textContent = fill;
-      div.style.color = value>=star-0.5 ? "#f5c518" : "#555";
+      var outer = document.createElement("div");
+      outer.style.cssText = "position:relative;display:inline-block;width:"+size+"px;height:"+size+"px;user-select:none;flex-shrink:0;";
+      var fill = value>=star ? "full" : (value>=star-0.5 ? "half" : "empty");
+      outer.innerHTML = makeSVGStar(size, fill);
       if(interactive){
-        var lz = document.createElement("div"); lz.className = "sw-l";
-        var rz = document.createElement("div"); rz.className = "sw-r";
+        var lz = document.createElement("div");
+        lz.style.cssText = "position:absolute;top:0;left:0;width:50%;height:100%;z-index:2;cursor:pointer;";
+        var rz = document.createElement("div");
+        rz.style.cssText = "position:absolute;top:0;right:0;width:50%;height:100%;z-index:2;cursor:pointer;";
         lz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s-0.5; else rdmRating=s-0.5; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
         rz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s; else rdmRating=s; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
-        div.appendChild(lz); div.appendChild(rz);
+        outer.appendChild(lz); outer.appendChild(rz);
       }
-      c.appendChild(div);
+      c.appendChild(outer);
     })(i);
   }
   var lbl = document.createElement("span");
-  lbl.style.cssText = "font-size:12px;color:"+(interactive?"var(--gold)":"var(--text2)")+";margin-left:6px;";
+  lbl.style.cssText = "font-size:12px;color:"+(interactive?"var(--gold)":"var(--text2)")+";margin-left:6px;vertical-align:middle;";
   lbl.textContent = value > 0 ? value+"/5" : T("notrated");
   c.appendChild(lbl);
 }
@@ -873,7 +893,11 @@ function renderReviews(){
     var key=entry[0], rev=entry[1];
     var card=document.createElement("div"); card.className="rev-card";
     var isSelected=selMode&&selKeys[key]; card.style.outline=isSelected?"3px solid var(--accent)":"none";
-    var starsH=""; for(var i=1;i<=5;i++) starsH+="<span style='color:"+(rev.rating>=i-0.5?"#f5c518":"#555")+"'>"+(rev.rating>=i?"★":(rev.rating>=i-0.5?"⯨":"☆"))+"</span>";
+    var starsH="";
+    for(var i=1;i<=5;i++){
+      var f = rev.rating>=i ? "full" : (rev.rating>=i-0.5 ? "half" : "empty");
+      starsH += makeSVGStar(14, f);
+    }
     var typeLabel = rev.media_type==="movie" ? T("movies") : "TV";
     card.innerHTML=
       (rev.poster?"<img src='"+IMG+rev.poster+"' alt='' loading='lazy'/>":"<div class='rev-card-no-img'>🎬</div>")+
