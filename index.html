@@ -18,16 +18,12 @@
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;transition:background .2s,color .2s;}
 a{color:var(--blue);}
 input,textarea,button,select{font-family:inherit;}
-
-/* API screen */
 #api-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .api-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:460px;width:90%;text-align:center;}
 .api-box h1{font-size:22px;color:var(--text);margin-bottom:8px;}
 .api-box p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
 .api-err{background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px 14px;color:var(--red);font-size:13px;margin-bottom:14px;text-align:left;display:none;}
 .api-err.show{display:block;}
-
-/* App shell */
 #app{display:none;flex-direction:column;min-height:100vh;}
 header{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;}
 .logo{font-size:20px;font-weight:800;color:var(--text);}
@@ -37,12 +33,8 @@ nav{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap;}
 .tab-btn span{filter:grayscale(1) brightness(2);}
 .key-btn{margin-left:4px;background:none;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;}
 main{max-width:1200px;margin:0 auto;padding:20px 16px;flex:1;width:100%;}
-
-/* Tabs — only one shown at a time */
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
-
-/* Shared */
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
 .filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;}
 .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -68,8 +60,6 @@ main{max-width:1200px;margin:0 auto;padding:20px 16px;flex:1;width:100%;}
 .loading{color:var(--text3);text-align:center;padding:48px;}
 .no-res{color:var(--text3);text-align:center;padding:48px;}
 select option{background:var(--bg2);color:var(--text);}
-
-/* Browse grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
 .card{border-radius:12px;overflow:hidden;background:var(--bg3);cursor:pointer;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;}
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.4);}
@@ -82,8 +72,6 @@ select option{background:var(--bg2);color:var(--text);}
 .page-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:13px;}
 .page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
 .page-btn:disabled{opacity:.4;cursor:default;}
-
-/* My Reviews */
 .rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px;}
 .rev-card{border-radius:12px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
 .rev-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
@@ -100,8 +88,6 @@ select option{background:var(--bg2);color:var(--text);}
 .empty-icon{font-size:48px;margin-bottom:12px;}
 .ms-bar{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
 .ms-bar.show{display:flex;}
-
-/* Overlays */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;overflow-y:auto;display:none;}
 .overlay.show{display:block;}
 .modal{background:var(--bg2);max-width:860px;margin:40px auto;border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative;}
@@ -121,15 +107,11 @@ select option{background:var(--bg2);color:var(--text);}
 .rev-ta{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px;resize:vertical;outline:none;margin-top:10px;}
 .save-row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
 .fa-sel{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;outline:none;}
-
-/* Star rater */
 .star-wrap-outer{display:inline-flex;gap:2px;align-items:center;}
 .sw{position:relative;display:inline-block;width:30px;height:30px;font-size:26px;line-height:30px;text-align:center;user-select:none;}
 .sw-l,.sw-r{position:absolute;top:0;height:100%;width:50%;z-index:2;}
 .sw-l{left:0;cursor:pointer;}
 .sw-r{right:0;cursor:pointer;}
-
-/* Rev detail */
 .rdm{background:var(--bg2);max-width:520px;margin:60px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative;}
 .rdm-back{width:100%;height:140px;background:var(--bg3) center/cover;position:relative;}
 .rdm-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg2),transparent 60%);}
@@ -143,14 +125,10 @@ select option{background:var(--bg2);color:var(--text);}
 .rdm-rt{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
 .rdm-acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;}
 .rdm-edit-ta{width:100%;min-height:80px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 12px;resize:vertical;outline:none;margin-top:8px;}
-
-/* Folder popup */
 .sm-modal{background:var(--bg2);max-width:380px;margin:120px auto;border-radius:14px;border:1px solid var(--border);padding:24px;position:relative;}
 .sm-modal h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
 .fl{font-size:12px;color:var(--text2);margin-bottom:4px;}
 .sinput{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;margin-bottom:12px;}
-
-/* Settings */
 .s-sec{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;}
 .s-sec h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px;}
 .s-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;}
@@ -169,7 +147,7 @@ select option{background:var(--bg2);color:var(--text);}
 <body>
 
 <!-- API Screen -->
-<div id="api-screen" style="display:none">	
+<div id="api-screen" style="display:none">
   <div class="api-box">
     <div style="font-size:40px;margin-bottom:12px">🎬</div>
     <h1>CineLog</h1>
@@ -205,9 +183,9 @@ select option{background:var(--bg2);color:var(--text);}
         <button class="s-clear" id="b-clear">✕</button>
       </div>
       <div class="filters">
-        <button class="filter-btn active" data-btype="all">All</button>
-        <button class="filter-btn" data-btype="movie">Movies</button>
-        <button class="filter-btn" data-btype="tv">TV Shows</button>
+        <button class="filter-btn active" id="btype-all">All</button>
+        <button class="filter-btn" id="btype-movie">Movies</button>
+        <button class="filter-btn" id="btype-tv">TV Shows</button>
         <select class="fsel" id="genre-sel"><option value="">All Genres</option></select>
       </div>
       <div class="err-bar" id="err-bar">
@@ -226,7 +204,7 @@ select option{background:var(--bg2);color:var(--text);}
     <!-- MY REVIEWS -->
     <div class="tab-panel" id="tab-reviews">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-        <div class="sec-title" style="margin-bottom:0">📋 My Reviews</div>
+        <div class="sec-title" style="margin-bottom:0" id="lbl-myreviews-title">📋 My Reviews</div>
         <button class="btn btn-purple" id="manage-folders-btn" style="font-size:16px;padding:7px 12px" title="Manage Folders">📁</button>
       </div>
       <div class="folders-bar" id="folders-bar"></div>
@@ -253,68 +231,68 @@ select option{background:var(--bg2);color:var(--text);}
         <button class="btn btn-danger" id="ms-del-btn" style="font-size:12px;padding:6px 14px">🗑 Delete</button>
         <button class="btn btn-sec" id="ms-cancel-btn" style="font-size:12px;padding:6px 14px">Cancel</button>
       </div>
-      <div id="r-empty" class="empty" style="display:none"><div class="empty-icon">🎥</div><div>No reviews yet.</div></div>
+      <div id="r-empty" class="empty" style="display:none"><div class="empty-icon">🎥</div><div id="lbl-noreviews">No reviews yet.</div></div>
       <div class="rev-grid" id="r-grid"></div>
     </div>
 
     <!-- SETTINGS -->
     <div class="tab-panel" id="tab-settings">
-      <div class="sec-title">⚙️ Settings</div>
+      <div class="sec-title">⚙️ <span id="lbl-settings">Settings</span></div>
       <div class="s-sec">
-        <h3>Profile</h3>
+        <h3 id="lbl-profile">Profile</h3>
         <div class="s-row">
-          <div class="s-lbl">Profile Picture</div>
+          <div class="s-lbl" id="lbl-avatar">Profile Picture</div>
           <div class="av-wrap">
             <div class="av-img" id="av-preview">🎬</div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <input type="file" id="av-file" accept="image/*" style="display:none"/>
-              <button class="btn btn-sec" onclick="document.getElementById('av-file').click()" style="font-size:12px;padding:6px 12px">Upload</button>
+              <button class="btn btn-sec" id="lbl-upload-btn" onclick="document.getElementById('av-file').click()" style="font-size:12px;padding:6px 12px">Upload</button>
               <button class="btn btn-sec" id="av-reset-btn" style="font-size:12px;padding:6px 12px">Reset</button>
             </div>
           </div>
         </div>
         <div class="s-row">
-          <div class="s-lbl">Display Name</div>
+          <div class="s-lbl" id="lbl-dispname">Display Name</div>
           <input class="sinput-sm" id="sname" placeholder="Your name…"/>
         </div>
         <div class="s-row">
-          <div class="s-lbl">Bio</div>
+          <div class="s-lbl" id="lbl-bio">Bio</div>
           <input class="sinput-sm" id="sbio" placeholder="A short bio…"/>
         </div>
       </div>
       <div class="s-sec">
-        <h3>Appearance</h3>
+        <h3 id="lbl-appearance">Appearance</h3>
         <div class="s-row">
-          <div class="s-lbl">Dark Mode<small>Toggle light/dark theme</small></div>
+          <div class="s-lbl" id="lbl-darkmode">Dark Mode<small id="lbl-darkmode-sub">Toggle light/dark theme</small></div>
           <button class="toggle on" id="dark-toggle"></button>
         </div>
         <div class="s-row">
-          <div class="s-lbl">Interface Language</div>
+          <div class="s-lbl" id="lbl-lang">Interface Language</div>
           <select class="fsel" id="lang-sel" style="min-width:120px">
             <option value="en">English</option>
             <option value="ko">한국어</option>
           </select>
         </div>
         <div class="s-row">
-          <div class="s-lbl">TMDB API Key<small>Reset and enter a new API key</small></div>
-          <button class="btn btn-sec" onclick="showKeyScreen()" style="font-size:12px;padding:7px 14px">🔑 Change Key</button>
+          <div class="s-lbl" id="lbl-apikey-title">TMDB API Key<small id="lbl-apikey-desc">Reset and enter a new API key</small></div>
+          <button class="btn btn-sec" onclick="showKeyScreen()" style="font-size:12px;padding:7px 14px" id="lbl-changekey-btn">🔑 Change Key</button>
         </div>
       </div>
       <div class="s-sec">
-        <h3>Data & Backup</h3>
+        <h3 id="lbl-data-backup">Data & Backup</h3>
         <div class="s-row">
-          <div class="s-lbl">Export Reviews<small>Download all your reviews as a JSON file</small></div>
+          <div class="s-lbl" id="lbl-export-title">Export Reviews<small id="lbl-export-sub">Download all your reviews as a JSON file</small></div>
           <button class="btn btn-sec" id="export-btn" style="font-size:12px;padding:7px 14px">⬇ Export</button>
         </div>
         <div class="s-row">
-          <div class="s-lbl">Import Reviews<small>Restore from a previously exported file</small></div>
+          <div class="s-lbl" id="lbl-import-title">Import Reviews<small id="lbl-import-sub">Restore from a previously exported file</small></div>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="file" id="import-file" accept=".json" style="display:none"/>
             <button class="btn btn-sec" id="import-btn" style="font-size:12px;padding:7px 14px">⬆ Import</button>
           </div>
         </div>
         <div class="s-row">
-          <div class="s-lbl">Storage Used<small id="storage-used-lbl">Calculating…</small></div>
+          <div class="s-lbl" id="lbl-storage-title">Storage Used<small id="storage-used-lbl">Calculating…</small></div>
           <button class="btn btn-sec" id="calc-storage-btn" style="font-size:12px;padding:7px 14px">Check</button>
         </div>
       </div>
@@ -345,7 +323,7 @@ select option{background:var(--bg2);color:var(--text);}
         <div class="prow" id="det-director"></div>
         <div class="prow" id="det-cast"></div>
         <div class="rev-box">
-          <h3>✍️ My Review</h3>
+          <h3 id="lbl-myreview">✍️ My Review</h3>
           <div id="det-stars" class="star-wrap-outer"></div>
           <textarea class="rev-ta" id="det-text" placeholder="Write your thoughts…"></textarea>
           <div class="save-row">
@@ -399,15 +377,13 @@ select option{background:var(--bg2);color:var(--text);}
 <div class="overlay" id="folder-overlay">
   <div class="sm-modal" style="max-width:440px">
     <button class="close-btn" id="folder-close" style="background:var(--bg3);color:var(--text)">✕</button>
-    <h3 style="margin-bottom:14px">📁 Manage Folders</h3>
-    <!-- Add new folder -->
+    <h3 style="margin-bottom:14px">📁 <span id="lbl-manage-folders">Manage Folders</span></h3>
     <div style="display:flex;gap:8px;margin-bottom:6px">
       <input class="sinput" id="f-name" placeholder="New folder name…" style="margin-bottom:0;flex:1"/>
       <button class="btn btn-purple" id="f-create-btn" style="font-size:13px;padding:8px 14px;white-space:nowrap">+ Add</button>
     </div>
     <div id="f-warn" style="display:none;color:var(--red);font-size:12px;margin-bottom:8px"></div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Drag to reorder • Click name to rename • ✕ to delete</div>
-    <!-- Folder list -->
+    <div id="folder-hint" style="font-size:12px;color:var(--text3);margin-bottom:10px">Drag to reorder • Click name to rename • ✕ to delete</div>
     <div id="folder-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto"></div>
   </div>
 </div>
@@ -426,22 +402,18 @@ var bType    = "all", bGenre = "", bPage = 1, bTotalPages = 1;
 var aFolder  = "all", rType  = "all", rQuery = "";
 var curItem  = null, curRevKey = null;
 var bSearchT = null;
-// THE rating globals — plain, no closures
 var detRating = 0;
 var rdmRating = 0;
 var selMode   = false;
 var selKeys   = {};
 
 // ── TMDB ───────────────────────────────────────────────
-function eid(id){ return document.getElementById(id); }
-function setClick(id, fn){ var el=eid(id); if(el) el.onclick=fn; }
-function setChange(id, fn){ var el=eid(id); if(el) el.onchange=fn; }
-function addEvent(id, ev, fn){ var el=eid(id); if(el) el.addEventListener(ev,fn); }
 async function api(path){
   var k = getKey();
   if(!k) throw new Error("No API key");
   var sep = path.includes("?") ? "&" : "?";
-  var r = await fetch("https://api.themoviedb.org/3" + path + sep + "api_key=" + k.trim());
+  var langParam = lang === "ko" ? "&language=ko-KR" : "&language=en-US";
+  var r = await fetch("https://api.themoviedb.org/3" + path + sep + "api_key=" + k.trim() + langParam);
   if(!r.ok){ var e = await r.json().catch(function(){return{};}); throw new Error(e.status_message || "HTTP "+r.status); }
   return r.json();
 }
@@ -450,14 +422,16 @@ async function api(path){
 var TT = {
   en:{ notrated:"Not rated", notext:"(No written review)", reviewedon:"Reviewed on ",
        director:"Director", creator:"Creator", cast:"Cast", genres:"Genres",
-       date:"Date (Newest)", rd:"Rating ↓", ra:"Rating ↑",
        selected:"selected", movefolder:"Move to folder…", nofolder:"No folder",
-       all:"All", deleteconfirm:"Delete this review?", deletemulti:"Delete {n} review(s)?" },
+       deleteconfirm:"Delete this review?", deletemulti:"Delete {n} review(s)?",
+       popular:"🔥 Popular Right Now", loading:"Loading…", noresults:"No results found.",
+       all:"All", movies:"Movies", tvshows:"TV Shows", allgenres:"All Genres" },
   ko:{ notrated:"평가 없음", notext:"(작성된 리뷰 없음)", reviewedon:"리뷰 날짜: ",
        director:"감독", creator:"제작", cast:"출연", genres:"장르",
-       date:"날짜 (최신)", rd:"평점 ↓", ra:"평점 ↑",
        selected:"개 선택됨", movefolder:"폴더로 이동…", nofolder:"폴더 없음",
-       all:"전체", deleteconfirm:"이 리뷰를 삭제할까요?", deletemulti:"{n}개의 리뷰를 삭제할까요?" }
+       deleteconfirm:"이 리뷰를 삭제할까요?", deletemulti:"{n}개의 리뷰를 삭제할까요?",
+       popular:"🔥 지금 인기 있는 작품", loading:"로딩 중…", noresults:"검색 결과가 없습니다.",
+       all:"전체", movies:"영화", tvshows:"TV 프로그램", allgenres:"전체 장르" }
 };
 function T(k){ return (TT[lang]||TT.en)[k] || k; }
 
@@ -484,9 +458,7 @@ if(_cb) _cb.onclick = async function(){
     localStorage.setItem("cl:key", k);
     document.getElementById("api-screen").style.display = "none";
     document.getElementById("app").style.display = "flex";
-    initGenres();
-    switchTab("browse");
-    loadContent(1);
+    initGenres(); switchTab("browse"); loadContent(1);
   } catch(e){
     errEl.textContent = "⚠️ " + (e.message || "Connection failed.");
     errEl.classList.add("show");
@@ -500,29 +472,15 @@ function showKeyScreen(){
   document.getElementById("api-key-input").value = "";
   localStorage.removeItem("cl:key");
 }
-// change-key-btn removed from header, now only in settings
-
-// ── START APP ─────────────────────────────────────────
-function startApp(){
-  document.getElementById("api-screen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
-  applyTheme();
-  loadProfileUI();
-  initGenres();
-  switchTab("browse");
-  loadContent(1);
-}
 
 // ── TABS ──────────────────────────────────────────────
 function switchTab(name){
   document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
-  ["browse","reviews","settings"].forEach(function(t){
-    document.getElementById("nav-"+t).classList.remove("active");
-  });
+  ["browse","reviews","settings"].forEach(function(t){ document.getElementById("nav-"+t).classList.remove("active"); });
   document.getElementById("tab-"+name).classList.add("active");
   document.getElementById("nav-"+name).classList.add("active");
   if(name === "reviews"){ renderFolders(); renderReviews(); }
-  if(name === "settings"){ loadProfileUI(); }
+  if(name === "settings"){ loadProfileUI(); applySettingsLang(); applyReviewsLang(); }
 }
 document.getElementById("nav-browse").onclick   = function(){ switchTab("browse"); };
 document.getElementById("nav-reviews").onclick  = function(){ switchTab("reviews"); };
@@ -536,7 +494,7 @@ async function initGenres(){
     (res[0].genres||[]).forEach(function(g){ all[g.id] = g.name; });
     (res[1].genres||[]).forEach(function(g){ all[g.id] = g.name; });
     var sel = document.getElementById("genre-sel");
-    sel.innerHTML = "<option value=''>All Genres</option>";
+    sel.innerHTML = "<option value=''>"+T("allgenres")+"</option>";
     Object.entries(all).sort(function(a,b){ return a[1].localeCompare(b[1]); }).forEach(function(e){
       var o = document.createElement("option"); o.value = e[0]; o.textContent = e[1]; sel.appendChild(o);
     });
@@ -544,26 +502,33 @@ async function initGenres(){
 }
 document.getElementById("genre-sel").onchange = function(){ bGenre = this.value; loadContent(1); };
 
-document.querySelectorAll(".filters .filter-btn[data-btype]").forEach(function(btn){
-  btn.onclick = function(){
-    document.querySelectorAll(".filters .filter-btn[data-btype]").forEach(function(b){ b.classList.remove("active"); });
-    btn.classList.add("active"); bType = btn.dataset.btype; loadContent(1);
-  };
-});
+// Browse type filter buttons
+document.getElementById("btype-all").onclick = function(){
+  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
+  this.classList.add("active"); bType = "all"; loadContent(1);
+};
+document.getElementById("btype-movie").onclick = function(){
+  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
+  this.classList.add("active"); bType = "movie"; loadContent(1);
+};
+document.getElementById("btype-tv").onclick = function(){
+  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
+  this.classList.add("active"); bType = "tv"; loadContent(1);
+};
 
 // ── BROWSE SEARCH ─────────────────────────────────────
 document.getElementById("b-search").addEventListener("input", function(){
   var q = this.value.trim();
   document.getElementById("b-clear").classList.toggle("show", q.length > 0);
   clearTimeout(bSearchT);
-  document.getElementById("b-title").textContent = q ? '"'+q+'" results' : "🔥 Popular Right Now";
+  document.getElementById("b-title").textContent = q ? '"'+q+'" results' : T("popular");
   if(!q){ loadContent(1); return; }
   bSearchT = setTimeout(function(){ loadContent(1); }, 450);
 });
 document.getElementById("b-clear").onclick = function(){
   document.getElementById("b-search").value = "";
   this.classList.remove("show");
-  document.getElementById("b-title").textContent = "🔥 Popular Right Now";
+  document.getElementById("b-title").textContent = T("popular");
   loadContent(1);
 };
 
@@ -632,10 +597,11 @@ function renderGrid(items){
   items.forEach(function(item){
     var key = item.media_type+":"+item.id, rev = reviews[key];
     var card = document.createElement("div"); card.className = "card";
+    var typeLabel = item.media_type==="movie" ? T("movies") : "TV";
     card.innerHTML =
       (item.poster_path ? "<img src='"+IMG+item.poster_path+"' alt='' loading='lazy'/>" : "<div class='card-no-img'>🎬</div>") +
       "<div class='card-body'><div class='card-title'>"+(item.title||item.name)+"</div>" +
-      "<div class='card-meta'><span class='badge badge-"+item.media_type+"'>"+(item.media_type==="movie"?"Movie":"TV")+"</span>" +
+      "<div class='card-meta'><span class='badge badge-"+item.media_type+"'>"+typeLabel+"</span>" +
       (rev&&rev.rating ? "<span style='color:var(--gold);font-size:12px'>★ "+rev.rating+"</span>" : "") +
       "</div></div>";
     card.onclick = function(){ openDetail(item); };
@@ -661,7 +627,6 @@ function renderPagination(){
 }
 
 // ── STARS ─────────────────────────────────────────────
-// Draws interactive or readonly stars. For interactive, click updates a named global.
 function drawStars(containerId, value, interactive){
   var c = document.getElementById(containerId); if(!c) return;
   c.innerHTML = "";
@@ -674,7 +639,6 @@ function drawStars(containerId, value, interactive){
       if(interactive){
         var lz = document.createElement("div"); lz.className = "sw-l";
         var rz = document.createElement("div"); rz.className = "sw-r";
-        // Use IIFE to capture star and containerId
         lz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s-0.5; else rdmRating=s-0.5; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
         rz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s; else rdmRating=s; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
         div.appendChild(lz); div.appendChild(rz);
@@ -707,7 +671,8 @@ async function openDetail(item){
     var poster = document.getElementById("det-poster");
     if(d.poster_path){ poster.src=IMG+d.poster_path; poster.style.display="block"; } else poster.style.display="none";
     document.getElementById("det-title").textContent = d.title||d.name;
-    var meta = "<span class='badge badge-"+item.media_type+"'>"+(item.media_type==="movie"?"Movie":"TV")+"</span>";
+    var typeLabel = item.media_type==="movie" ? T("movies") : "TV";
+    var meta = "<span class='badge badge-"+item.media_type+"'>"+typeLabel+"</span>";
     var yr = ((d.release_date||d.first_air_date||"")).slice(0,4);
     if(yr) meta += "<span>"+yr+"</span>";
     if(d.runtime) meta += "<span>"+d.runtime+" min</span>";
@@ -723,14 +688,21 @@ async function openDetail(item){
     document.getElementById("det-director").innerHTML = dn.length ? "<strong style='color:var(--text)'>"+dl+": </strong>"+dn.join(", ") : "";
     var castNames = (cr.cast||[]).slice(0,6).map(function(c){ return c.name; }).join(", ");
     document.getElementById("det-cast").innerHTML = castNames ? "<strong style='color:var(--text)'>"+T("cast")+": </strong>"+castNames : "";
-    // Cache enrichment data into review record
-    if(!reviews[key]) reviews[key] = {id:item.id,media_type:item.media_type,title:item.title||item.name,poster:item.poster_path,rating:0,text:"",savedAt:new Date().toISOString()};
-    reviews[key]._dir   = dn.join(", "); reviews[key]._dl = dl;
-    reviews[key]._cast  = castNames;
-    reviews[key]._genres= (d.genres||[]).map(function(g){return g.name;}).join(", ");
-    reviews[key]._year  = yr;
-    reviews[key]._vote  = d.vote_average>0 ? d.vote_average.toFixed(1) : "";
-    reviews[key]._back  = d.backdrop_path||"";
+    // Cache enrichment data — only if review already exists
+    var existingRev = reviews[key];
+    if(existingRev){
+      existingRev._dir = dn.join(", "); existingRev._dl = dl;
+      existingRev._cast = castNames;
+      existingRev._genres = (d.genres||[]).map(function(g){return g.name;}).join(", ");
+      existingRev._year = yr; existingRev._vote = d.vote_average>0?d.vote_average.toFixed(1):"";
+      existingRev._back = d.backdrop_path||"";
+      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+    }
+    window._tmpDetail = {
+      _dir:dn.join(", "), _dl:dl, _cast:castNames,
+      _genres:(d.genres||[]).map(function(g){return g.name;}).join(", "),
+      _year:yr, _vote:d.vote_average>0?d.vote_average.toFixed(1):"", _back:d.backdrop_path||""
+    };
     document.getElementById("det-loading").style.display = "none";
     document.getElementById("det-content").style.display = "block";
   } catch(e){ document.getElementById("det-loading").textContent = "Failed to load details."; }
@@ -745,20 +717,18 @@ document.getElementById("det-save-btn").onclick = function(){
   if(!curItem) return;
   var key = curItem.media_type+":"+curItem.id;
   var existing = reviews[key] || {};
-  reviews[key] = Object.assign({}, existing, {
-    rating:   detRating,
-    text:     document.getElementById("det-text").value,
-    id:       curItem.id,
-    media_type: curItem.media_type,
-    title:    curItem.title||curItem.name,
-    poster:   curItem.poster_path,
-    folder:   document.getElementById("det-folder").value,
-    savedAt:  existing.savedAt || new Date().toISOString(),
+  var tmp = window._tmpDetail || {};
+  reviews[key] = Object.assign({}, existing, tmp, {
+    rating: detRating,
+    text: document.getElementById("det-text").value,
+    id: curItem.id, media_type: curItem.media_type,
+    title: curItem.title||curItem.name, poster: curItem.poster_path,
+    folder: document.getElementById("det-folder").value,
+    savedAt: existing.savedAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
   localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  closeDetail();
-  loadContent(bPage);
+  closeDetail(); loadContent(bPage);
 };
 
 // ── FOLDER SELECT HELPERS ─────────────────────────────
@@ -786,30 +756,17 @@ function renderFolders(){
   folders.forEach(function(f){
     var wrap = document.createElement("span"); wrap.style.cssText = "display:inline-flex;align-items:center;gap:2px;";
     wrap.appendChild(mkBtn(f.name, f.name, aFolder===f.name));
-    var del = document.createElement("span"); del.className = "folder-del"; del.textContent = "✕"; del.title = "Delete folder (use Manage Folders instead)";
-    del.style.display = "none";
-    del.onclick = function(e){
-      e.stopPropagation();
-      if(!confirm("Delete folder \""+f.name+"\"?")) return;
-      folders = folders.filter(function(x){ return x.name !== f.name; });
-      Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
-      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-      saveFolders(); if(aFolder===f.name) aFolder="all";
-      renderFolders(); renderReviews();
-    };
+    var del = document.createElement("span"); del.className = "folder-del"; del.textContent = "✕"; del.style.display = "none";
     wrap.appendChild(del); bar.appendChild(wrap);
   });
-  // Delete current folder button when inside a folder — REMOVED
 }
 
-// Folder manager popup
-document.getElementById("manage-folders-btn").onclick = openFolderManager;
-function openFolderManager(){
+document.getElementById("manage-folders-btn").onclick = function(){
   document.getElementById("f-name").value = "";
   document.getElementById("f-warn").style.display = "none";
   renderFolderList();
   document.getElementById("folder-overlay").classList.add("show");
-}
+};
 function closeFolderPopup(){
   document.getElementById("folder-overlay").classList.remove("show");
   renderFolders(); renderReviews();
@@ -823,18 +780,16 @@ document.getElementById("f-create-btn").onclick = function(){
   if(!name){ warn.textContent = lang==="ko"?"폴더 이름을 입력해주세요.":"Please enter a folder name."; warn.style.display="block"; return; }
   if(folders.find(function(f){ return f.name.toLowerCase()===name.toLowerCase(); })){
     warn.textContent = lang==="ko"?"이미 존재하는 폴더 이름입니다.":"A folder with this name already exists.";
-    warn.style.display = "block"; return;
+    warn.style.display="block"; return;
   }
-  warn.style.display = "none";
-  folders.push({name:name, desc:""}); saveFolders();
+  warn.style.display="none";
+  folders.push({name:name,desc:""}); saveFolders();
   document.getElementById("f-name").value = "";
   renderFolderList();
 };
 document.getElementById("f-name").addEventListener("keydown", function(e){ if(e.key==="Enter") document.getElementById("f-create-btn").click(); });
 
-// Drag state
 var dragIdx = null;
-
 function renderFolderList(){
   var list = document.getElementById("folder-list"); list.innerHTML = "";
   if(folders.length === 0){
@@ -844,244 +799,251 @@ function renderFolderList(){
     list.appendChild(empty); return;
   }
   folders.forEach(function(f, idx){
-    var row = document.createElement("div");
-    row.draggable = true;
-    row.dataset.idx = idx;
+    var row = document.createElement("div"); row.draggable = true; row.dataset.idx = idx;
     row.style.cssText = "display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:grab;";
-
-    // Drag handle
-    var handle = document.createElement("span");
-    handle.textContent = "⠿"; handle.style.cssText = "color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0;";
+    var handle = document.createElement("span"); handle.textContent="⠿"; handle.style.cssText="color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0;";
     row.appendChild(handle);
-
-    // Folder name (editable on click)
-    var nameEl = document.createElement("span");
-    nameEl.textContent = f.name;
-    nameEl.style.cssText = "flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:text;";
+    var nameEl = document.createElement("span"); nameEl.textContent=f.name; nameEl.style.cssText="flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:text;";
     nameEl.title = lang==="ko"?"클릭하여 이름 변경":"Click to rename";
     nameEl.onclick = function(){
-      var inp = document.createElement("input");
-      inp.value = f.name;
-      inp.style.cssText = "flex:1;font-size:13px;font-weight:600;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;color:var(--text);padding:2px 6px;outline:none;width:100%;";
-      row.replaceChild(inp, nameEl);
-      inp.focus(); inp.select();
+      var inp = document.createElement("input"); inp.value=f.name;
+      inp.style.cssText="flex:1;font-size:13px;font-weight:600;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;color:var(--text);padding:2px 6px;outline:none;width:100%;";
+      row.replaceChild(inp, nameEl); inp.focus(); inp.select();
       function commitRename(){
-        var newName = inp.value.trim();
-        if(newName && newName !== f.name){
-          if(folders.find(function(x,i){ return i!==idx && x.name.toLowerCase()===newName.toLowerCase(); })){
-            inp.style.borderColor = "var(--red)"; return;
-          }
-          // update reviews that reference old folder name
+        var newName=inp.value.trim();
+        if(newName && newName!==f.name){
+          if(folders.find(function(x,i){ return i!==idx && x.name.toLowerCase()===newName.toLowerCase(); })){ inp.style.borderColor="var(--red)"; return; }
           Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=newName; });
           localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-          if(aFolder === f.name) aFolder = newName;
-          folders[idx].name = newName; saveFolders();
+          if(aFolder===f.name) aFolder=newName;
+          folders[idx].name=newName; saveFolders();
         }
-        row.replaceChild(nameEl, inp);
-        nameEl.textContent = folders[idx].name;
+        row.replaceChild(nameEl, inp); nameEl.textContent=folders[idx].name;
       }
       inp.addEventListener("blur", commitRename);
-      inp.addEventListener("keydown", function(e){ if(e.key==="Enter"){ inp.blur(); } if(e.key==="Escape"){ inp.removeEventListener("blur",commitRename); row.replaceChild(nameEl,inp); } });
+      inp.addEventListener("keydown", function(e){ if(e.key==="Enter") inp.blur(); if(e.key==="Escape"){ inp.removeEventListener("blur",commitRename); row.replaceChild(nameEl,inp); } });
     };
     row.appendChild(nameEl);
-
-    // Desc badge
-    if(f.desc){
-      var desc = document.createElement("span");
-      desc.textContent = f.desc; desc.style.cssText = "font-size:11px;color:var(--text3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
-      row.appendChild(desc);
-    }
-
-    // Count
-    var cnt = Object.values(reviews).filter(function(r){ return r.folder===f.name; }).length;
-    var cntEl = document.createElement("span");
-    cntEl.textContent = cnt; cntEl.style.cssText = "font-size:11px;color:var(--text3);min-width:18px;text-align:center;";
-    row.appendChild(cntEl);
-
-    // Delete
-    var del = document.createElement("button");
-    del.textContent = "✕"; del.style.cssText = "background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;";
-    del.onmouseenter = function(){ del.style.color="var(--red)"; };
-    del.onmouseleave = function(){ del.style.color="var(--text3)"; };
-    del.onclick = function(e){
+    if(f.desc){ var desc=document.createElement("span"); desc.textContent=f.desc; desc.style.cssText="font-size:11px;color:var(--text3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"; row.appendChild(desc); }
+    var cnt=Object.values(reviews).filter(function(r){ return r.folder===f.name; }).length;
+    var cntEl=document.createElement("span"); cntEl.textContent=cnt; cntEl.style.cssText="font-size:11px;color:var(--text3);min-width:18px;text-align:center;"; row.appendChild(cntEl);
+    var del=document.createElement("button"); del.textContent="✕"; del.style.cssText="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;";
+    del.onmouseenter=function(){ del.style.color="var(--red)"; }; del.onmouseleave=function(){ del.style.color="var(--text3)"; };
+    del.onclick=function(e){
       e.stopPropagation();
       if(!confirm((lang==="ko"?"\""+f.name+"\" 폴더를 삭제할까요?":"Delete folder \""+f.name+"\"?"))) return;
-      folders.splice(idx,1);
-      Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
-      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-      saveFolders(); if(aFolder===f.name) aFolder="all";
-      renderFolderList();
+      folders.splice(idx,1); Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
+      localStorage.setItem("cl:reviews", JSON.stringify(reviews)); saveFolders(); if(aFolder===f.name) aFolder="all"; renderFolderList();
     };
     row.appendChild(del);
-
-    // Drag events
-    row.addEventListener("dragstart", function(){ dragIdx = idx; row.style.opacity="0.4"; });
-    row.addEventListener("dragend",   function(){ dragIdx = null; row.style.opacity="1"; });
+    row.addEventListener("dragstart", function(){ dragIdx=idx; row.style.opacity="0.4"; });
+    row.addEventListener("dragend",   function(){ dragIdx=null; row.style.opacity="1"; });
     row.addEventListener("dragover",  function(e){ e.preventDefault(); row.style.background="var(--bg2)"; });
     row.addEventListener("dragleave", function(){ row.style.background="var(--bg3)"; });
-    row.addEventListener("drop", function(e){
-      e.preventDefault(); row.style.background="var(--bg3)";
-      if(dragIdx===null || dragIdx===idx) return;
-      var moved = folders.splice(dragIdx,1)[0];
-      folders.splice(idx,0,moved);
-      saveFolders(); renderFolderList();
-    });
-
+    row.addEventListener("drop", function(e){ e.preventDefault(); row.style.background="var(--bg3)"; if(dragIdx===null||dragIdx===idx) return; var moved=folders.splice(dragIdx,1)[0]; folders.splice(idx,0,moved); saveFolders(); renderFolderList(); });
     list.appendChild(row);
   });
 }
 
 // ── REVIEWS SEARCH + FILTER ───────────────────────────
 document.getElementById("r-search").addEventListener("input", function(){
-  rQuery = this.value.trim();
-  document.getElementById("r-clear").classList.toggle("show", rQuery.length > 0);
-  renderReviews();
+  rQuery=this.value.trim(); document.getElementById("r-clear").classList.toggle("show",rQuery.length>0); renderReviews();
 });
-document.getElementById("r-clear").onclick = function(){
-  document.getElementById("r-search").value = ""; rQuery = "";
-  this.classList.remove("show"); renderReviews();
-};
+document.getElementById("r-clear").onclick = function(){ document.getElementById("r-search").value=""; rQuery=""; this.classList.remove("show"); renderReviews(); };
 ["all","movie","tv"].forEach(function(tp){
   document.getElementById("rtype-"+tp).onclick = function(){
     document.querySelectorAll("#tab-reviews .filter-btn[data-rtype]").forEach(function(b){ b.classList.remove("active"); });
-    this.classList.add("active"); rType = tp; renderReviews();
+    this.classList.add("active"); rType=tp; renderReviews();
   };
 });
 document.getElementById("sort-sel").onchange = function(){ renderReviews(); };
 
 function renderReviews(){
-  var grid = document.getElementById("r-grid"), empty = document.getElementById("r-empty");
-  grid.innerHTML = "";
-  var sort = document.getElementById("sort-sel").value;
-  var entries = Object.entries(reviews);
-  if(rType !== "all")    entries = entries.filter(function(e){ return e[1].media_type===rType; });
-  if(aFolder !== "all")  entries = entries.filter(function(e){ return e[1].folder===aFolder; });
-  if(rQuery)             entries = entries.filter(function(e){ return (e[1].title||"").toLowerCase().includes(rQuery.toLowerCase()); });
-  if(sort==="date")      entries.sort(function(a,b){ return new Date(b[1].savedAt)-new Date(a[1].savedAt); });
-  else if(sort==="rd")   entries.sort(function(a,b){ return (b[1].rating||0)-(a[1].rating||0); });
-  else if(sort==="ra")   entries.sort(function(a,b){ return (a[1].rating||0)-(b[1].rating||0); });
-  empty.style.display = entries.length===0 ? "block" : "none";
+  var grid=document.getElementById("r-grid"), empty=document.getElementById("r-empty"); grid.innerHTML="";
+  var sort=document.getElementById("sort-sel").value;
+  var entries=Object.entries(reviews);
+  if(rType!=="all")   entries=entries.filter(function(e){ return e[1].media_type===rType; });
+  if(aFolder!=="all") entries=entries.filter(function(e){ return e[1].folder===aFolder; });
+  if(rQuery)          entries=entries.filter(function(e){ return (e[1].title||"").toLowerCase().includes(rQuery.toLowerCase()); });
+  if(sort==="date")   entries.sort(function(a,b){ return new Date(b[1].savedAt)-new Date(a[1].savedAt); });
+  else if(sort==="rd") entries.sort(function(a,b){ return (b[1].rating||0)-(a[1].rating||0); });
+  else if(sort==="ra") entries.sort(function(a,b){ return (a[1].rating||0)-(b[1].rating||0); });
+  empty.style.display=entries.length===0?"block":"none";
   entries.forEach(function(entry){
-    var key = entry[0], rev = entry[1];
-    var card = document.createElement("div"); card.className = "rev-card";
-    var isSelected = selMode && selKeys[key];
-    card.style.outline = isSelected ? "3px solid var(--accent)" : "none";
-    var starsH = "";
-    for(var i=1;i<=5;i++) starsH += "<span style='color:"+(rev.rating>=i-0.5?"#f5c518":"#555")+"'>"+(rev.rating>=i?"★":(rev.rating>=i-0.5?"⯨":"☆"))+"</span>";
-    card.innerHTML =
-      (rev.poster ? "<img src='"+IMG+rev.poster+"' alt='' loading='lazy'/>" : "<div class='rev-card-no-img'>🎬</div>") +
-      (selMode ? "<div style='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:"+(isSelected?"var(--accent)":"rgba(0,0,0,.5)")+";border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff'>"+(isSelected?"✓":"")+"</div>" : "") +
-      "<div class='rev-badge-overlay'><span class='badge badge-"+rev.media_type+"'>"+(rev.media_type==="movie"?"Movie":"TV")+"</span></div>" +
+    var key=entry[0], rev=entry[1];
+    var card=document.createElement("div"); card.className="rev-card";
+    var isSelected=selMode&&selKeys[key]; card.style.outline=isSelected?"3px solid var(--accent)":"none";
+    var starsH=""; for(var i=1;i<=5;i++) starsH+="<span style='color:"+(rev.rating>=i-0.5?"#f5c518":"#555")+"'>"+(rev.rating>=i?"★":(rev.rating>=i-0.5?"⯨":"☆"))+"</span>";
+    var typeLabel = rev.media_type==="movie" ? T("movies") : "TV";
+    card.innerHTML=
+      (rev.poster?"<img src='"+IMG+rev.poster+"' alt='' loading='lazy'/>":"<div class='rev-card-no-img'>🎬</div>")+
+      (selMode?"<div style='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:"+(isSelected?"var(--accent)":"rgba(0,0,0,.5)")+";border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff'>"+(isSelected?"✓":"")+"</div>":"")+
+      "<div class='rev-badge-overlay'><span class='badge badge-"+rev.media_type+"'>"+typeLabel+"</span></div>"+
       "<div class='rev-card-body'><div class='rev-card-title'>"+rev.title+"</div><div style='font-size:13px'>"+starsH+"</div></div>";
-    card.onclick = function(){
-      if(selMode){ selKeys[key]=!selKeys[key]; updateMSBar(); renderReviews(); }
-      else        openRevDetail(key, rev);
-    };
+    card.onclick=function(){ if(selMode){ selKeys[key]=!selKeys[key]; updateMSBar(); renderReviews(); } else openRevDetail(key,rev); };
     grid.appendChild(card);
   });
 }
 
 // ── MULTI-SELECT ──────────────────────────────────────
 function updateMSBar(){
-  var keys = Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
-  var bar  = document.getElementById("ms-bar");
-  bar.classList.toggle("show", selMode);
-  document.getElementById("ms-count").textContent = keys.length + " " + T("selected");
-  var sel = document.getElementById("ms-folder");
-  sel.innerHTML = "<option value=''>"+T("movefolder")+"</option>";
+  var keys=Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
+  document.getElementById("ms-bar").classList.toggle("show",selMode);
+  document.getElementById("ms-count").textContent=keys.length+" "+T("selected");
+  var sel=document.getElementById("ms-folder"); sel.innerHTML="<option value=''>"+T("movefolder")+"</option>";
   folders.forEach(function(f){ var o=document.createElement("option"); o.value=f.name; o.textContent=f.name; sel.appendChild(o); });
 }
-document.getElementById("sel-mode-btn").onclick = function(){
-  selMode = !selMode; selKeys = {};
-  this.style.background = selMode ? "var(--accent)" : ""; this.style.color = selMode ? "#fff" : "";
-  updateMSBar(); renderReviews();
-};
-document.getElementById("ms-cancel-btn").onclick = function(){
-  selMode = false; selKeys = {};
-  document.getElementById("sel-mode-btn").style.background = ""; document.getElementById("sel-mode-btn").style.color = "";
-  updateMSBar(); renderReviews();
-};
-document.getElementById("ms-move-btn").onclick = function(){
-  var folder = document.getElementById("ms-folder").value;
+document.getElementById("sel-mode-btn").onclick=function(){ selMode=!selMode; selKeys={}; this.style.background=selMode?"var(--accent)":""; this.style.color=selMode?"#fff":""; updateMSBar(); renderReviews(); };
+document.getElementById("ms-cancel-btn").onclick=function(){ selMode=false; selKeys={}; document.getElementById("sel-mode-btn").style.background=""; document.getElementById("sel-mode-btn").style.color=""; updateMSBar(); renderReviews(); };
+document.getElementById("ms-move-btn").onclick=function(){
+  var folder=document.getElementById("ms-folder").value;
   if(!folder){ alert(lang==="ko"?"폴더를 선택해주세요.":"Please select a folder first."); return; }
   Object.keys(selKeys).filter(function(k){ return selKeys[k]; }).forEach(function(k){ if(reviews[k]) reviews[k].folder=folder; });
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  selKeys = {}; updateMSBar(); renderFolders(); renderReviews();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); selKeys={}; updateMSBar(); renderFolders(); renderReviews();
 };
-document.getElementById("ms-del-btn").onclick = function(){
-  var keys = Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
-  if(!keys.length) return;
-  var msg = T("deletemulti").replace("{n}", keys.length);
-  if(!confirm(msg)) return;
+document.getElementById("ms-del-btn").onclick=function(){
+  var keys=Object.keys(selKeys).filter(function(k){ return selKeys[k]; }); if(!keys.length) return;
+  if(!confirm(T("deletemulti").replace("{n}",keys.length))) return;
   keys.forEach(function(k){ delete reviews[k]; });
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  selKeys = {}; updateMSBar(); renderReviews();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); selKeys={}; updateMSBar(); renderReviews();
 };
 
 // ── REVIEW DETAIL ─────────────────────────────────────
-function openRevDetail(key, rev){
-  curRevKey = key;
-  var editOn = false;
-  showRdmMode(false);
-  document.getElementById("rdm-back").style.background = rev._back ? "url("+IMGB+rev._back+") center/cover" : "var(--bg3)";
-  var poster = document.getElementById("rdm-poster");
-  if(rev.poster){ poster.src=IMG+rev.poster; poster.style.display="block"; } else poster.style.display="none";
-  document.getElementById("rdm-title").textContent = rev.title;
-  var meta = "<span class='badge badge-"+rev.media_type+"'>"+(rev.media_type==="movie"?"Movie":"TV")+"</span>";
-  if(rev._year) meta += "<span>"+rev._year+"</span>";
-  if(rev._vote) meta += "<span>⭐ "+rev._vote+"</span>";
-  document.getElementById("rdm-meta").innerHTML = meta;
-  document.getElementById("rdm-dir").innerHTML    = rev._dir    ? "<strong style='color:var(--text)'>"+(rev._dl||T("director"))+": </strong>"+rev._dir    : "";
-  document.getElementById("rdm-cast").innerHTML   = rev._cast   ? "<strong style='color:var(--text)'>"+T("cast")+": </strong>"+rev._cast   : "";
-  document.getElementById("rdm-genres").innerHTML = rev._genres ? "<strong style='color:var(--text)'>"+T("genres")+": </strong>"+rev._genres : "";
-  drawStars("rdm-stars", rev.rating||0, false);
-  document.getElementById("rdm-text").textContent = rev.text || T("notext");
-  document.getElementById("rdm-date").textContent = T("reviewedon") + new Date(rev.savedAt).toLocaleDateString(lang==="ko"?"ko-KR":"en-US",{year:"numeric",month:"long",day:"numeric"});
+function openRevDetail(key,rev){
+  curRevKey=key; showRdmMode(false);
+  document.getElementById("rdm-back").style.background=rev._back?"url("+IMGB+rev._back+") center/cover":"var(--bg3)";
+  var poster=document.getElementById("rdm-poster"); if(rev.poster){ poster.src=IMG+rev.poster; poster.style.display="block"; } else poster.style.display="none";
+  document.getElementById("rdm-title").textContent=rev.title;
+  var typeLabel = rev.media_type==="movie" ? T("movies") : "TV";
+  var meta="<span class='badge badge-"+rev.media_type+"'>"+typeLabel+"</span>";
+  if(rev._year) meta+="<span>"+rev._year+"</span>"; if(rev._vote) meta+="<span>⭐ "+rev._vote+"</span>";
+  document.getElementById("rdm-meta").innerHTML=meta;
+  document.getElementById("rdm-dir").innerHTML=rev._dir?"<strong style='color:var(--text)'>"+(rev._dl||T("director"))+": </strong>"+rev._dir:"";
+  document.getElementById("rdm-cast").innerHTML=rev._cast?"<strong style='color:var(--text)'>"+T("cast")+": </strong>"+rev._cast:"";
+  document.getElementById("rdm-genres").innerHTML=rev._genres?"<strong style='color:var(--text)'>"+T("genres")+": </strong>"+rev._genres:"";
+  drawStars("rdm-stars",rev.rating||0,false);
+  document.getElementById("rdm-text").textContent=rev.text||T("notext");
+  document.getElementById("rdm-date").textContent=T("reviewedon")+new Date(rev.savedAt).toLocaleDateString(lang==="ko"?"ko-KR":"en-US",{year:"numeric",month:"long",day:"numeric"});
   document.getElementById("rdm-overlay").classList.add("show");
 }
 
 function showRdmMode(editing){
-  document.getElementById("rdm-view").style.display   = editing ? "none"  : "block";
-  document.getElementById("rdm-edit").style.display   = editing ? "block" : "none";
-  document.getElementById("rdm-edit-btn").style.display   = editing ? "none"  : "inline-flex";
-  document.getElementById("rdm-save-btn").style.display   = editing ? "inline-flex" : "none";
-  document.getElementById("rdm-cancel-btn").style.display = editing ? "inline-flex" : "none";
-  if(editing){
-    var rev = reviews[curRevKey]; if(!rev) return;
-    rdmRating = rev.rating || 0;
-    document.getElementById("rdm-edit-text").value = rev.text || "";
-    drawStars("rdm-stars", rdmRating, true);
-    updateFolderSel("rdm-edit-folder", curRevKey);
-  } else {
-    var rev2 = reviews[curRevKey]; if(rev2) drawStars("rdm-stars", rev2.rating||0, false);
-  }
+  document.getElementById("rdm-view").style.display=editing?"none":"block";
+  document.getElementById("rdm-edit").style.display=editing?"block":"none";
+  document.getElementById("rdm-edit-btn").style.display=editing?"none":"inline-flex";
+  document.getElementById("rdm-save-btn").style.display=editing?"inline-flex":"none";
+  document.getElementById("rdm-cancel-btn").style.display=editing?"inline-flex":"none";
+  if(editing){ var rev=reviews[curRevKey]; if(!rev) return; rdmRating=rev.rating||0; document.getElementById("rdm-edit-text").value=rev.text||""; drawStars("rdm-stars",rdmRating,true); updateFolderSel("rdm-edit-folder",curRevKey); }
+  else{ var rev2=reviews[curRevKey]; if(rev2) drawStars("rdm-stars",rev2.rating||0,false); }
 }
-
-document.getElementById("rdm-edit-btn").onclick   = function(){ showRdmMode(true); };
-document.getElementById("rdm-cancel-btn").onclick = function(){ showRdmMode(false); };
-document.getElementById("rdm-save-btn").onclick   = function(){
+document.getElementById("rdm-edit-btn").onclick=function(){ showRdmMode(true); };
+document.getElementById("rdm-cancel-btn").onclick=function(){ showRdmMode(false); };
+document.getElementById("rdm-save-btn").onclick=function(){
   if(!curRevKey) return;
-  reviews[curRevKey].rating    = rdmRating;
-  reviews[curRevKey].text      = document.getElementById("rdm-edit-text").value;
-  reviews[curRevKey].folder    = document.getElementById("rdm-edit-folder").value;
-  reviews[curRevKey].updatedAt = new Date().toISOString();
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  document.getElementById("rdm-text").textContent = reviews[curRevKey].text || T("notext");
-  drawStars("rdm-stars", rdmRating, false);
-  showRdmMode(false);
-  renderReviews();
+  reviews[curRevKey].rating=rdmRating; reviews[curRevKey].text=document.getElementById("rdm-edit-text").value;
+  reviews[curRevKey].folder=document.getElementById("rdm-edit-folder").value; reviews[curRevKey].updatedAt=new Date().toISOString();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews));
+  document.getElementById("rdm-text").textContent=reviews[curRevKey].text||T("notext");
+  drawStars("rdm-stars",rdmRating,false); showRdmMode(false); renderReviews();
 };
-document.getElementById("rdm-del-btn").onclick = function(){
-  if(!curRevKey) return;
-  if(!confirm(T("deleteconfirm"))) return;
-  delete reviews[curRevKey];
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  document.getElementById("rdm-overlay").classList.remove("show");
-  curRevKey = null; renderReviews();
+document.getElementById("rdm-del-btn").onclick=function(){
+  if(!curRevKey) return; if(!confirm(T("deleteconfirm"))) return;
+  delete reviews[curRevKey]; localStorage.setItem("cl:reviews",JSON.stringify(reviews));
+  document.getElementById("rdm-overlay").classList.remove("show"); curRevKey=null; renderReviews();
 };
 function closeRdm(){ document.getElementById("rdm-overlay").classList.remove("show"); }
-document.getElementById("rdm-close").onclick   = closeRdm;
-document.getElementById("rdm-overlay").onclick = function(e){ if(e.target===this) closeRdm(); };
+document.getElementById("rdm-close").onclick=closeRdm;
+document.getElementById("rdm-overlay").onclick=function(e){ if(e.target===this) closeRdm(); };
+
+// ── LANGUAGE FUNCTIONS ────────────────────────────────
+function applyBrowseLang(){
+  var ko = lang === "ko";
+  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
+  // Search placeholder
+  ph("b-search", ko ? "영화 및 TV 프로그램 검색…" : "Search movies and TV shows…");
+  // Filter buttons
+  set("btype-all",   ko ? "전체"        : "All");
+  set("btype-movie", ko ? "영화"        : "Movies");
+  set("btype-tv",    ko ? "TV 프로그램" : "TV Shows");
+  // Genre select first option
+  var gs = document.getElementById("genre-sel");
+  if(gs && gs.options[0]) gs.options[0].text = ko ? "전체 장르" : "All Genres";
+  // Section title (only when not searching)
+  var q = document.getElementById("b-search").value.trim();
+  if(!q) set("b-title", ko ? "🔥 지금 인기 있는 작품" : "🔥 Popular Right Now");
+  // Loading / no results
+  var bl = document.getElementById("b-loading"); if(bl && bl.textContent !== "") bl.textContent = ko ? "로딩 중…" : "Loading…";
+  set("b-nores", ko ? "검색 결과가 없습니다." : "No results found.");
+  // My Review section inside browse detail popup
+  var mr = document.getElementById("lbl-myreview"); if(mr) mr.textContent = ko ? "✍️ 내 리뷰" : "✍️ My Review";
+  var ds = document.getElementById("det-save-btn"); if(ds) ds.textContent = ko ? "저장" : "Save";
+  ph("det-text", ko ? "이 작품에 대한 생각을 적어보세요…" : "Write your thoughts…");
+}
+
+function applyReviewsLang(){
+  var ko = lang === "ko";
+  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
+  set("lbl-myreviews-title", ko?"📋 내 리뷰":"📋 My Reviews");
+  ph("r-search",             ko?"리뷰 검색…":"Search your reviews…");
+  set("rtype-all",           ko?"전체":"All");
+  set("rtype-movie",         ko?"영화":"Movies");
+  set("rtype-tv",            ko?"TV 프로그램":"TV Shows");
+  set("sel-mode-btn",        ko?"☑ 선택":"☑ Select");
+  set("lbl-noreviews",       ko?"아직 작성된 리뷰가 없습니다.":"No reviews yet.");
+  set("ms-move-btn",         ko?"이동":"Move");
+  set("ms-del-btn",          ko?"🗑 삭제":"🗑 Delete");
+  set("ms-cancel-btn",       ko?"취소":"Cancel");
+  var ss=document.getElementById("sort-sel");
+  if(ss&&ss.options[0]) ss.options[0].text=ko?"날짜 (최신)":"Date (Newest)";
+  if(ss&&ss.options[1]) ss.options[1].text=ko?"평점 ↓":"Rating ↓";
+  if(ss&&ss.options[2]) ss.options[2].text=ko?"평점 ↑":"Rating ↑";
+  var mb=document.getElementById("manage-folders-btn"); if(mb) mb.title=ko?"폴더 관리":"Manage Folders";
+  var fn=document.getElementById("f-name"); if(fn) fn.placeholder=ko?"새 폴더 이름…":"New folder name…";
+  var fc=document.getElementById("f-create-btn"); if(fc) fc.textContent=ko?"+ 추가":"+ Add";
+  var fh=document.getElementById("folder-hint"); if(fh) fh.textContent=ko?"드래그해서 순서 변경 · 이름 클릭해서 수정 · ✕ 눌러 삭제":"Drag to reorder • Click name to rename • ✕ to delete";
+  var mf=document.getElementById("lbl-manage-folders"); if(mf) mf.textContent=ko?"폴더 관리":"Manage Folders";
+  // RDM edit buttons
+  var re=document.getElementById("rdm-edit-btn"); if(re) re.textContent=ko?"✏️ 수정":"✏️ Edit";
+  var rs=document.getElementById("rdm-save-btn"); if(rs) rs.textContent=ko?"💾 저장":"💾 Save";
+  var rc=document.getElementById("rdm-cancel-btn"); if(rc) rc.textContent=ko?"취소":"Cancel";
+  var rd=document.getElementById("rdm-del-btn"); if(rd) rd.textContent=ko?"🗑 삭제":"🗑 Delete";
+  ph("rdm-edit-text", ko?"이 작품에 대한 생각을 적어보세요…":"Write your thoughts…");
+}
+
+function applySettingsLang(){
+  var ko = lang === "ko";
+  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
+  set("lbl-settings",    ko?"설정":"Settings");
+  set("lbl-profile",     ko?"프로필":"Profile");
+  set("lbl-avatar",      ko?"프로필 사진":"Profile Picture");
+  set("lbl-upload-btn",  ko?"업로드":"Upload");
+  set("av-reset-btn",    ko?"초기화":"Reset");
+  set("lbl-dispname",    ko?"표시 이름":"Display Name");
+  ph("sname",            ko?"이름을 입력하세요…":"Your name…");
+  set("lbl-bio",         ko?"자기소개":"Bio");
+  ph("sbio",             ko?"간단한 소개를 입력하세요…":"A short bio…");
+  set("lbl-appearance",  ko?"화면 설정":"Appearance");
+  var dm=document.getElementById("lbl-darkmode"); if(dm&&dm.childNodes[0]) dm.childNodes[0].nodeValue=ko?"다크 모드":"Dark Mode";
+  set("lbl-darkmode-sub",ko?"라이트/다크 테마 전환":"Toggle light/dark theme");
+  set("lbl-lang",        ko?"인터페이스 언어":"Interface Language");
+  var at=document.getElementById("lbl-apikey-title"); if(at&&at.childNodes[0]) at.childNodes[0].nodeValue=ko?"TMDB API 키":"TMDB API Key";
+  set("lbl-apikey-desc", ko?"API 키를 재설정하고 새 키 입력":"Reset and enter a new API key");
+  set("lbl-changekey-btn",ko?"🔑 키 변경":"🔑 Change Key");
+  set("lbl-data-backup", ko?"데이터 및 백업":"Data & Backup");
+  var ex=document.getElementById("lbl-export-title"); if(ex&&ex.childNodes[0]) ex.childNodes[0].nodeValue=ko?"리뷰 내보내기":"Export Reviews";
+  set("lbl-export-sub",  ko?"모든 리뷰를 JSON 파일로 다운로드":"Download all your reviews as a JSON file");
+  var im=document.getElementById("lbl-import-title"); if(im&&im.childNodes[0]) im.childNodes[0].nodeValue=ko?"리뷰 가져오기":"Import Reviews";
+  set("lbl-import-sub",  ko?"이전에 내보낸 파일로 복원":"Restore from a previously exported file");
+  var st=document.getElementById("lbl-storage-title"); if(st&&st.childNodes[0]) st.childNodes[0].nodeValue=ko?"사용 중인 저장 공간":"Storage Used";
+  set("storage-used-lbl",ko?"계산 중…":"Calculating…");
+  set("export-btn",      ko?"⬇ 내보내기":"⬇ Export");
+  set("import-btn",      ko?"⬆ 가져오기":"⬆ Import");
+  set("calc-storage-btn",ko?"확인":"Check");
+  set("save-settings-btn",ko?"설정 저장":"Save Settings");
+}
 
 // ── SETTINGS ──────────────────────────────────────────
 function saveCfg(){ localStorage.setItem("cl:cfg", JSON.stringify(cfg)); }
@@ -1091,23 +1053,21 @@ function loadProfileUI(){
   var av = document.getElementById("av-preview");
   av.innerHTML = cfg.avatar ? "<img src='"+cfg.avatar+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>" : "🎬";
   document.getElementById("lang-sel").value = lang;
-  applyTheme();
+  applyTheme(); applySettingsLang(); applyReviewsLang(); applyBrowseLang();
 }
 document.getElementById("av-file").onchange = function(){
-  var file = this.files[0]; if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    cfg.avatar = e.target.result;
-    document.getElementById("av-preview").innerHTML = "<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
-    document.getElementById("hdr-avatar").innerHTML = "<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
+  var file=this.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    cfg.avatar=e.target.result;
+    document.getElementById("av-preview").innerHTML="<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
   };
   reader.readAsDataURL(file);
 };
 document.getElementById("av-reset-btn").onclick = function(){
-  cfg.avatar = "";
-  document.getElementById("av-preview").innerHTML  = "🎬";
-  document.getElementById("hdr-avatar").innerHTML  = "🎬";
+  cfg.avatar=""; document.getElementById("av-preview").innerHTML="🎬";
 };
+
 document.getElementById("save-settings-btn").onclick = function(){
   cfg.name = document.getElementById("sname").value.trim();
   cfg.bio  = document.getElementById("sbio").value.trim();
@@ -1115,16 +1075,15 @@ document.getElementById("save-settings-btn").onclick = function(){
   cfg.dark = dark;
   lang = cfg.lang;
   saveCfg();
-  document.getElementById("hdr-name") && (document.getElementById("hdr-name").textContent = cfg.name || "CineLog");
   applyTheme();
-  // Update sort dropdown labels for new language
-  var ss = document.getElementById("sort-sel");
-  if(ss.options[0]) ss.options[0].text = lang==="ko"?"날짜 (최신)":"Date (Newest)";
-  if(ss.options[1]) ss.options[1].text = lang==="ko"?"평점 ↓":"Rating ↓";
-  if(ss.options[2]) ss.options[2].text = lang==="ko"?"평점 ↑":"Rating ↑";
-  var btn = document.getElementById("save-settings-btn");
-  btn.textContent = lang==="ko"?"저장됨 ✓":"Saved ✓";
-  setTimeout(function(){ btn.textContent = lang==="ko"?"설정 저장":"Save Settings"; }, 1500);
+  applySettingsLang();
+  applyReviewsLang();
+  applyBrowseLang();
+  initGenres();
+  loadContent(bPage);
+  this.textContent = lang==="ko"?"저장됨 ✓":"Saved ✓";
+  var self = this;
+  setTimeout(function(){ self.textContent = lang==="ko"?"설정 저장":"Save Settings"; }, 1500);
 };
 
 // ── PWA SETUP ─────────────────────────────────────────
@@ -1134,62 +1093,37 @@ if("serviceWorker" in navigator){
 
 // ── EXPORT / IMPORT / STORAGE ─────────────────────────
 document.getElementById("export-btn").onclick = function(){
-  var data = {
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    reviews: reviews,
-    folders: folders,
-    cfg: cfg
-  };
-  var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement("a");
-  a.href   = url;
-  a.download = "cinelog-backup-" + new Date().toISOString().slice(0,10) + ".json";
-  a.click();
-  URL.revokeObjectURL(url);
+  var data={version:1,exportedAt:new Date().toISOString(),reviews:reviews,folders:folders,cfg:cfg};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var url=URL.createObjectURL(blob); var a=document.createElement("a");
+  a.href=url; a.download="cinelog-backup-"+new Date().toISOString().slice(0,10)+".json";
+  a.click(); URL.revokeObjectURL(url);
 };
-
-document.getElementById("import-btn").onclick = function(){
-  document.getElementById("import-file").click();
-};
-
+document.getElementById("import-btn").onclick = function(){ document.getElementById("import-file").click(); };
 document.getElementById("import-file").onchange = function(){
-  var file = this.files[0]; if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
+  var file=this.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
     try{
-      var data = JSON.parse(e.target.result);
-      if(!data.reviews) throw new Error("Invalid backup file.");
-      var msg = lang==="ko"
-        ? "기존 리뷰를 불러온 데이터로 교체할까요? 현재 데이터는 사라집니다."
-        : "Replace all current data with the imported backup? This cannot be undone.";
+      var data=JSON.parse(e.target.result); if(!data.reviews) throw new Error("Invalid backup file.");
+      var msg=lang==="ko"?"기존 리뷰를 불러온 데이터로 교체할까요? 현재 데이터는 사라집니다.":"Replace all current data with the imported backup? This cannot be undone.";
       if(!confirm(msg)) return;
-      reviews = data.reviews || {};
-      folders = data.folders || [];
-      if(data.cfg){ cfg = data.cfg; dark = cfg.dark!==false; lang = cfg.lang||"en"; }
-      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-      localStorage.setItem("cl:folders", JSON.stringify(folders));
-      localStorage.setItem("cl:cfg",     JSON.stringify(cfg));
+      reviews=data.reviews||{}; folders=data.folders||[];
+      if(data.cfg){ cfg=data.cfg; dark=cfg.dark!==false; lang=cfg.lang||"en"; }
+      localStorage.setItem("cl:reviews",JSON.stringify(reviews));
+      localStorage.setItem("cl:folders",JSON.stringify(folders));
+      localStorage.setItem("cl:cfg",JSON.stringify(cfg));
       applyTheme(); loadProfileUI();
-      alert(lang==="ko" ? "가져오기 완료!" : "Import successful!");
-    } catch(err){
-      alert((lang==="ko"?"가져오기 실패: ":"Import failed: ") + err.message);
-    }
+      alert(lang==="ko"?"가져오기 완료!":"Import successful!");
+    } catch(err){ alert((lang==="ko"?"가져오기 실패: ":"Import failed: ")+err.message); }
   };
-  reader.readAsText(file);
-  this.value = "";
+  reader.readAsText(file); this.value="";
 };
-
 document.getElementById("calc-storage-btn").onclick = function(){
-  var total = 0;
-  for(var k in localStorage) if(localStorage.hasOwnProperty(k)) total += (localStorage[k].length + k.length) * 2;
-  var kb   = (total / 1024).toFixed(1);
-  var mb   = (total / 1048576).toFixed(2);
-  var pct  = ((total / (5*1024*1024)) * 100).toFixed(1);
-  var rCount = Object.keys(reviews).length;
-  var lbl  = document.getElementById("storage-used-lbl");
-  lbl.textContent = kb + " KB (" + mb + " MB) — " + pct + "% of 5MB used · " + rCount + " reviews";
+  var total=0; for(var k in localStorage) if(localStorage.hasOwnProperty(k)) total+=(localStorage[k].length+k.length)*2;
+  var kb=(total/1024).toFixed(1), mb=(total/1048576).toFixed(2), pct=((total/(5*1024*1024))*100).toFixed(1);
+  var lbl=document.getElementById("storage-used-lbl");
+  lbl.textContent=kb+" KB ("+mb+" MB) — "+pct+"% of 5MB used · "+Object.keys(reviews).length+" reviews";
 };
 
 // ── INIT ──────────────────────────────────────────────
@@ -1198,9 +1132,7 @@ var _savedKey = localStorage.getItem("cl:key");
 if(_savedKey && _savedKey.trim()){
   document.getElementById("api-screen").style.display = "none";
   document.getElementById("app").style.display = "flex";
-  initGenres();
-  switchTab("browse");
-  loadContent(1);
+  initGenres(); switchTab("browse"); loadContent(1);
 } else {
   document.getElementById("api-screen").style.display = "flex";
   document.getElementById("app").style.display = "none";
