@@ -4,12 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="theme-color" content="#e50914"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="CineLog"/>
 <link rel="icon" type="image/svg+xml" href="./icon.svg"/>
 <link rel="manifest" href="./manifest.json"/>
-<link rel="apple-touch-icon" href="icon.svg"/>
+<link rel="apple-touch-icon" href="./icon.svg"/>
 <title>CineLog</title>
 <style>
 :root{--bg:#0d0d0f;--bg2:#111114;--bg3:#1a1a1f;--border:#2a2a2f;--text:#e8e8e8;--text2:#aaa;--text3:#666;--text4:#444;--accent:#e50914;--purple:#7c3aed;--gold:#f5c518;--green:#4ade80;--blue:#60a5fa;--red:#f87171;}
@@ -18,7 +18,8 @@
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;transition:background .2s,color .2s;}
 a{color:var(--blue);}
 input,textarea,button,select{font-family:inherit;}
-#api-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+#api-screen{display:none;align-items:center;justify-content:center;min-height:100vh;}
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .api-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:460px;width:90%;text-align:center;}
 .api-box h1{font-size:22px;color:var(--text);margin-bottom:8px;}
 .api-box p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
@@ -108,7 +109,6 @@ select option{background:var(--bg2);color:var(--text);}
 .save-row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
 .fa-sel{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;outline:none;}
 .star-wrap-outer{display:inline-flex;gap:2px;align-items:center;}
-.sw{position:relative;display:inline-block;width:30px;height:30px;font-size:26px;line-height:30px;text-align:center;user-select:none;}
 .sw-l,.sw-r{position:absolute;top:0;height:100%;width:50%;z-index:2;}
 .sw-l{left:0;cursor:pointer;}
 .sw-r{right:0;cursor:pointer;}
@@ -127,7 +127,6 @@ select option{background:var(--bg2);color:var(--text);}
 .rdm-edit-ta{width:100%;min-height:80px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 12px;resize:vertical;outline:none;margin-top:8px;}
 .sm-modal{background:var(--bg2);max-width:380px;margin:120px auto;border-radius:14px;border:1px solid var(--border);padding:24px;position:relative;}
 .sm-modal h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
-.fl{font-size:12px;color:var(--text2);margin-bottom:4px;}
 .sinput{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;margin-bottom:12px;}
 .s-sec{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;}
 .s-sec h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px;}
@@ -142,12 +141,46 @@ select option{background:var(--bg2);color:var(--text);}
 .av-wrap{display:flex;align-items:center;gap:14px;}
 .av-img{width:72px;height:72px;border-radius:50%;border:2px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;}
 .sinput-sm{padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;max-width:220px;width:100%;}
+.auth-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;}
 </style>
 </head>
 <body>
 
-<!-- API Screen -->
-<div id="api-screen" style="display:none">
+<!-- Auth Screen -->
+<div id="auth-screen">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+      <img src="icon.svg" style="width:36px;height:36px;border-radius:8px" onerror="this.style.display='none'"/>
+      <div style="font-size:26px;font-weight:800;color:var(--text)">CineLog</div>
+    </div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:28px">Your personal movie & TV review tracker</div>
+    <div style="display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:24px;gap:4px">
+      <button id="auth-tab-login" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:var(--accent);color:#fff;">Sign In</button>
+      <button id="auth-tab-signup" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:transparent;color:var(--text2);">Sign Up</button>
+    </div>
+    <div id="auth-err" style="display:none;background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px 14px;color:var(--red);font-size:13px;margin-bottom:14px;text-align:left"></div>
+    <div id="auth-login-form">
+      <input id="login-email" type="email" placeholder="Email" class="auth-input"/>
+      <input id="login-password" type="password" placeholder="Password" class="auth-input" style="margin-bottom:10px"/>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;text-align:left">
+        <input type="checkbox" id="remember-me" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)"/>
+        <label for="remember-me" style="font-size:13px;color:var(--text2);cursor:pointer">Remember me</label>
+      </div>
+      <button id="login-btn" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Sign In</button>
+    </div>
+    <div id="auth-signup-form" style="display:none">
+      <input id="signup-username" type="text" placeholder="Username" class="auth-input"/>
+      <input id="signup-email" type="email" placeholder="Email" class="auth-input"/>
+      <input id="signup-password" type="password" placeholder="Password" class="auth-input"/>
+      <input id="signup-password2" type="password" placeholder="Confirm Password" class="auth-input" style="margin-bottom:16px"/>
+      <button id="signup-btn" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Create Account</button>
+    </div>
+    <p style="font-size:11px;color:var(--text4);margin-top:16px">Your data is private and only accessible by you.</p>
+  </div>
+</div>
+
+<!-- API Key Screen -->
+<div id="api-screen">
   <div class="api-box">
     <div style="font-size:40px;margin-bottom:12px">🎬</div>
     <h1>CineLog</h1>
@@ -160,42 +193,8 @@ select option{background:var(--bg2);color:var(--text);}
   </div>
 </div>
 
-<!-- Auth Screen -->
-<div id="auth-screen" style="display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;">
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
-      <img src="icon.svg" style="width:36px;height:36px;border-radius:8px" onerror="this.style.display='none'"/>
-      <div style="font-size:26px;font-weight:800;color:var(--text)">CineLog</div>
-    </div>
-    <div style="font-size:13px;color:var(--text3);margin-bottom:28px">Your personal movie & TV review tracker</div>
-
-    <!-- Tabs -->
-    <div style="display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:24px;gap:4px">
-      <button id="auth-tab-login" onclick="showAuthTab('login')" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:var(--accent);color:#fff;transition:all .2s">Sign In</button>
-      <button id="auth-tab-signup" onclick="showAuthTab('signup')" style="flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;background:transparent;color:var(--text2);transition:all .2s">Sign Up</button>
-    </div>
-
-    <div id="auth-err" style="display:none;background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px 14px;color:var(--red);font-size:13px;margin-bottom:14px;text-align:left"></div>
-
-    <!-- Sign In Form -->
-    <div id="auth-login-form">
-      <input id="login-email" type="email" placeholder="Email" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
-      <input id="login-password" type="password" placeholder="Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:16px;box-sizing:border-box"/>
-      <button id="login-btn" onclick="doSignIn()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Sign In</button>
-    </div>
-
-    <!-- Sign Up Form -->
-    <div id="auth-signup-form" style="display:none">
-      <input id="signup-username" type="text" placeholder="Username" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
-      <input id="signup-email" type="email" placeholder="Email (for account recovery)" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
-      <input id="signup-password" type="password" placeholder="Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box"/>
-      <input id="signup-password2" type="password" placeholder="Confirm Password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;margin-bottom:16px;box-sizing:border-box"/>
-      <button id="signup-btn" onclick="doSignUp()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Create Account</button>
-    </div>
-
-    <p style="font-size:11px;color:var(--text4);margin-top:16px">Your data is private and only accessible by you.</p>
-  </div>
-</div>
+<!-- App -->
+<div id="app">
   <header>
     <div style="display:flex;align-items:center;gap:8px">
       <img src="icon.svg" style="width:30px;height:30px;border-radius:6px" onerror="this.style.display='none'"/>
@@ -204,12 +203,10 @@ select option{background:var(--bg2);color:var(--text);}
     <nav>
       <button class="tab-btn" id="nav-browse" title="Browse"><span>🔍</span></button>
       <button class="tab-btn" id="nav-reviews" title="My Reviews"><span>⭐</span></button>
-      <button class="tab-btn" id="nav-settings" title="Settings"><span>⚙️</span></button>
-      <button class="key-btn" id="signout-btn" title="Sign Out" style="margin-left:8px">↩ Sign Out</button>
+      <button class="tab-btn" id="nav-settings" title="My Page"><span>👤</span></button>
     </nav>
   </header>
   <main>
-
     <!-- BROWSE -->
     <div class="tab-panel" id="tab-browse">
       <div class="search-wrap">
@@ -225,9 +222,7 @@ select option{background:var(--bg2);color:var(--text);}
       </div>
       <div class="err-bar" id="err-bar">
         <span id="err-msg"></span>
-        <div style="display:flex;gap:8px">
-          <button class="btn" id="retry-btn">Retry</button>
-        </div>
+        <div style="display:flex;gap:8px"><button class="btn" id="retry-btn">Retry</button></div>
       </div>
       <div class="sec-title" id="b-title">🔥 Popular Right Now</div>
       <div id="b-loading" class="loading" style="display:none">Loading…</div>
@@ -270,11 +265,11 @@ select option{background:var(--bg2);color:var(--text);}
       <div class="rev-grid" id="r-grid"></div>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- MY PAGE -->
     <div class="tab-panel" id="tab-settings">
-      <div class="sec-title">⚙️ <span id="lbl-settings">Settings</span></div>
+      <div class="sec-title">👤 My Page</div>
       <div class="s-sec">
-        <h3 id="lbl-profile">Profile</h3>
+        <h3 id="lbl-profile" style="background:var(--accent);color:#fff;margin:-22px -22px 16px;padding:12px 22px;border-radius:12px 12px 0 0">Profile</h3>
         <div class="s-row">
           <div class="s-lbl" id="lbl-avatar">Profile Picture</div>
           <div class="av-wrap">
@@ -296,7 +291,7 @@ select option{background:var(--bg2);color:var(--text);}
         </div>
       </div>
       <div class="s-sec">
-        <h3 id="lbl-appearance">Appearance</h3>
+        <h3 id="lbl-appearance" style="background:var(--accent);color:#fff;margin:-22px -22px 16px;padding:12px 22px;border-radius:12px 12px 0 0">Appearance</h3>
         <div class="s-row">
           <div class="s-lbl" id="lbl-darkmode">Dark Mode<small id="lbl-darkmode-sub">Toggle light/dark theme</small></div>
           <button class="toggle on" id="dark-toggle"></button>
@@ -309,94 +304,36 @@ select option{background:var(--bg2);color:var(--text);}
           </select>
         </div>
         <div class="s-row">
-          <div class="s-lbl" id="lbl-apikey-title">TMDB API Key<small id="lbl-apikey-desc">Reset and enter a new API key</small></div>
-          <button class="btn btn-sec" onclick="showKeyScreen()" style="font-size:12px;padding:7px 14px" id="lbl-changekey-btn">🔑 Change Key</button>
+          <div class="s-lbl">TMDB API Key</div>
+          <button class="btn btn-sec" id="lbl-changekey-btn" style="font-size:12px;padding:7px 14px">🔑 Change Key</button>
         </div>
+      </div>
+      <div style="text-align:right;margin-bottom:24px">
+        <button class="btn" id="save-settings-btn" style="font-size:14px;padding:10px 28px">Save</button>
       </div>
       <div class="s-sec">
-        <h3 id="lbl-data-backup">Data & Backup</h3>
+        <h3 id="lbl-account" style="background:var(--bg3);color:var(--text2);margin:-22px -22px 16px;padding:12px 22px;border-radius:12px 12px 0 0;font-size:13px;letter-spacing:0.5px;text-transform:uppercase">Account</h3>
         <div class="s-row">
-          <div class="s-lbl" id="lbl-export-title">Export Reviews<small id="lbl-export-sub">Download all your reviews as a JSON file</small></div>
-          <button class="btn btn-sec" id="export-btn" style="font-size:12px;padding:7px 14px">⬇ Export</button>
+          <div class="s-lbl" id="lbl-account-name">Signed in as<small id="account-email" style="color:var(--blue)"></small></div>
         </div>
         <div class="s-row">
-          <div class="s-lbl" id="lbl-import-title">Import Reviews<small id="lbl-import-sub">Restore from a previously exported file</small></div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="file" id="import-file" accept=".json" style="display:none"/>
-            <button class="btn btn-sec" id="import-btn" style="font-size:12px;padding:7px 14px">⬆ Import</button>
-          </div>
+          <div class="s-lbl" id="lbl-change-pwd">Change Password</div>
+          <button class="btn btn-sec" id="change-pw-btn" style="font-size:12px;padding:7px 14px">🔒 Change</button>
         </div>
         <div class="s-row">
-          <div class="s-lbl" id="lbl-storage-title">Storage Used<small id="storage-used-lbl">Calculating…</small></div>
-          <button class="btn btn-sec" id="calc-storage-btn" style="font-size:12px;padding:7px 14px">Check</button>
+          <div class="s-lbl" id="lbl-signout">Sign Out</div>
+          <button class="btn btn-sec" id="signout-btn2" style="font-size:12px;padding:7px 14px">↩ Sign Out</button>
         </div>
-      </div>
-      <div style="text-align:right;margin-top:4px">
-        <button class="btn" id="save-settings-btn" style="font-size:13px">Save Settings</button>
+        <div class="s-row">
+          <div class="s-lbl" id="lbl-del-account">Delete Account<small style="color:var(--red)" id="lbl-del-account-sub">Permanently deletes all your data</small></div>
+          <button class="btn btn-danger" id="delete-account-btn" style="font-size:12px;padding:7px 14px">🗑 Delete</button>
+        </div>
       </div>
     </div>
-
   </main>
 </div>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBf7VYCKnj1gHj2vRRtxsfz6HEtEUM_Esc",
-  authDomain: "cinelog-7d421.firebaseapp.com",
-  projectId: "cinelog-7d421",
-  storageBucket: "cinelog-7d421.firebasestorage.app",
-  messagingSenderId: "549878936607",
-  appId: "1:549878936607:web:9976da400a12b5596c912a"
-};
-
-const fbApp = initializeApp(firebaseConfig);
-const db    = getFirestore(fbApp);
-const auth  = getAuth(fbApp);
-
-function userDoc(uid){ return doc(db, "cinelog", uid, "data", "main"); }
-
-window._fbSave = async function(data){
-  var u = auth.currentUser; if(!u) return;
-  try{ await setDoc(userDoc(u.uid), data); } catch(e){ console.warn("Firebase save failed:", e); }
-};
-
-window._fbLoad = async function(){
-  var u = auth.currentUser; if(!u) return null;
-  try{
-    var snap = await getDoc(userDoc(u.uid));
-    if(snap.exists()) return snap.data();
-  } catch(e){ console.warn("Firebase load failed:", e); }
-  return null;
-};
-
-window._fbSignUp = async function(email, password, username){
-  var cred = await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(cred.user, { displayName: username });
-  return cred.user;
-};
-
-window._fbSignIn = async function(email, password){
-  var cred = await signInWithEmailAndPassword(auth, email, password);
-  return cred.user;
-};
-
-window._fbSignOut = async function(){ await signOut(auth); };
-window._fbGetUser = function(){ return auth.currentUser; };
-
-onAuthStateChanged(auth, function(user){
-  window._fbUser = user;
-  window._authResolved = true;
-  window._authChanged = true;
-});
-
-window._fbReady = true;
-window.dispatchEvent(new Event("fb-ready"));
-</script>
+<!-- BROWSE DETAIL MODAL -->
 <div class="overlay" id="det-overlay">
   <div class="modal">
     <button class="close-btn" id="det-close">✕</button>
@@ -449,9 +386,7 @@ window.dispatchEvent(new Event("fb-ready"));
         <div id="rdm-view"><div class="rdm-rt" id="rdm-text"></div></div>
         <div id="rdm-edit" style="display:none">
           <textarea class="rdm-edit-ta" id="rdm-edit-text" placeholder="Write your thoughts…"></textarea>
-          <div style="margin-top:8px">
-            <select class="fa-sel" id="rdm-edit-folder"><option value="">No folder</option></select>
-          </div>
+          <div style="margin-top:8px"><select class="fa-sel" id="rdm-edit-folder"><option value="">No folder</option></select></div>
         </div>
       </div>
       <div style="font-size:11px;color:var(--text4);margin-top:10px" id="rdm-date"></div>
@@ -465,7 +400,7 @@ window.dispatchEvent(new Event("fb-ready"));
   </div>
 </div>
 
-<!-- FOLDER MANAGER POPUP -->
+<!-- FOLDER MANAGER -->
 <div class="overlay" id="folder-overlay">
   <div class="sm-modal" style="max-width:440px">
     <button class="close-btn" id="folder-close" style="background:var(--bg3);color:var(--text)">✕</button>
@@ -480,718 +415,726 @@ window.dispatchEvent(new Event("fb-ready"));
   </div>
 </div>
 
-<script>
-// ── STATE ──────────────────────────────────────────────
-function getKey(){ return localStorage.getItem("cl:key") || ""; }
-var IMG  = "https://image.tmdb.org/t/p/w500";
-var IMGB = "https://image.tmdb.org/t/p/w1280";
-var reviews  = JSON.parse(localStorage.getItem("cl:reviews")  || "{}");
-var folders  = JSON.parse(localStorage.getItem("cl:folders")  || "[]");
-var cfg      = JSON.parse(localStorage.getItem("cl:cfg")      || "{}");
-var dark     = cfg.dark !== false;
-var lang     = cfg.lang  || "en";
-var bType    = "all", bGenre = "", bPage = 1, bTotalPages = 1;
-var aFolder  = "all", rType  = "all", rQuery = "";
-var curItem  = null, curRevKey = null;
-var bSearchT = null;
-var detRating = 0;
-var rdmRating = 0;
-var selMode   = false;
-var selKeys   = {};
+<!-- CHANGE PASSWORD POPUP -->
+<div class="overlay" id="pw-overlay">
+  <div class="sm-modal">
+    <button class="close-btn" id="pw-close" style="background:var(--bg3);color:var(--text)">✕</button>
+    <h3 style="margin-bottom:16px" id="chg-pwd-lbl-title">🔒 Change Password</h3>
+    <div id="pw-err" style="display:none;background:#2a1a1a;border:1px solid #5a2a2a;border-radius:8px;padding:10px;color:var(--red);font-size:13px;margin-bottom:12px"></div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px" id="chg-pwd-lbl-curr_pwd">Current Password</div>
+    <input class="sinput" id="pw-current" type="password" placeholder="Current password"/>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px" id="chg-pwd-lbl-new_pwd">New Password</div>
+    <input class="sinput" id="pw-new" type="password" placeholder="New password (min 6 chars)"/>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px" id="chg-pwd-lbl-confirm">Confirm New Password</div>
+    <input class="sinput" id="pw-confirm" type="password" placeholder="Confirm new password"/>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-sec" id="pw-cancel-btn" style="font-size:13px">Cancel</button>
+      <button class="btn" id="pw-save-btn" style="font-size:13px">Update Password</button>
+    </div>
+  </div>
+</div>
 
-// ── AUTH ──────────────────────────────────────────────
-function showAuthTab(tab){
-  var isLogin = tab === "login";
-  document.getElementById("auth-login-form").style.display  = isLogin ? "block" : "none";
-  document.getElementById("auth-signup-form").style.display = isLogin ? "none"  : "block";
-  document.getElementById("auth-tab-login").style.background  = isLogin ? "var(--accent)" : "transparent";
-  document.getElementById("auth-tab-login").style.color       = isLogin ? "#fff" : "var(--text2)";
-  document.getElementById("auth-tab-signup").style.background = isLogin ? "transparent" : "var(--accent)";
-  document.getElementById("auth-tab-signup").style.color      = isLogin ? "var(--text2)" : "#fff";
-  document.getElementById("auth-err").style.display = "none";
-}
+<script type="module">
+import { initializeApp }                                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc }          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword,
+         signInWithEmailAndPassword, signOut, updateProfile,
+         updatePassword, deleteUser, reauthenticateWithCredential,
+         EmailAuthProvider, browserLocalPersistence,
+         browserSessionPersistence, setPersistence }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-function authErr(msg){
-  var el = document.getElementById("auth-err");
-  el.textContent = msg; el.style.display = "block";
-}
-
-function setAuthLoading(btnId, loading){
-  var btn = document.getElementById(btnId);
-  if(!btn) return;
-  btn.disabled = loading;
-  btn.textContent = loading ? "Please wait…" : (btnId === "login-btn" ? "Sign In" : "Create Account");
-}
-
-function waitForFb(){
-  return new Promise(function(resolve){
-    if(window._fbReady){ resolve(); return; }
-    window.addEventListener("fb-ready", function(){ resolve(); }, { once: true });
-    setTimeout(resolve, 5000); // max 5s wait
-  });
-}
-
-async function doSignIn(){
-  var email = document.getElementById("login-email").value.trim();
-  var pass  = document.getElementById("login-password").value;
-  if(!email || !pass){ authErr("Please fill in all fields."); return; }
-  setAuthLoading("login-btn", true);
-  await waitForFb();
-  if(!window._fbSignIn){
-    authErr("Could not connect to authentication service. Try refreshing.");
-    setAuthLoading("login-btn", false); return;
-  }
-  try{
-    await window._fbSignIn(email, pass);
-  } catch(e){
-    var msg = e.code === "auth/invalid-credential"     ? "Incorrect email or password." :
-              e.code === "auth/user-not-found"          ? "No account found with this email." :
-              e.code === "auth/wrong-password"          ? "Incorrect password." :
-              e.code === "auth/invalid-email"           ? "Invalid email address." :
-              e.code === "auth/network-request-failed"  ? "Network error. Check your connection." :
-              e.code === "auth/too-many-requests"       ? "Too many attempts. Try again later." :
-              e.message;
-    authErr(msg);
-    setAuthLoading("login-btn", false);
-  }
-}
-
-async function doSignUp(){
-  var username = document.getElementById("signup-username").value.trim();
-  var email    = document.getElementById("signup-email").value.trim();
-  var pass     = document.getElementById("signup-password").value;
-  var pass2    = document.getElementById("signup-password2").value;
-  if(!username || !email || !pass || !pass2){ authErr("Please fill in all fields."); return; }
-  if(pass !== pass2){ authErr("Passwords do not match."); return; }
-  if(pass.length < 6){ authErr("Password must be at least 6 characters."); return; }
-  setAuthLoading("signup-btn", true);
-  await waitForFb();
-  if(!window._fbSignUp){
-    authErr("Could not connect to authentication service. Try refreshing.");
-    setAuthLoading("signup-btn", false); return;
-  }
-  try{
-    await window._fbSignUp(email, pass, username);
-  } catch(e){
-    var msg = e.code === "auth/email-already-in-use"   ? "An account with this email already exists." :
-              e.code === "auth/invalid-email"           ? "Invalid email address." :
-              e.code === "auth/weak-password"           ? "Password is too weak." :
-              e.code === "auth/network-request-failed"  ? "Network error. Check your connection." :
-              e.message;
-    authErr(msg);
-    setAuthLoading("signup-btn", false);
-  }
-}
-
-// Allow Enter key on all auth inputs
-["login-email","login-password"].forEach(function(id){
-  var el = document.getElementById(id); if(el) el.addEventListener("keydown", function(e){ if(e.key==="Enter") doSignIn(); });
+// ── FIREBASE ──────────────────────────────────────────
+const fbApp = initializeApp({
+  apiKey: "AIzaSyBf7VYCKnj1gHj2vRRtxsfz6HEtEUM_Esc",
+  authDomain: "cinelog-7d421.firebaseapp.com",
+  projectId: "cinelog-7d421",
+  storageBucket: "cinelog-7d421.firebasestorage.app",
+  messagingSenderId: "549878936607",
+  appId: "1:549878936607:web:9976da400a12b5596c912a"
 });
-["signup-username","signup-email","signup-password","signup-password2"].forEach(function(id){
-  var el = document.getElementById(id); if(el) el.addEventListener("keydown", function(e){ if(e.key==="Enter") doSignUp(); });
-});
+const db=getFirestore(fbApp), auth=getAuth(fbApp);
+function userDoc(uid){ return doc(db,"cinelog",uid,"data","main"); }
 
-document.getElementById("signout-btn").onclick = async function(){
-  if(!confirm("Sign out of CineLog?")) return;
-  await window._fbSignOut();
-};
+// ── STATE ─────────────────────────────────────────────
+const IMG="https://image.tmdb.org/t/p/w500", IMGB="https://image.tmdb.org/t/p/w1280";
+let reviews={}, folders=[], cfg={};
+let dark=true, lang="en";
+let bType="all", bGenre="", bPage=1, bTotalPages=1;
+let aFolder="all", rType="all", rQuery="";
+let curItem=null, curRevKey=null, bSearchT=null;
+let detRating=0, rdmRating=0, selMode=false, selKeys={};
+// In-memory TMDB cache — not stored, fetched fresh each session
+const tmdbCache={};
 
-// Poll for auth state changes since module events don't cross reliably
-var _lastAuthUser = undefined;
-setInterval(async function(){
-  if(!window._authResolved) return;
-  var user = window._fbUser;
-  // Check if auth state actually changed
-  var uid = user ? user.uid : null;
-  var lastUid = _lastAuthUser === undefined ? undefined : (_lastAuthUser ? _lastAuthUser.uid : null);
-  if(uid === lastUid) return;
-  _lastAuthUser = user;
+function getKey(){
+  if(!localStorage.getItem("cl:key")) localStorage.setItem("cl:key","11d018a81672a7030d41eaa7ea29462a");
+  return localStorage.getItem("cl:key");
+}
 
-  var authScreen = document.getElementById("auth-screen");
-  var apiScreen  = document.getElementById("api-screen");
-  var appEl      = document.getElementById("app");
-  if(!authScreen || !apiScreen || !appEl) return;
-
-  if(user){
-    authScreen.style.display = "none";
-    apiScreen.style.display  = "none";
-    var loaded = await loadFromCloud();
-    if(!loaded){ reviews={}; folders=[]; cfg={}; dark=true; lang="en"; }
-    var k = localStorage.getItem("cl:key");
-    if(k && k.trim()){
-      appEl.style.display = "flex";
-      applyTheme(); loadProfileUI();
-      initGenres(); switchTab("browse"); loadContent(1);
-    } else {
-      apiScreen.style.display = "flex";
-    }
-  } else {
-    appEl.style.display      = "none";
-    apiScreen.style.display  = "none";
-    authScreen.style.display = "flex";
-    reviews={}; folders=[]; cfg={};
-  }
-}, 300);
+// ── FIREBASE SYNC ─────────────────────────────────────
 async function saveToCloud(){
-  if(!window._fbSave) return;
-  await window._fbSave({ reviews: reviews, folders: folders, cfg: cfg });
+  const u=auth.currentUser; if(!u) return;
+  try{ await setDoc(userDoc(u.uid),{reviews,folders,cfg}); } catch(e){ console.warn("Save failed",e); }
 }
-
 async function loadFromCloud(){
-  if(!window._fbLoad) return false;
-  var data = await window._fbLoad();
-  if(!data) return false;
-  if(data.reviews) reviews = data.reviews;
-  if(data.folders) folders = data.folders;
-  if(data.cfg){ cfg = data.cfg; dark = cfg.dark!==false; lang = cfg.lang||"en"; }
-  // Sync to localStorage as cache
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-  localStorage.setItem("cl:folders", JSON.stringify(folders));
-  localStorage.setItem("cl:cfg",     JSON.stringify(cfg));
-  return true;
-}
-async function api(path){
-  var k = getKey();
-  if(!k) throw new Error("No API key");
-  var sep = path.includes("?") ? "&" : "?";
-  var langParam = lang === "ko" ? "&language=ko-KR" : "&language=en-US";
-  var r = await fetch("https://api.themoviedb.org/3" + path + sep + "api_key=" + k.trim() + langParam);
-  if(!r.ok){ var e = await r.json().catch(function(){return{};}); throw new Error(e.status_message || "HTTP "+r.status); }
-  return r.json();
+  const u=auth.currentUser; if(!u) return false;
+  try{
+    const snap=await getDoc(userDoc(u.uid));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.reviews) reviews=d.reviews;
+      if(d.folders) folders=d.folders;
+      if(d.cfg){ cfg=d.cfg; dark=cfg.dark!==false; lang=cfg.lang||"en"; }
+      return true;
+    }
+  } catch(e){ console.warn("Load failed",e); }
+  return false;
 }
 
 // ── TRANSLATIONS ──────────────────────────────────────
-var TT = {
+const TT={
   en:{ notrated:"Not rated", notext:"(No written review)", reviewedon:"Reviewed on ",
        director:"Director", creator:"Creator", cast:"Cast", genres:"Genres",
        selected:"selected", movefolder:"Move to folder…", nofolder:"No folder",
        deleteconfirm:"Delete this review?", deletemulti:"Delete {n} review(s)?",
-       popular:"🔥 Popular Right Now", loading:"Loading…", noresults:"No results found.",
        all:"All", movies:"Movies", tvshows:"TV Shows", allgenres:"All Genres" },
   ko:{ notrated:"평가 없음", notext:"(작성된 리뷰 없음)", reviewedon:"리뷰 날짜: ",
        director:"감독", creator:"제작", cast:"출연", genres:"장르",
        selected:"개 선택됨", movefolder:"폴더로 이동…", nofolder:"폴더 없음",
        deleteconfirm:"이 리뷰를 삭제할까요?", deletemulti:"{n}개의 리뷰를 삭제할까요?",
-       popular:"🔥 지금 인기 있는 작품", loading:"로딩 중…", noresults:"검색 결과가 없습니다.",
        all:"전체", movies:"영화", tvshows:"TV 프로그램", allgenres:"전체 장르" }
 };
-function T(k){ return (TT[lang]||TT.en)[k] || k; }
+function T(k){ return (TT[lang]||TT.en)[k]||k; }
 
 // ── THEME ─────────────────────────────────────────────
 function applyTheme(){
-  document.body.classList.toggle("light", !dark);
-  document.getElementById("dark-toggle").classList.toggle("on", dark);
+  document.body.classList.toggle("light",!dark);
+  document.getElementById("dark-toggle").classList.toggle("on",dark);
 }
-document.getElementById("dark-toggle").onclick = function(){
-  dark = !dark; applyTheme(); cfg.dark = dark; saveCfg();
+document.getElementById("dark-toggle").onclick=function(){ dark=!dark; applyTheme(); cfg.dark=dark; saveCfg(); };
+
+// ── TMDB ──────────────────────────────────────────────
+async function api(path){
+  const k=getKey(); if(!k) throw new Error("No API key");
+  const sep=path.includes("?")?"&":"?";
+  const lp=lang==="ko"?"&language=ko-KR":"&language=en-US";
+  const r=await fetch("https://api.themoviedb.org/3"+path+sep+"api_key="+k.trim()+lp);
+  if(!r.ok){ const e=await r.json().catch(()=>{}); throw new Error(e?.status_message||"HTTP "+r.status); }
+  return r.json();
+}
+
+// Fetch and cache TMDB data by ID — cache is keyed by language so switching lang re-fetches
+async function getTmdbData(mediaType,id){
+  const key=lang+":"+mediaType+":"+id;
+  if(tmdbCache[key]) return tmdbCache[key];
+  try{
+    const [d,cr]=await Promise.all([api("/"+mediaType+"/"+id), api("/"+mediaType+"/"+id+"/credits")]);
+    tmdbCache[key]={d,cr};
+    return {d,cr};
+  } catch(e){ return null; }
+}
+
+// ── AUTH UI ───────────────────────────────────────────
+function showAuthTab(tab){
+  const il=tab==="login";
+  document.getElementById("auth-login-form").style.display=il?"block":"none";
+  document.getElementById("auth-signup-form").style.display=il?"none":"block";
+  document.getElementById("auth-tab-login").style.background=il?"var(--accent)":"transparent";
+  document.getElementById("auth-tab-login").style.color=il?"#fff":"var(--text2)";
+  document.getElementById("auth-tab-signup").style.background=il?"transparent":"var(--accent)";
+  document.getElementById("auth-tab-signup").style.color=il?"var(--text2)":"#fff";
+  document.getElementById("auth-err").style.display="none";
+}
+function authErr(msg){ const e=document.getElementById("auth-err"); e.textContent=msg; e.style.display="block"; }
+function setAuthBtn(id,loading){
+  const b=document.getElementById(id); if(!b) return;
+  b.disabled=loading;
+  b.textContent=loading?"Please wait…":(id==="login-btn"?"Sign In":"Create Account");
+}
+function showScreen(name){
+  document.getElementById("auth-screen").style.display=name==="auth"?"flex":"none";
+  document.getElementById("api-screen").style.display=name==="api"?"flex":"none";
+  document.getElementById("app").style.display=name==="app"?"flex":"none";
+}
+document.getElementById("auth-tab-login").onclick=()=>showAuthTab("login");
+document.getElementById("auth-tab-signup").onclick=()=>showAuthTab("signup");
+
+async function startApp(){
+  showScreen("app");
+  applyTheme(); loadProfileUI();
+  initGenres(); switchTab("browse"); loadContent(1);
+}
+
+document.getElementById("login-btn").onclick=async function(){
+  const email=document.getElementById("login-email").value.trim();
+  const pass=document.getElementById("login-password").value;
+  if(!email||!pass){ authErr("Please fill in all fields."); return; }
+  setAuthBtn("login-btn",true);
+  try{
+    const remember=document.getElementById("remember-me").checked;
+    await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
+    await signInWithEmailAndPassword(auth,email,pass);
+    let loaded=false;
+    try{
+      loaded=await Promise.race([loadFromCloud(),new Promise((_,r)=>setTimeout(()=>r(),5000))]);
+    } catch(e){}
+    if(!loaded){ reviews={}; folders=[]; cfg={}; dark=true; lang="en"; }
+    await startApp();
+  } catch(e){
+    const msg=e.code==="auth/invalid-credential"?"Incorrect email or password.":
+              e.code==="auth/user-not-found"?"No account found with this email.":
+              e.code==="auth/wrong-password"?"Incorrect password.":
+              e.code==="auth/invalid-email"?"Invalid email address.":
+              e.code==="auth/too-many-requests"?"Too many attempts. Try again later.":
+              e.code==="auth/network-request-failed"?"Network error. Check your connection.":
+              "Sign in failed: "+e.message;
+    authErr(msg); setAuthBtn("login-btn",false);
+  }
+};
+
+document.getElementById("signup-btn").onclick=async function(){
+  const username=document.getElementById("signup-username").value.trim();
+  const email=document.getElementById("signup-email").value.trim();
+  const pass=document.getElementById("signup-password").value;
+  const pass2=document.getElementById("signup-password2").value;
+  if(!username||!email||!pass||!pass2){ authErr("Please fill in all fields."); return; }
+  if(pass!==pass2){ authErr("Passwords do not match."); return; }
+  if(pass.length<6){ authErr("Password must be at least 6 characters."); return; }
+  setAuthBtn("signup-btn",true);
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(cred.user,{displayName:username});
+    reviews={}; folders=[]; cfg={}; dark=true; lang="en";
+    await startApp();
+  } catch(e){
+    const msg=e.code==="auth/email-already-in-use"?"An account with this email already exists.":
+              e.code==="auth/invalid-email"?"Invalid email address.":
+              e.code==="auth/weak-password"?"Password is too weak.":e.message;
+    authErr(msg); setAuthBtn("signup-btn",false);
+  }
+};
+
+["login-email","login-password"].forEach(id=>document.getElementById(id)?.addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("login-btn").click(); }));
+["signup-username","signup-email","signup-password","signup-password2"].forEach(id=>document.getElementById(id)?.addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("signup-btn").click(); }));
+
+// ── ACCOUNT MANAGEMENT ────────────────────────────────
+function doSignOut(){
+  if(!confirm("Sign out of CineLog?")) return;
+  signOut(auth).then(()=>{
+    setAuthBtn("login-btn",false);
+    document.getElementById("login-email").value="";
+    document.getElementById("login-password").value="";
+    document.getElementById("auth-err").style.display="none";
+    showAuthTab("login"); showScreen("auth");
+    reviews={}; folders=[]; cfg={};
+  });
+}
+document.getElementById("signout-btn2").onclick=doSignOut;
+
+document.getElementById("change-pw-btn").onclick=function(){
+  document.getElementById("pw-current").value="";
+  document.getElementById("pw-new").value="";
+  document.getElementById("pw-confirm").value="";
+  document.getElementById("pw-err").style.display="none";
+  document.getElementById("pw-overlay").classList.add("show");
+};
+document.getElementById("pw-close").onclick=()=>document.getElementById("pw-overlay").classList.remove("show");
+document.getElementById("pw-cancel-btn").onclick=()=>document.getElementById("pw-overlay").classList.remove("show");
+document.getElementById("pw-overlay").onclick=e=>{ if(e.target===e.currentTarget) document.getElementById("pw-overlay").classList.remove("show"); };
+document.getElementById("pw-save-btn").onclick=async function(){
+  const current=document.getElementById("pw-current").value;
+  const newPw=document.getElementById("pw-new").value;
+  const confirm2=document.getElementById("pw-confirm").value;
+  const errEl=document.getElementById("pw-err"); errEl.style.display="none";
+  if(!current||!newPw||!confirm2){ errEl.textContent="Please fill in all fields."; errEl.style.display="block"; return; }
+  if(newPw!==confirm2){ errEl.textContent="New passwords do not match."; errEl.style.display="block"; return; }
+  if(newPw.length<6){ errEl.textContent="Password must be at least 6 characters."; errEl.style.display="block"; return; }
+  this.textContent="Updating…"; this.disabled=true;
+  try{
+    const user=auth.currentUser;
+    await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,current));
+    await updatePassword(user,newPw);
+    document.getElementById("pw-overlay").classList.remove("show");
+    alert("Password updated successfully!");
+  } catch(e){
+    const msg=e.code==="auth/wrong-password"?"Current password is incorrect.":
+              e.code==="auth/too-many-requests"?"Too many attempts. Try again later.":
+              "Failed: "+e.message;
+    errEl.textContent=msg; errEl.style.display="block";
+  }
+  this.textContent="Update Password"; this.disabled=false;
+};
+
+document.getElementById("delete-account-btn").onclick=async function(){
+  if(!confirm("Are you sure you want to delete your account?\n\nThis will permanently delete ALL your reviews and data. This cannot be undone.")) return;
+  const pass=prompt("Enter your password to confirm:"); if(!pass) return;
+  try{
+    const user=auth.currentUser;
+    await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,pass));
+    await deleteDoc(doc(db,"cinelog",user.uid,"data","main"));
+    await deleteUser(user);
+    setAuthBtn("login-btn",false); showScreen("auth");
+    reviews={}; folders=[]; cfg={};
+    alert("Account deleted successfully.");
+  } catch(e){
+    alert(e.code==="auth/wrong-password"?"Incorrect password.":"Failed: "+e.message);
+  }
 };
 
 // ── API KEY ───────────────────────────────────────────
-var _cb = document.getElementById("connect-btn");
-if(_cb) _cb.onclick = async function(){
-  var k = document.getElementById("api-key-input").value.trim();
-  if(!k) return;
-  this.textContent = "Connecting…"; this.disabled = true;
-  var errEl = document.getElementById("api-err"); errEl.classList.remove("show");
+document.getElementById("connect-btn").onclick=async function(){
+  const k=document.getElementById("api-key-input").value.trim(); if(!k) return;
+  this.textContent="Connecting…"; this.disabled=true;
+  const errEl=document.getElementById("api-err"); errEl.classList.remove("show");
   try{
-    var r = await fetch("https://api.themoviedb.org/3/movie/550?api_key=" + k);
-    var d = await r.json();
-    if(d.success === false) throw new Error(d.status_message);
-    localStorage.setItem("cl:key", k);
-    document.getElementById("api-screen").style.display = "none";
-    document.getElementById("app").style.display = "flex";
-    initGenres(); switchTab("browse"); loadContent(1);
-  } catch(e){
-    errEl.textContent = "⚠️ " + (e.message || "Connection failed.");
-    errEl.classList.add("show");
-  }
-  this.textContent = "Connect"; this.disabled = false;
+    const r=await fetch("https://api.themoviedb.org/3/movie/550?api_key="+k);
+    const d=await r.json();
+    if(d.success===false) throw new Error(d.status_message);
+    localStorage.setItem("cl:key",k);
+    await startApp();
+  } catch(e){ errEl.textContent="⚠️ "+(e.message||"Connection failed."); errEl.classList.add("show"); }
+  this.textContent="Connect"; this.disabled=false;
 };
-
-function showKeyScreen(){
-  document.getElementById("api-screen").style.display = "flex";
-  document.getElementById("app").style.display = "none";
-  document.getElementById("api-key-input").value = "";
-  localStorage.removeItem("cl:key");
-}
+document.getElementById("lbl-changekey-btn").onclick=function(){ localStorage.removeItem("cl:key"); showScreen("api"); };
 
 // ── TABS ──────────────────────────────────────────────
 function switchTab(name){
-  document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
-  ["browse","reviews","settings"].forEach(function(t){ document.getElementById("nav-"+t).classList.remove("active"); });
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  ["browse","reviews","settings"].forEach(t=>document.getElementById("nav-"+t).classList.remove("active"));
   document.getElementById("tab-"+name).classList.add("active");
   document.getElementById("nav-"+name).classList.add("active");
-  if(name === "reviews"){ renderFolders(); renderReviews(); }
-  if(name === "settings"){ loadProfileUI(); applySettingsLang(); applyReviewsLang(); }
+  if(name==="reviews"){ renderFolders(); renderReviews(); }
+  if(name==="settings"){ loadProfileUI(); applySettingsLang(); applyReviewsLang(); applyBrowseLang(); }
 }
-document.getElementById("nav-browse").onclick   = function(){ switchTab("browse"); };
-document.getElementById("nav-reviews").onclick  = function(){ switchTab("reviews"); };
-document.getElementById("nav-settings").onclick = function(){ switchTab("settings"); };
+document.getElementById("nav-browse").onclick=()=>switchTab("browse");
+document.getElementById("nav-reviews").onclick=()=>switchTab("reviews");
+document.getElementById("nav-settings").onclick=()=>switchTab("settings");
 
 // ── GENRES ────────────────────────────────────────────
 async function initGenres(){
   try{
-    var res = await Promise.all([api("/genre/movie/list"), api("/genre/tv/list")]);
-    var all = {};
-    (res[0].genres||[]).forEach(function(g){ all[g.id] = g.name; });
-    (res[1].genres||[]).forEach(function(g){ all[g.id] = g.name; });
-    var sel = document.getElementById("genre-sel");
-    sel.innerHTML = "<option value=''>"+T("allgenres")+"</option>";
-    Object.entries(all).sort(function(a,b){ return a[1].localeCompare(b[1]); }).forEach(function(e){
-      var o = document.createElement("option"); o.value = e[0]; o.textContent = e[1]; sel.appendChild(o);
+    const res=await Promise.all([api("/genre/movie/list"),api("/genre/tv/list")]);
+    const all={};
+    (res[0].genres||[]).forEach(g=>{ all[g.id]=g.name; });
+    (res[1].genres||[]).forEach(g=>{ all[g.id]=g.name; });
+    const sel=document.getElementById("genre-sel");
+    sel.innerHTML="<option value=''>"+T("allgenres")+"</option>";
+    Object.entries(all).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([id,name])=>{
+      const o=document.createElement("option"); o.value=id; o.textContent=name; sel.appendChild(o);
     });
-  } catch(e){ console.warn("Genres failed", e); }
+  } catch(e){ console.warn("Genres failed",e); }
 }
-document.getElementById("genre-sel").onchange = function(){ bGenre = this.value; loadContent(1); };
-
-// Browse type filter buttons
-document.getElementById("btype-all").onclick = function(){
-  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
-  this.classList.add("active"); bType = "all"; loadContent(1);
-};
-document.getElementById("btype-movie").onclick = function(){
-  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
-  this.classList.add("active"); bType = "movie"; loadContent(1);
-};
-document.getElementById("btype-tv").onclick = function(){
-  document.querySelectorAll(".filters .filter-btn").forEach(function(b){ b.classList.remove("active"); });
-  this.classList.add("active"); bType = "tv"; loadContent(1);
-};
+document.getElementById("genre-sel").onchange=function(){ bGenre=this.value; loadContent(1); };
+["all","movie","tv"].forEach(t=>{
+  document.getElementById("btype-"+t).onclick=function(){
+    bType=t;
+    document.querySelectorAll(".filters .filter-btn").forEach(b=>b.classList.remove("active"));
+    this.classList.add("active"); loadContent(1);
+  };
+});
 
 // ── BROWSE SEARCH ─────────────────────────────────────
-document.getElementById("b-search").addEventListener("input", function(){
-  var q = this.value.trim();
-  document.getElementById("b-clear").classList.toggle("show", q.length > 0);
+document.getElementById("b-search").addEventListener("input",function(){
+  const q=this.value.trim();
+  document.getElementById("b-clear").classList.toggle("show",q.length>0);
   clearTimeout(bSearchT);
-  document.getElementById("b-title").textContent = q ? '"'+q+'" results' : T("popular");
+  document.getElementById("b-title").textContent=q?'"'+q+'" results':(T("popular")||"🔥 Popular Right Now");
   if(!q){ loadContent(1); return; }
-  bSearchT = setTimeout(function(){ loadContent(1); }, 450);
+  bSearchT=setTimeout(()=>loadContent(1),450);
 });
-document.getElementById("b-clear").onclick = function(){
-  document.getElementById("b-search").value = "";
-  this.classList.remove("show");
-  document.getElementById("b-title").textContent = T("popular");
-  loadContent(1);
+document.getElementById("b-clear").onclick=function(){
+  document.getElementById("b-search").value=""; this.classList.remove("show");
+  document.getElementById("b-title").textContent="🔥 Popular Right Now"; loadContent(1);
 };
 
 // ── LOAD CONTENT ──────────────────────────────────────
 async function loadContent(page){
-  bPage = page;
-  document.getElementById("b-loading").style.display = "block";
-  document.getElementById("b-nores").style.display = "none";
+  bPage=page;
+  document.getElementById("b-loading").style.display="block";
+  document.getElementById("b-nores").style.display="none";
   document.getElementById("err-bar").classList.remove("show");
-  var q = document.getElementById("b-search").value.trim();
-  try{
-    if(q) await doSearch(q, page);
-    else   await doDiscover(page);
-  } catch(e){
-    document.getElementById("err-msg").textContent = "⚠️ " + (e.message || "Could not load.");
-    document.getElementById("err-bar").classList.add("show");
-  }
-  document.getElementById("b-loading").style.display = "none";
+  const q=document.getElementById("b-search").value.trim();
+  try{ if(q) await doSearch(q,page); else await doDiscover(page); }
+  catch(e){ document.getElementById("err-msg").textContent="⚠️ "+(e.message||"Could not load."); document.getElementById("err-bar").classList.add("show"); }
+  document.getElementById("b-loading").style.display="none";
 }
-
 async function doDiscover(page){
-  var fetches = [];
-  var pg = "&page=" + page;
-  if(bType==="all"||bType==="movie") fetches.push(api("/discover/movie?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(function(d){ return {results:(d.results||[]).map(function(x){return Object.assign({},x,{media_type:"movie"});}),pages:d.total_pages}; }));
-  if(bType==="all"||bType==="tv")    fetches.push(api("/discover/tv?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(function(d){ return {results:(d.results||[]).map(function(x){return Object.assign({},x,{media_type:"tv"});}),pages:d.total_pages}; }));
-  var arrs = await Promise.all(fetches);
-  var items = [].concat.apply([], arrs.map(function(a){ return a.results; })).sort(function(a,b){ return b.popularity-a.popularity; });
-  bTotalPages = Math.min(arrs[0] ? arrs[0].pages : 1, 20);
+  const fetches=[], pg="&page="+page;
+  if(bType==="all"||bType==="movie") fetches.push(api("/discover/movie?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(d=>({results:(d.results||[]).map(x=>({...x,media_type:"movie"})),pages:d.total_pages})));
+  if(bType==="all"||bType==="tv")    fetches.push(api("/discover/tv?sort_by=popularity.desc"+pg+(bGenre?"&with_genres="+bGenre:"")).then(d=>({results:(d.results||[]).map(x=>({...x,media_type:"tv"})),pages:d.total_pages})));
+  const arrs=await Promise.all(fetches);
+  const items=[].concat(...arrs.map(a=>a.results)).sort((a,b)=>b.popularity-a.popularity);
+  bTotalPages=Math.min(arrs[0]?arrs[0].pages:1,20);
   renderGrid(items); renderPagination();
 }
-
-async function doSearch(q, page){
-  var pg = "&page=" + page;
-  var personRes = await api("/search/person?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
-  var titleRes;
-  if(bType==="all") titleRes = await api("/search/multi?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
-  else              titleRes = await api("/search/"+bType+"?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
-  var pages = titleRes.total_pages || 1;
-  var pItems = [];
-  (personRes.results||[]).slice(0,3).forEach(function(p){
-    (p.known_for||[]).forEach(function(m){ if(m.media_type==="movie"||m.media_type==="tv") pItems.push(m); });
-  });
-  if((personRes.results||[]).length > 0){
+async function doSearch(q,page){
+  const pg="&page="+page;
+  const personRes=await api("/search/person?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
+  const titleRes=bType==="all"?await api("/search/multi?query="+encodeURIComponent(q)+"&include_adult=false"+pg):await api("/search/"+bType+"?query="+encodeURIComponent(q)+"&include_adult=false"+pg);
+  const pages=titleRes.total_pages||1;
+  let pItems=[];
+  (personRes.results||[]).slice(0,3).forEach(p=>{ (p.known_for||[]).forEach(m=>{ if(m.media_type==="movie"||m.media_type==="tv") pItems.push(m); }); });
+  if((personRes.results||[]).length>0){
     try{
-      var cr = await api("/person/"+personRes.results[0].id+"/combined_credits");
-      var extra = (cr.cast||[]).concat((cr.crew||[]).filter(function(x){ return x.job==="Director"||x.job==="Creator"; })).slice(0,20).map(function(x){ return Object.assign({},x,{media_type:x.media_type||"movie"}); });
-      pItems = pItems.concat(extra);
-    } catch(e){}
+      const cr=await api("/person/"+personRes.results[0].id+"/combined_credits");
+      pItems=pItems.concat([...(cr.cast||[]),...(cr.crew||[]).filter(x=>x.job==="Director"||x.job==="Creator")].slice(0,20).map(x=>({...x,media_type:x.media_type||"movie"})));
+    }catch(e){}
   }
-  var tItems = (titleRes.results||[]);
-  if(bType==="all") tItems = tItems.filter(function(x){ return x.media_type==="movie"||x.media_type==="tv"; });
-  else              tItems = tItems.map(function(x){ return Object.assign({},x,{media_type:bType}); });
-  var seen = {};
-  var results = pItems.concat(tItems).filter(function(x){ var id=x.media_type+":"+x.id; if(seen[id]) return false; seen[id]=true; return true; });
-  if(bGenre) results = results.filter(function(x){ return (x.genre_ids||[]).includes(parseInt(bGenre)); });
-  bTotalPages = Math.min(pages, 20);
+  let tItems=titleRes.results||[];
+  if(bType==="all") tItems=tItems.filter(x=>x.media_type==="movie"||x.media_type==="tv");
+  else tItems=tItems.map(x=>({...x,media_type:bType}));
+  const seen={};
+  let results=[...pItems,...tItems].filter(x=>{ const id=x.media_type+":"+x.id; if(seen[id]) return false; seen[id]=true; return true; });
+  if(bGenre) results=results.filter(x=>(x.genre_ids||[]).includes(parseInt(bGenre)));
+  bTotalPages=Math.min(pages,20);
   renderGrid(results); renderPagination();
-  document.getElementById("b-nores").style.display = results.length===0 ? "block" : "none";
+  document.getElementById("b-nores").style.display=results.length===0?"block":"none";
 }
-document.getElementById("retry-btn").onclick = function(){ loadContent(bPage); };
+document.getElementById("retry-btn").onclick=()=>loadContent(bPage);
 
 // ── GRID ──────────────────────────────────────────────
 function renderGrid(items){
-  var grid = document.getElementById("b-grid"); grid.innerHTML = "";
-  document.getElementById("b-nores").style.display = "none";
-  items.forEach(function(item){
-    var key = item.media_type+":"+item.id, rev = reviews[key];
-    var card = document.createElement("div"); card.className = "card";
-    var typeLabel = item.media_type==="movie" ? T("movies") : "TV";
-    card.innerHTML =
-      (item.poster_path ? "<img src='"+IMG+item.poster_path+"' alt='' loading='lazy'/>" : "<div class='card-no-img'>🎬</div>") +
-      "<div class='card-body'><div class='card-title'>"+(item.title||item.name)+"</div>" +
-      "<div class='card-meta'><span class='badge badge-"+item.media_type+"'>"+typeLabel+"</span>" +
-      (rev&&rev.rating ? "<span style='color:var(--gold);font-size:12px'>★ "+rev.rating+"</span>" : "") +
-      "</div></div>";
-    card.onclick = function(){ openDetail(item); };
+  const grid=document.getElementById("b-grid"); grid.innerHTML="";
+  document.getElementById("b-nores").style.display="none";
+  items.forEach(item=>{
+    const key=item.media_type+":"+item.id, rev=reviews[key];
+    const card=document.createElement("div"); card.className="card";
+    card.innerHTML=
+      (item.poster_path?`<img src="${IMG}${item.poster_path}" alt="" loading="lazy"/>`:`<div class="card-no-img">🎬</div>`)+
+      `<div class="card-body"><div class="card-title">${item.title||item.name}</div>`+
+      `<div class="card-meta"><span class="badge badge-${item.media_type}">${item.media_type==="movie"?T("movies"):"TV"}</span>`+
+      (rev&&rev.rating?`<span style="color:var(--gold);font-size:12px">★ ${rev.rating}</span>`:"")+
+      `</div></div>`;
+    card.onclick=()=>openDetail(item);
     grid.appendChild(card);
   });
 }
 
 // ── PAGINATION ────────────────────────────────────────
 function renderPagination(){
-  var pg = document.getElementById("b-pages"); pg.innerHTML = "";
-  if(bTotalPages <= 1) return;
-  function mk(label, page, active, disabled){
-    var b = document.createElement("button"); b.className = "page-btn"+(active?" active":""); b.textContent = label; b.disabled = disabled;
-    if(!disabled) b.onclick = function(){ loadContent(page); window.scrollTo(0,0); };
+  const pg=document.getElementById("b-pages"); pg.innerHTML="";
+  if(bTotalPages<=1) return;
+  const mk=(label,page,active,disabled)=>{
+    const b=document.createElement("button"); b.className="page-btn"+(active?" active":""); b.textContent=label; b.disabled=disabled;
+    if(!disabled) b.onclick=()=>{ loadContent(page); window.scrollTo(0,0); };
     return b;
-  }
-  pg.appendChild(mk("←", bPage-1, false, bPage===1));
-  var s = Math.max(1,bPage-2), e = Math.min(bTotalPages,bPage+2);
-  if(s>1){ pg.appendChild(mk("1",1,false,false)); if(s>2){ var sp=document.createElement("span"); sp.textContent="…"; sp.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp); } }
-  for(var p=s;p<=e;p++) pg.appendChild(mk(p,p,p===bPage,false));
-  if(e<bTotalPages){ if(e<bTotalPages-1){ var sp2=document.createElement("span"); sp2.textContent="…"; sp2.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp2); } pg.appendChild(mk(bTotalPages,bTotalPages,false,false)); }
-  pg.appendChild(mk("→", bPage+1, false, bPage===bTotalPages));
+  };
+  pg.appendChild(mk("←",bPage-1,false,bPage===1));
+  const s=Math.max(1,bPage-2),e=Math.min(bTotalPages,bPage+2);
+  if(s>1){ pg.appendChild(mk("1",1,false,false)); if(s>2){ const sp=document.createElement("span"); sp.textContent="…"; sp.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp); } }
+  for(let p=s;p<=e;p++) pg.appendChild(mk(p,p,p===bPage,false));
+  if(e<bTotalPages){ if(e<bTotalPages-1){ const sp2=document.createElement("span"); sp2.textContent="…"; sp2.style.cssText="color:var(--text3);align-self:center"; pg.appendChild(sp2); } pg.appendChild(mk(bTotalPages,bTotalPages,false,false)); }
+  pg.appendChild(mk("→",bPage+1,false,bPage===bTotalPages));
 }
 
-// ── STARS ─────────────────────────────────────────────
-function makeSVGStar(size, fill){
-  // fill: "full", "half", "empty"
-  var id = "clip"+Math.random().toString(36).slice(2);
-  var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" style="display:inline-block;vertical-align:middle;flex-shrink:0">';
-  if(fill==="half"){
-    svg += '<defs><clipPath id="'+id+'"><rect x="0" y="0" width="12" height="24"/></clipPath></defs>';
-  }
-  // Grey base
-  svg += '<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="'+(fill==="full"?"#f5c518":"#444")+'" stroke="none"/>';
-  // Gold half overlay
-  if(fill==="half"){
-    svg += '<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#f5c518" clip-path="url(#'+id+')" stroke="none"/>';
-  }
-  svg += '</svg>';
-  return svg;
+// ── SVG STARS ─────────────────────────────────────────
+function makeSVGStar(size,fill){
+  const id="clip"+Math.random().toString(36).slice(2);
+  let svg=`<svg width="${size}" height="${size}" viewBox="0 0 24 24" style="display:inline-block;vertical-align:middle;flex-shrink:0">`;
+  if(fill==="half") svg+=`<defs><clipPath id="${id}"><rect x="0" y="0" width="12" height="24"/></clipPath></defs>`;
+  svg+=`<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${fill==="full"?"#f5c518":"#444"}" stroke="none"/>`;
+  if(fill==="half") svg+=`<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#f5c518" clip-path="url(#${id})" stroke="none"/>`;
+  return svg+`</svg>`;
 }
-
-function drawStars(containerId, value, interactive){
-  var c = document.getElementById(containerId); if(!c) return;
-  c.innerHTML = "";
-  var size = containerId==="det-stars" ? 28 : 22;
-  for(var i=1; i<=5; i++){
+function drawStars(containerId,value,interactive){
+  const c=document.getElementById(containerId); if(!c) return;
+  c.innerHTML="";
+  const size=containerId==="det-stars"?28:22;
+  for(let i=1;i<=5;i++){
     (function(star){
-      var outer = document.createElement("div");
-      outer.style.cssText = "position:relative;display:inline-block;width:"+size+"px;height:"+size+"px;user-select:none;flex-shrink:0;";
-      var fill = value>=star ? "full" : (value>=star-0.5 ? "half" : "empty");
-      outer.innerHTML = makeSVGStar(size, fill);
+      const outer=document.createElement("div");
+      outer.style.cssText=`position:relative;display:inline-block;width:${size}px;height:${size}px;user-select:none;flex-shrink:0;`;
+      outer.innerHTML=makeSVGStar(size,value>=star?"full":(value>=star-0.5?"half":"empty"));
       if(interactive){
-        var lz = document.createElement("div");
-        lz.style.cssText = "position:absolute;top:0;left:0;width:50%;height:100%;z-index:2;cursor:pointer;";
-        var rz = document.createElement("div");
-        rz.style.cssText = "position:absolute;top:0;right:0;width:50%;height:100%;z-index:2;cursor:pointer;";
-        lz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s-0.5; else rdmRating=s-0.5; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
-        rz.onclick = (function(s,cid){ return function(e){ e.stopPropagation(); if(cid==="det-stars") detRating=s; else rdmRating=s; drawStars(cid, cid==="det-stars"?detRating:rdmRating, true); }; })(star, containerId);
+        const lz=document.createElement("div"); lz.style.cssText="position:absolute;top:0;left:0;width:50%;height:100%;z-index:2;cursor:pointer;";
+        const rz=document.createElement("div"); rz.style.cssText="position:absolute;top:0;right:0;width:50%;height:100%;z-index:2;cursor:pointer;";
+        lz.onclick=(s=>e=>{ e.stopPropagation(); if(containerId==="det-stars") detRating=s-0.5; else rdmRating=s-0.5; drawStars(containerId,containerId==="det-stars"?detRating:rdmRating,true); })(star);
+        rz.onclick=(s=>e=>{ e.stopPropagation(); if(containerId==="det-stars") detRating=s; else rdmRating=s; drawStars(containerId,containerId==="det-stars"?detRating:rdmRating,true); })(star);
         outer.appendChild(lz); outer.appendChild(rz);
       }
       c.appendChild(outer);
     })(i);
   }
-  var lbl = document.createElement("span");
-  lbl.style.cssText = "font-size:12px;color:"+(interactive?"var(--gold)":"var(--text2)")+";margin-left:6px;vertical-align:middle;";
-  lbl.textContent = value > 0 ? value+"/5" : T("notrated");
+  const lbl=document.createElement("span");
+  lbl.style.cssText=`font-size:12px;color:${interactive?"var(--gold)":"var(--text2)"};margin-left:6px;vertical-align:middle;`;
+  lbl.textContent=value>0?value+"/5":T("notrated");
   c.appendChild(lbl);
 }
 
 // ── DETAIL MODAL ──────────────────────────────────────
 async function openDetail(item){
-  curItem = item;
-  var key = item.media_type+":"+item.id;
-  var rev = reviews[key];
-  detRating = (rev && rev.rating) ? rev.rating : 0;
-  document.getElementById("det-text").value  = rev ? (rev.text||"") : "";
-  document.getElementById("det-loading").style.display  = "block";
-  document.getElementById("det-content").style.display  = "none";
+  curItem=item;
+  const key=item.media_type+":"+item.id, rev=reviews[key];
+  detRating=(rev&&rev.rating)?rev.rating:0;
+  document.getElementById("det-text").value=rev?(rev.text||""):"";
+  document.getElementById("det-loading").style.display="block";
+  document.getElementById("det-content").style.display="none";
   document.getElementById("det-overlay").classList.add("show");
-  drawStars("det-stars", detRating, true);
-  updateFolderSel("det-folder", key);
+  drawStars("det-stars",detRating,true);
+  updateFolderSel("det-folder",key);
   try{
-    var res = await Promise.all([api("/"+item.media_type+"/"+item.id), api("/"+item.media_type+"/"+item.id+"/credits")]);
-    var d = res[0], cr = res[1];
-    document.getElementById("det-back").style.background = d.backdrop_path ? "url("+IMGB+d.backdrop_path+") center/cover" : "var(--bg3)";
-    var poster = document.getElementById("det-poster");
+    const [d,cr]=await Promise.all([api("/"+item.media_type+"/"+item.id),api("/"+item.media_type+"/"+item.id+"/credits")]);
+    // Cache for review detail popup (language-aware key)
+    tmdbCache[lang+":"+item.media_type+":"+item.id]={d,cr};
+    document.getElementById("det-back").style.background=d.backdrop_path?`url(${IMGB}${d.backdrop_path}) center/cover`:"var(--bg3)";
+    const poster=document.getElementById("det-poster");
     if(d.poster_path){ poster.src=IMG+d.poster_path; poster.style.display="block"; } else poster.style.display="none";
-    document.getElementById("det-title").textContent = d.title||d.name;
-    var typeLabel = item.media_type==="movie" ? T("movies") : "TV";
-    var meta = "<span class='badge badge-"+item.media_type+"'>"+typeLabel+"</span>";
-    var yr = ((d.release_date||d.first_air_date||"")).slice(0,4);
-    if(yr) meta += "<span>"+yr+"</span>";
-    if(d.runtime) meta += "<span>"+d.runtime+" min</span>";
-    if(d.number_of_seasons) meta += "<span>"+d.number_of_seasons+" season"+(d.number_of_seasons>1?"s":"")+"</span>";
-    if(d.vote_average>0) meta += "<span>⭐ "+d.vote_average.toFixed(1)+"</span>";
-    (d.genres||[]).slice(0,4).forEach(function(g){ meta+="<span class='genre-tag'>"+g.name+"</span>"; });
-    document.getElementById("det-meta").innerHTML = meta;
-    document.getElementById("det-overview").textContent = d.overview||"";
-    var dirs = (cr.crew||[]).filter(function(c){ return c.job==="Director"; }).map(function(c){ return c.name; });
-    var crs  = (d.created_by||[]).map(function(c){ return c.name; });
-    var dn   = item.media_type==="movie" ? dirs : crs;
-    var dl   = item.media_type==="movie" ? T("director") : T("creator");
-    document.getElementById("det-director").innerHTML = dn.length ? "<strong style='color:var(--text)'>"+dl+": </strong>"+dn.join(", ") : "";
-    var castNames = (cr.cast||[]).slice(0,6).map(function(c){ return c.name; }).join(", ");
-    document.getElementById("det-cast").innerHTML = castNames ? "<strong style='color:var(--text)'>"+T("cast")+": </strong>"+castNames : "";
-    // Cache enrichment data — only if review already exists
-    var existingRev = reviews[key];
-    if(existingRev){
-      existingRev._dir = dn.join(", "); existingRev._dl = dl;
-      existingRev._cast = castNames;
-      existingRev._genres = (d.genres||[]).map(function(g){return g.name;}).join(", ");
-      existingRev._year = yr; existingRev._vote = d.vote_average>0?d.vote_average.toFixed(1):"";
-      existingRev._back = d.backdrop_path||"";
-      localStorage.setItem("cl:reviews", JSON.stringify(reviews));
-    }
-    window._tmpDetail = {
-      _dir:dn.join(", "), _dl:dl, _cast:castNames,
-      _genres:(d.genres||[]).map(function(g){return g.name;}).join(", "),
-      _year:yr, _vote:d.vote_average>0?d.vote_average.toFixed(1):"", _back:d.backdrop_path||""
-    };
-    document.getElementById("det-loading").style.display = "none";
-    document.getElementById("det-content").style.display = "block";
-  } catch(e){ document.getElementById("det-loading").textContent = "Failed to load details."; }
+    document.getElementById("det-title").textContent=d.title||d.name;
+    let meta=`<span class="badge badge-${item.media_type}">${item.media_type==="movie"?T("movies"):"TV"}</span>`;
+    const yr=((d.release_date||d.first_air_date||"")).slice(0,4);
+    if(yr) meta+=`<span>${yr}</span>`;
+    if(d.runtime) meta+=`<span>${d.runtime} min</span>`;
+    if(d.number_of_seasons) meta+=`<span>${d.number_of_seasons} season${d.number_of_seasons>1?"s":""}</span>`;
+    if(d.vote_average>0) meta+=`<span>⭐ ${d.vote_average.toFixed(1)}</span>`;
+    (d.genres||[]).slice(0,4).forEach(g=>{ meta+=`<span class="genre-tag">${g.name}</span>`; });
+    document.getElementById("det-meta").innerHTML=meta;
+    document.getElementById("det-overview").textContent=d.overview||"";
+    const dirs=(cr.crew||[]).filter(c=>c.job==="Director").map(c=>c.name);
+    const crs=(d.created_by||[]).map(c=>c.name);
+    const dn=item.media_type==="movie"?dirs:crs;
+    const dl=item.media_type==="movie"?T("director"):T("creator");
+    document.getElementById("det-director").innerHTML=dn.length?`<strong style="color:var(--text)">${dl}: </strong>${dn.join(", ")}`:"";
+    const castNames=(cr.cast||[]).slice(0,6).map(c=>c.name).join(", ");
+    document.getElementById("det-cast").innerHTML=castNames?`<strong style="color:var(--text)">${T("cast")}: </strong>${castNames}`:"";
+    document.getElementById("det-loading").style.display="none";
+    document.getElementById("det-content").style.display="block";
+  } catch(e){ document.getElementById("det-loading").textContent="Failed to load details."; }
 }
-
 function closeDetail(){ document.getElementById("det-overlay").classList.remove("show"); }
-document.getElementById("det-close").onclick   = closeDetail;
-document.getElementById("det-overlay").onclick = function(e){ if(e.target===this) closeDetail(); };
+document.getElementById("det-close").onclick=closeDetail;
+document.getElementById("det-overlay").onclick=e=>{ if(e.target===e.currentTarget) closeDetail(); };
 
-// ── SAVE REVIEW ───────────────────────────────────────
-document.getElementById("det-save-btn").onclick = function(){
+// ── SAVE REVIEW — only minimal fields stored ──────────
+document.getElementById("det-save-btn").onclick=function(){
   if(!curItem) return;
-  var key = curItem.media_type+":"+curItem.id;
-  var existing = reviews[key] || {};
-  var tmp = window._tmpDetail || {};
-  reviews[key] = Object.assign({}, existing, tmp, {
-    rating: detRating,
-    text: document.getElementById("det-text").value,
-    id: curItem.id, media_type: curItem.media_type,
-    title: curItem.title||curItem.name, poster: curItem.poster_path,
-    folder: document.getElementById("det-folder").value,
-    savedAt: existing.savedAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
-  localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+  const key=curItem.media_type+":"+curItem.id;
+  const existing=reviews[key]||{};
+  reviews[key]={
+    id:       curItem.id,
+    media_type: curItem.media_type,
+    poster:   curItem.poster_path,
+    rating:   detRating,
+    text:     document.getElementById("det-text").value,
+    folder:   document.getElementById("det-folder").value,
+    savedAt:  existing.savedAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString(),
+  };
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews));
   saveToCloud();
   closeDetail(); loadContent(bPage);
 };
 
-// ── FOLDER SELECT HELPERS ─────────────────────────────
-function updateFolderSel(selId, key){
-  var sel = document.getElementById(selId);
-  sel.innerHTML = "<option value=''>"+T("nofolder")+"</option>";
-  folders.forEach(function(f){
-    var o = document.createElement("option"); o.value = f.name; o.textContent = f.name;
-    if(reviews[key] && reviews[key].folder === f.name) o.selected = true;
+// ── FOLDER SELECT ─────────────────────────────────────
+function updateFolderSel(selId,key){
+  const sel=document.getElementById(selId);
+  sel.innerHTML=`<option value="">${T("nofolder")}</option>`;
+  folders.forEach(f=>{
+    const o=document.createElement("option"); o.value=f.name; o.textContent=f.name;
+    if(reviews[key]&&reviews[key].folder===f.name) o.selected=true;
     sel.appendChild(o);
   });
 }
 
 // ── FOLDERS ───────────────────────────────────────────
-function saveFolders(){ localStorage.setItem("cl:folders", JSON.stringify(folders)); saveToCloud(); }
-
+function saveFolders(){ localStorage.setItem("cl:folders",JSON.stringify(folders)); saveToCloud(); }
 function renderFolders(){
-  var bar = document.getElementById("folders-bar"); bar.innerHTML = "";
-  function mkBtn(label, folder, active){
-    var btn = document.createElement("button"); btn.className = "folder-btn"+(active?" active":""); btn.textContent = label;
-    btn.onclick = function(){ aFolder = folder; renderFolders(); renderReviews(); };
+  const bar=document.getElementById("folders-bar"); bar.innerHTML="";
+  const mkBtn=(label,folder,active)=>{
+    const btn=document.createElement("button"); btn.className="folder-btn"+(active?" active":""); btn.textContent=label;
+    btn.onclick=()=>{ aFolder=folder; renderFolders(); renderReviews(); };
     return btn;
-  }
-  bar.appendChild(mkBtn(T("all"), "all", aFolder==="all"));
-  folders.forEach(function(f){
-    var wrap = document.createElement("span"); wrap.style.cssText = "display:inline-flex;align-items:center;gap:2px;";
-    wrap.appendChild(mkBtn(f.name, f.name, aFolder===f.name));
-    var del = document.createElement("span"); del.className = "folder-del"; del.textContent = "✕"; del.style.display = "none";
+  };
+  bar.appendChild(mkBtn(T("all"),"all",aFolder==="all"));
+  folders.forEach(f=>{
+    const wrap=document.createElement("span"); wrap.style.cssText="display:inline-flex;align-items:center;gap:2px;";
+    wrap.appendChild(mkBtn(f.name,f.name,aFolder===f.name));
+    const del=document.createElement("span"); del.className="folder-del"; del.textContent="✕"; del.style.display="none";
     wrap.appendChild(del); bar.appendChild(wrap);
   });
 }
-
-document.getElementById("manage-folders-btn").onclick = function(){
-  document.getElementById("f-name").value = "";
-  document.getElementById("f-warn").style.display = "none";
-  renderFolderList();
-  document.getElementById("folder-overlay").classList.add("show");
+document.getElementById("manage-folders-btn").onclick=function(){
+  document.getElementById("f-name").value=""; document.getElementById("f-warn").style.display="none";
+  renderFolderList(); document.getElementById("folder-overlay").classList.add("show");
 };
-function closeFolderPopup(){
-  document.getElementById("folder-overlay").classList.remove("show");
-  renderFolders(); renderReviews();
-}
-document.getElementById("folder-close").onclick   = closeFolderPopup;
-document.getElementById("folder-overlay").onclick = function(e){ if(e.target===this) closeFolderPopup(); };
-
-document.getElementById("f-create-btn").onclick = function(){
-  var name = document.getElementById("f-name").value.trim();
-  var warn = document.getElementById("f-warn");
-  if(!name){ warn.textContent = lang==="ko"?"폴더 이름을 입력해주세요.":"Please enter a folder name."; warn.style.display="block"; return; }
-  if(folders.find(function(f){ return f.name.toLowerCase()===name.toLowerCase(); })){
-    warn.textContent = lang==="ko"?"이미 존재하는 폴더 이름입니다.":"A folder with this name already exists.";
-    warn.style.display="block"; return;
-  }
-  warn.style.display="none";
-  folders.push({name:name,desc:""}); saveFolders();
-  document.getElementById("f-name").value = "";
-  renderFolderList();
+function closeFolderPopup(){ document.getElementById("folder-overlay").classList.remove("show"); renderFolders(); renderReviews(); }
+document.getElementById("folder-close").onclick=closeFolderPopup;
+document.getElementById("folder-overlay").onclick=e=>{ if(e.target===e.currentTarget) closeFolderPopup(); };
+document.getElementById("f-create-btn").onclick=function(){
+  const name=document.getElementById("f-name").value.trim(), warn=document.getElementById("f-warn");
+  if(!name){ warn.textContent=lang==="ko"?"폴더 이름을 입력해주세요.":"Please enter a folder name."; warn.style.display="block"; return; }
+  if(folders.find(f=>f.name.toLowerCase()===name.toLowerCase())){ warn.textContent=lang==="ko"?"이미 존재하는 폴더 이름입니다.":"A folder with this name already exists."; warn.style.display="block"; return; }
+  warn.style.display="none"; folders.push({name,desc:""}); saveFolders();
+  document.getElementById("f-name").value=""; renderFolderList();
 };
-document.getElementById("f-name").addEventListener("keydown", function(e){ if(e.key==="Enter") document.getElementById("f-create-btn").click(); });
+document.getElementById("f-name").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("f-create-btn").click(); });
 
-var dragIdx = null;
+let dragIdx=null;
 function renderFolderList(){
-  var list = document.getElementById("folder-list"); list.innerHTML = "";
-  if(folders.length === 0){
-    var empty = document.createElement("div");
-    empty.style.cssText = "color:var(--text3);font-size:13px;text-align:center;padding:20px";
-    empty.textContent = lang==="ko" ? "폴더가 없습니다." : "No folders yet.";
-    list.appendChild(empty); return;
+  const list=document.getElementById("folder-list"); list.innerHTML="";
+  if(folders.length===0){
+    const empty=document.createElement("div"); empty.style.cssText="color:var(--text3);font-size:13px;text-align:center;padding:20px";
+    empty.textContent=lang==="ko"?"폴더가 없습니다.":"No folders yet."; list.appendChild(empty); return;
   }
-  folders.forEach(function(f, idx){
-    var row = document.createElement("div"); row.draggable = true; row.dataset.idx = idx;
-    row.style.cssText = "display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:grab;";
-    var handle = document.createElement("span"); handle.textContent="⠿"; handle.style.cssText="color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0;";
-    row.appendChild(handle);
-    var nameEl = document.createElement("span"); nameEl.textContent=f.name; nameEl.style.cssText="flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:text;";
-    nameEl.title = lang==="ko"?"클릭하여 이름 변경":"Click to rename";
-    nameEl.onclick = function(){
-      var inp = document.createElement("input"); inp.value=f.name;
-      inp.style.cssText="flex:1;font-size:13px;font-weight:600;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;color:var(--text);padding:2px 6px;outline:none;width:100%;";
-      row.replaceChild(inp, nameEl); inp.focus(); inp.select();
+  folders.forEach((f,idx)=>{
+    const row=document.createElement("div"); row.draggable=true; row.dataset.idx=idx;
+    row.style.cssText="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:grab;";
+    const handle=document.createElement("span"); handle.textContent="⠿"; handle.style.cssText="color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0;"; row.appendChild(handle);
+    const nameEl=document.createElement("span"); nameEl.textContent=f.name; nameEl.style.cssText="flex:1;font-size:13px;font-weight:600;color:var(--text);cursor:text;";
+    nameEl.onclick=function(){
+      const inp=document.createElement("input"); inp.value=f.name; inp.style.cssText="flex:1;font-size:13px;font-weight:600;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;color:var(--text);padding:2px 6px;outline:none;width:100%;";
+      row.replaceChild(inp,nameEl); inp.focus(); inp.select();
       function commitRename(){
-        var newName=inp.value.trim();
-        if(newName && newName!==f.name){
-          if(folders.find(function(x,i){ return i!==idx && x.name.toLowerCase()===newName.toLowerCase(); })){ inp.style.borderColor="var(--red)"; return; }
-          Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=newName; });
-          localStorage.setItem("cl:reviews", JSON.stringify(reviews));
+        const newName=inp.value.trim();
+        if(newName&&newName!==f.name){
+          if(folders.find((x,i)=>i!==idx&&x.name.toLowerCase()===newName.toLowerCase())){ inp.style.borderColor="var(--red)"; return; }
+          Object.keys(reviews).forEach(k=>{ if(reviews[k].folder===f.name) reviews[k].folder=newName; });
+          localStorage.setItem("cl:reviews",JSON.stringify(reviews));
           if(aFolder===f.name) aFolder=newName;
           folders[idx].name=newName; saveFolders();
         }
-        row.replaceChild(nameEl, inp); nameEl.textContent=folders[idx].name;
+        row.replaceChild(nameEl,inp); nameEl.textContent=folders[idx].name;
       }
-      inp.addEventListener("blur", commitRename);
-      inp.addEventListener("keydown", function(e){ if(e.key==="Enter") inp.blur(); if(e.key==="Escape"){ inp.removeEventListener("blur",commitRename); row.replaceChild(nameEl,inp); } });
+      inp.addEventListener("blur",commitRename);
+      inp.addEventListener("keydown",e=>{ if(e.key==="Enter") inp.blur(); if(e.key==="Escape"){ inp.removeEventListener("blur",commitRename); row.replaceChild(nameEl,inp); } });
     };
     row.appendChild(nameEl);
-    if(f.desc){ var desc=document.createElement("span"); desc.textContent=f.desc; desc.style.cssText="font-size:11px;color:var(--text3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"; row.appendChild(desc); }
-    var cnt=Object.values(reviews).filter(function(r){ return r.folder===f.name; }).length;
-    var cntEl=document.createElement("span"); cntEl.textContent=cnt; cntEl.style.cssText="font-size:11px;color:var(--text3);min-width:18px;text-align:center;"; row.appendChild(cntEl);
-    var del=document.createElement("button"); del.textContent="✕"; del.style.cssText="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;";
-    del.onmouseenter=function(){ del.style.color="var(--red)"; }; del.onmouseleave=function(){ del.style.color="var(--text3)"; };
-    del.onclick=function(e){
+    if(f.desc){ const desc=document.createElement("span"); desc.textContent=f.desc; desc.style.cssText="font-size:11px;color:var(--text3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"; row.appendChild(desc); }
+    const cnt=Object.values(reviews).filter(r=>r.folder===f.name).length;
+    const cntEl=document.createElement("span"); cntEl.textContent=cnt; cntEl.style.cssText="font-size:11px;color:var(--text3);min-width:18px;text-align:center;"; row.appendChild(cntEl);
+    const del=document.createElement("button"); del.textContent="✕"; del.style.cssText="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;";
+    del.onmouseenter=()=>del.style.color="var(--red)"; del.onmouseleave=()=>del.style.color="var(--text3)";
+    del.onclick=e=>{
       e.stopPropagation();
-      if(!confirm((lang==="ko"?"\""+f.name+"\" 폴더를 삭제할까요?":"Delete folder \""+f.name+"\"?"))) return;
-      folders.splice(idx,1); Object.keys(reviews).forEach(function(k){ if(reviews[k].folder===f.name) reviews[k].folder=""; });
-      localStorage.setItem("cl:reviews", JSON.stringify(reviews)); saveFolders(); if(aFolder===f.name) aFolder="all"; renderFolderList();
+      if(!confirm(lang==="ko"?`"${f.name}" 폴더를 삭제할까요?`:`Delete folder "${f.name}"?`)) return;
+      folders.splice(idx,1); Object.keys(reviews).forEach(k=>{ if(reviews[k].folder===f.name) reviews[k].folder=""; });
+      localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveFolders(); if(aFolder===f.name) aFolder="all"; renderFolderList();
     };
     row.appendChild(del);
-    row.addEventListener("dragstart", function(){ dragIdx=idx; row.style.opacity="0.4"; });
-    row.addEventListener("dragend",   function(){ dragIdx=null; row.style.opacity="1"; });
-    row.addEventListener("dragover",  function(e){ e.preventDefault(); row.style.background="var(--bg2)"; });
-    row.addEventListener("dragleave", function(){ row.style.background="var(--bg3)"; });
-    row.addEventListener("drop", function(e){ e.preventDefault(); row.style.background="var(--bg3)"; if(dragIdx===null||dragIdx===idx) return; var moved=folders.splice(dragIdx,1)[0]; folders.splice(idx,0,moved); saveFolders(); renderFolderList(); });
+    row.addEventListener("dragstart",()=>{ dragIdx=idx; row.style.opacity="0.4"; });
+    row.addEventListener("dragend",  ()=>{ dragIdx=null; row.style.opacity="1"; });
+    row.addEventListener("dragover", e=>{ e.preventDefault(); row.style.background="var(--bg2)"; });
+    row.addEventListener("dragleave",()=>{ row.style.background="var(--bg3)"; });
+    row.addEventListener("drop",e=>{ e.preventDefault(); row.style.background="var(--bg3)"; if(dragIdx===null||dragIdx===idx) return; const moved=folders.splice(dragIdx,1)[0]; folders.splice(idx,0,moved); saveFolders(); renderFolderList(); });
     list.appendChild(row);
   });
 }
 
-// ── REVIEWS SEARCH + FILTER ───────────────────────────
-document.getElementById("r-search").addEventListener("input", function(){
+// ── REVIEWS ───────────────────────────────────────────
+document.getElementById("r-search").addEventListener("input",function(){
   rQuery=this.value.trim(); document.getElementById("r-clear").classList.toggle("show",rQuery.length>0); renderReviews();
 });
-document.getElementById("r-clear").onclick = function(){ document.getElementById("r-search").value=""; rQuery=""; this.classList.remove("show"); renderReviews(); };
-["all","movie","tv"].forEach(function(tp){
-  document.getElementById("rtype-"+tp).onclick = function(){
-    document.querySelectorAll("#tab-reviews .filter-btn[data-rtype]").forEach(function(b){ b.classList.remove("active"); });
+document.getElementById("r-clear").onclick=function(){ document.getElementById("r-search").value=""; rQuery=""; this.classList.remove("show"); renderReviews(); };
+["all","movie","tv"].forEach(tp=>{
+  document.getElementById("rtype-"+tp).onclick=function(){
+    document.querySelectorAll("#tab-reviews .filter-btn[data-rtype]").forEach(b=>b.classList.remove("active"));
     this.classList.add("active"); rType=tp; renderReviews();
   };
 });
-document.getElementById("sort-sel").onchange = function(){ renderReviews(); };
+document.getElementById("sort-sel").onchange=()=>renderReviews();
 
 function renderReviews(){
-  var grid=document.getElementById("r-grid"), empty=document.getElementById("r-empty"); grid.innerHTML="";
-  var sort=document.getElementById("sort-sel").value;
-  var entries=Object.entries(reviews);
-  if(rType!=="all")   entries=entries.filter(function(e){ return e[1].media_type===rType; });
-  if(aFolder!=="all") entries=entries.filter(function(e){ return e[1].folder===aFolder; });
-  if(rQuery)          entries=entries.filter(function(e){ return (e[1].title||"").toLowerCase().includes(rQuery.toLowerCase()); });
-  if(sort==="date")   entries.sort(function(a,b){ return new Date(b[1].savedAt)-new Date(a[1].savedAt); });
-  else if(sort==="rd") entries.sort(function(a,b){ return (b[1].rating||0)-(a[1].rating||0); });
-  else if(sort==="ra") entries.sort(function(a,b){ return (a[1].rating||0)-(b[1].rating||0); });
+  const grid=document.getElementById("r-grid"), empty=document.getElementById("r-empty"); grid.innerHTML="";
+  const sort=document.getElementById("sort-sel").value;
+  let entries=Object.entries(reviews);
+  if(rType!=="all")   entries=entries.filter(([,v])=>v.media_type===rType);
+  if(aFolder!=="all") entries=entries.filter(([,v])=>v.folder===aFolder);
+  if(rQuery){
+    entries=entries.filter(([,v])=>{
+      const cached=tmdbCache[lang+":"+v.media_type+":"+v.id];
+      const title=cached?(cached.d.title||cached.d.name||""):"";
+      return title.toLowerCase().includes(rQuery.toLowerCase());
+    });
+  }
+  if(sort==="date")    entries.sort((a,b)=>new Date(b[1].savedAt)-new Date(a[1].savedAt));
+  else if(sort==="rd") entries.sort((a,b)=>(b[1].rating||0)-(a[1].rating||0));
+  else if(sort==="ra") entries.sort((a,b)=>(a[1].rating||0)-(b[1].rating||0));
   empty.style.display=entries.length===0?"block":"none";
-  entries.forEach(function(entry){
-    var key=entry[0], rev=entry[1];
-    var card=document.createElement("div"); card.className="rev-card";
-    var isSelected=selMode&&selKeys[key]; card.style.outline=isSelected?"3px solid var(--accent)":"none";
-    var starsH="";
-    for(var i=1;i<=5;i++){
-      var f = rev.rating>=i ? "full" : (rev.rating>=i-0.5 ? "half" : "empty");
-      starsH += makeSVGStar(14, f);
-    }
-    var typeLabel = rev.media_type==="movie" ? T("movies") : "TV";
+  entries.forEach(([key,rev])=>{
+    const card=document.createElement("div"); card.className="rev-card";
+    const isSel=selMode&&selKeys[key]; card.style.outline=isSel?"3px solid var(--accent)":"none";
+    const cached=tmdbCache[lang+":"+rev.media_type+":"+rev.id];
+    const title=cached?(cached.d.title||cached.d.name):"…";
+    let starsH="";
+    for(let i=1;i<=5;i++) starsH+=makeSVGStar(14,rev.rating>=i?"full":(rev.rating>=i-0.5?"half":"empty"));
     card.innerHTML=
-      (rev.poster?"<img src='"+IMG+rev.poster+"' alt='' loading='lazy'/>":"<div class='rev-card-no-img'>🎬</div>")+
-      (selMode?"<div style='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:"+(isSelected?"var(--accent)":"rgba(0,0,0,.5)")+";border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff'>"+(isSelected?"✓":"")+"</div>":"")+
-      "<div class='rev-badge-overlay'><span class='badge badge-"+rev.media_type+"'>"+typeLabel+"</span></div>"+
-      "<div class='rev-card-body'><div class='rev-card-title'>"+rev.title+"</div><div style='font-size:13px'>"+starsH+"</div></div>";
-    card.onclick=function(){ if(selMode){ selKeys[key]=!selKeys[key]; updateMSBar(); renderReviews(); } else openRevDetail(key,rev); };
+      (rev.poster?`<img src="${IMG}${rev.poster}" alt="" loading="lazy"/>`:`<div class="rev-card-no-img">🎬</div>`)+
+      (selMode?`<div style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:${isSel?"var(--accent)":"rgba(0,0,0,.5)"};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff">${isSel?"✓":""}</div>`:"")+
+      `<div class="rev-badge-overlay"><span class="badge badge-${rev.media_type}">${rev.media_type==="movie"?T("movies"):"TV"}</span></div>`+
+      `<div class="rev-card-body"><div class="rev-card-title">${title}</div><div style="display:flex;gap:1px">${starsH}</div></div>`;
+    card.onclick=()=>{ if(selMode){ selKeys[key]=!selKeys[key]; updateMSBar(); renderReviews(); } else openRevDetail(key,rev); };
+    // Lazy fetch title if not cached
+    if(!cached){
+      getTmdbData(rev.media_type,rev.id).then(data=>{
+        if(!data) return;
+        const el=card.querySelector(".rev-card-title");
+        if(el) el.textContent=data.d.title||data.d.name||"";
+      });
+    }
     grid.appendChild(card);
   });
 }
 
 // ── MULTI-SELECT ──────────────────────────────────────
 function updateMSBar(){
-  var keys=Object.keys(selKeys).filter(function(k){ return selKeys[k]; });
+  const keys=Object.keys(selKeys).filter(k=>selKeys[k]);
   document.getElementById("ms-bar").classList.toggle("show",selMode);
   document.getElementById("ms-count").textContent=keys.length+" "+T("selected");
-  var sel=document.getElementById("ms-folder"); sel.innerHTML="<option value=''>"+T("movefolder")+"</option>";
-  folders.forEach(function(f){ var o=document.createElement("option"); o.value=f.name; o.textContent=f.name; sel.appendChild(o); });
+  const sel=document.getElementById("ms-folder"); sel.innerHTML=`<option value="">${T("movefolder")}</option>`;
+  folders.forEach(f=>{ const o=document.createElement("option"); o.value=f.name; o.textContent=f.name; sel.appendChild(o); });
 }
 document.getElementById("sel-mode-btn").onclick=function(){ selMode=!selMode; selKeys={}; this.style.background=selMode?"var(--accent)":""; this.style.color=selMode?"#fff":""; updateMSBar(); renderReviews(); };
 document.getElementById("ms-cancel-btn").onclick=function(){ selMode=false; selKeys={}; document.getElementById("sel-mode-btn").style.background=""; document.getElementById("sel-mode-btn").style.color=""; updateMSBar(); renderReviews(); };
 document.getElementById("ms-move-btn").onclick=function(){
-  var folder=document.getElementById("ms-folder").value;
+  const folder=document.getElementById("ms-folder").value;
   if(!folder){ alert(lang==="ko"?"폴더를 선택해주세요.":"Please select a folder first."); return; }
-  Object.keys(selKeys).filter(function(k){ return selKeys[k]; }).forEach(function(k){ if(reviews[k]) reviews[k].folder=folder; });
+  Object.keys(selKeys).filter(k=>selKeys[k]).forEach(k=>{ if(reviews[k]) reviews[k].folder=folder; });
   localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud(); selKeys={}; updateMSBar(); renderFolders(); renderReviews();
 };
 document.getElementById("ms-del-btn").onclick=function(){
-  var keys=Object.keys(selKeys).filter(function(k){ return selKeys[k]; }); if(!keys.length) return;
+  const keys=Object.keys(selKeys).filter(k=>selKeys[k]); if(!keys.length) return;
   if(!confirm(T("deletemulti").replace("{n}",keys.length))) return;
-  keys.forEach(function(k){ delete reviews[k]; });
+  keys.forEach(k=>delete reviews[k]);
   localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud(); selKeys={}; updateMSBar(); renderReviews();
 };
 
-// ── REVIEW DETAIL ─────────────────────────────────────
-function openRevDetail(key,rev){
+// ── REVIEW DETAIL — fetches live from TMDB ────────────
+async function openRevDetail(key,rev){
   curRevKey=key; showRdmMode(false);
-  document.getElementById("rdm-back").style.background=rev._back?"url("+IMGB+rev._back+") center/cover":"var(--bg3)";
-  var poster=document.getElementById("rdm-poster"); if(rev.poster){ poster.src=IMG+rev.poster; poster.style.display="block"; } else poster.style.display="none";
-  document.getElementById("rdm-title").textContent=rev.title;
-  var typeLabel = rev.media_type==="movie" ? T("movies") : "TV";
-  var meta="<span class='badge badge-"+rev.media_type+"'>"+typeLabel+"</span>";
-  if(rev._year) meta+="<span>"+rev._year+"</span>"; if(rev._vote) meta+="<span>⭐ "+rev._vote+"</span>";
-  document.getElementById("rdm-meta").innerHTML=meta;
-  document.getElementById("rdm-dir").innerHTML=rev._dir?"<strong style='color:var(--text)'>"+(rev._dl||T("director"))+": </strong>"+rev._dir:"";
-  document.getElementById("rdm-cast").innerHTML=rev._cast?"<strong style='color:var(--text)'>"+T("cast")+": </strong>"+rev._cast:"";
-  document.getElementById("rdm-genres").innerHTML=rev._genres?"<strong style='color:var(--text)'>"+T("genres")+": </strong>"+rev._genres:"";
+  // Show poster immediately, load rest from TMDB
+  const poster=document.getElementById("rdm-poster");
+  if(rev.poster){ poster.src=IMG+rev.poster; poster.style.display="block"; } else poster.style.display="none";
+  document.getElementById("rdm-back").style.background="var(--bg3)";
+  document.getElementById("rdm-title").textContent="…";
+  document.getElementById("rdm-meta").innerHTML="";
+  document.getElementById("rdm-dir").innerHTML="";
+  document.getElementById("rdm-cast").innerHTML="";
+  document.getElementById("rdm-genres").innerHTML="";
   drawStars("rdm-stars",rev.rating||0,false);
   document.getElementById("rdm-text").textContent=rev.text||T("notext");
   document.getElementById("rdm-date").textContent=T("reviewedon")+new Date(rev.savedAt).toLocaleDateString(lang==="ko"?"ko-KR":"en-US",{year:"numeric",month:"long",day:"numeric"});
   document.getElementById("rdm-overlay").classList.add("show");
+
+  const data=await getTmdbData(rev.media_type,rev.id);
+  if(!data) return;
+  const {d,cr}=data;
+
+  document.getElementById("rdm-back").style.background=d.backdrop_path?`url(${IMGB}${d.backdrop_path}) center/cover`:"var(--bg3)";
+  document.getElementById("rdm-title").textContent=d.title||d.name;
+
+  let meta=`<span class="badge badge-${rev.media_type}">${rev.media_type==="movie"?T("movies"):"TV"}</span>`;
+  const yr=((d.release_date||d.first_air_date||"")).slice(0,4);
+  if(yr) meta+=`<span>${yr}</span>`;
+  if(d.vote_average>0) meta+=`<span>⭐ ${d.vote_average.toFixed(1)}</span>`;
+  document.getElementById("rdm-meta").innerHTML=meta;
+
+  const dirs=(cr.crew||[]).filter(c=>c.job==="Director").map(c=>c.name);
+  const crs=(d.created_by||[]).map(c=>c.name);
+  const dn=rev.media_type==="movie"?dirs:crs;
+  document.getElementById("rdm-dir").innerHTML=dn.length?`<strong style="color:var(--text)">${rev.media_type==="movie"?T("director"):T("creator")}: </strong>${dn.join(", ")}`:"";
+  const castNames=(cr.cast||[]).slice(0,6).map(c=>c.name).join(", ");
+  document.getElementById("rdm-cast").innerHTML=castNames?`<strong style="color:var(--text)">${T("cast")}: </strong>${castNames}`:"";
+  const genreNames=(d.genres||[]).map(g=>g.name).join(", ");
+  document.getElementById("rdm-genres").innerHTML=genreNames?`<strong style="color:var(--text)">${T("genres")}: </strong>${genreNames}`:"";
 }
 
 function showRdmMode(editing){
@@ -1200,211 +1143,161 @@ function showRdmMode(editing){
   document.getElementById("rdm-edit-btn").style.display=editing?"none":"inline-flex";
   document.getElementById("rdm-save-btn").style.display=editing?"inline-flex":"none";
   document.getElementById("rdm-cancel-btn").style.display=editing?"inline-flex":"none";
-  if(editing){ var rev=reviews[curRevKey]; if(!rev) return; rdmRating=rev.rating||0; document.getElementById("rdm-edit-text").value=rev.text||""; drawStars("rdm-stars",rdmRating,true); updateFolderSel("rdm-edit-folder",curRevKey); }
-  else{ var rev2=reviews[curRevKey]; if(rev2) drawStars("rdm-stars",rev2.rating||0,false); }
+  if(editing){ const rev=reviews[curRevKey]; if(!rev) return; rdmRating=rev.rating||0; document.getElementById("rdm-edit-text").value=rev.text||""; drawStars("rdm-stars",rdmRating,true); updateFolderSel("rdm-edit-folder",curRevKey); }
+  else{ const rev=reviews[curRevKey]; if(rev) drawStars("rdm-stars",rev.rating||0,false); }
 }
-document.getElementById("rdm-edit-btn").onclick=function(){ showRdmMode(true); };
-document.getElementById("rdm-cancel-btn").onclick=function(){ showRdmMode(false); };
+document.getElementById("rdm-edit-btn").onclick=()=>showRdmMode(true);
+document.getElementById("rdm-cancel-btn").onclick=()=>showRdmMode(false);
 document.getElementById("rdm-save-btn").onclick=function(){
   if(!curRevKey) return;
-  reviews[curRevKey].rating=rdmRating; reviews[curRevKey].text=document.getElementById("rdm-edit-text").value;
-  reviews[curRevKey].folder=document.getElementById("rdm-edit-folder").value; reviews[curRevKey].updatedAt=new Date().toISOString();
-  localStorage.setItem("cl:reviews",JSON.stringify(reviews));
-  saveToCloud();
+  reviews[curRevKey].rating=rdmRating;
+  reviews[curRevKey].text=document.getElementById("rdm-edit-text").value;
+  reviews[curRevKey].folder=document.getElementById("rdm-edit-folder").value;
+  reviews[curRevKey].updatedAt=new Date().toISOString();
+  localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud();
   document.getElementById("rdm-text").textContent=reviews[curRevKey].text||T("notext");
   drawStars("rdm-stars",rdmRating,false); showRdmMode(false); renderReviews();
 };
 document.getElementById("rdm-del-btn").onclick=function(){
   if(!curRevKey) return; if(!confirm(T("deleteconfirm"))) return;
-  delete reviews[curRevKey]; localStorage.setItem("cl:reviews",JSON.stringify(reviews));
-  saveToCloud();
+  delete reviews[curRevKey]; localStorage.setItem("cl:reviews",JSON.stringify(reviews)); saveToCloud();
   document.getElementById("rdm-overlay").classList.remove("show"); curRevKey=null; renderReviews();
 };
 function closeRdm(){ document.getElementById("rdm-overlay").classList.remove("show"); }
 document.getElementById("rdm-close").onclick=closeRdm;
-document.getElementById("rdm-overlay").onclick=function(e){ if(e.target===this) closeRdm(); };
+document.getElementById("rdm-overlay").onclick=e=>{ if(e.target===e.currentTarget) closeRdm(); };
 
-// ── LANGUAGE FUNCTIONS ────────────────────────────────
+// ── LANGUAGE ──────────────────────────────────────────
 function applyBrowseLang(){
-  var ko = lang === "ko";
-  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
-  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
-  // Search placeholder
-  ph("b-search", ko ? "영화 및 TV 프로그램 검색…" : "Search movies and TV shows…");
-  // Filter buttons
-  set("btype-all",   ko ? "전체"        : "All");
-  set("btype-movie", ko ? "영화"        : "Movies");
-  set("btype-tv",    ko ? "TV 프로그램" : "TV Shows");
-  // Genre select first option
-  var gs = document.getElementById("genre-sel");
-  if(gs && gs.options[0]) gs.options[0].text = ko ? "전체 장르" : "All Genres";
-  // Section title (only when not searching)
-  var q = document.getElementById("b-search").value.trim();
-  if(!q) set("b-title", ko ? "🔥 지금 인기 있는 작품" : "🔥 Popular Right Now");
-  // Loading / no results
-  var bl = document.getElementById("b-loading"); if(bl && bl.textContent !== "") bl.textContent = ko ? "로딩 중…" : "Loading…";
-  set("b-nores", ko ? "검색 결과가 없습니다." : "No results found.");
-  // My Review section inside browse detail popup
-  var mr = document.getElementById("lbl-myreview"); if(mr) mr.textContent = ko ? "✍️ 내 리뷰" : "✍️ My Review";
-  var ds = document.getElementById("det-save-btn"); if(ds) ds.textContent = ko ? "저장" : "Save";
-  ph("det-text", ko ? "이 작품에 대한 생각을 적어보세요…" : "Write your thoughts…");
+  const ko=lang==="ko";
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  const ph=(id,val)=>{ const el=document.getElementById(id); if(el) el.placeholder=val; };
+  ph("b-search",ko?"영화 및 TV 프로그램 검색…":"Search movies and TV shows…");
+  set("btype-all",ko?"전체":"All"); set("btype-movie",ko?"영화":"Movies"); set("btype-tv",ko?"TV 프로그램":"TV Shows");
+  const gs=document.getElementById("genre-sel"); if(gs&&gs.options[0]) gs.options[0].text=ko?"전체 장르":"All Genres";
+  if(!document.getElementById("b-search").value.trim()) set("b-title",ko?"🔥 지금 인기 있는 작품":"🔥 Popular Right Now");
+  set("b-nores",ko?"검색 결과가 없습니다.":"No results found.");
+  const mr=document.getElementById("lbl-myreview"); if(mr) mr.textContent=ko?"✍️ 내 리뷰":"✍️ My Review";
+  const ds=document.getElementById("det-save-btn"); if(ds) ds.textContent=ko?"저장":"Save";
+  ph("det-text",ko?"이 작품에 대한 생각을 적어보세요…":"Write your thoughts…");
 }
-
 function applyReviewsLang(){
-  var ko = lang === "ko";
-  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
-  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
-  set("lbl-myreviews-title", ko?"📋 내 리뷰":"📋 My Reviews");
-  ph("r-search",             ko?"리뷰 검색…":"Search your reviews…");
-  set("rtype-all",           ko?"전체":"All");
-  set("rtype-movie",         ko?"영화":"Movies");
-  set("rtype-tv",            ko?"TV 프로그램":"TV Shows");
-  set("sel-mode-btn",        ko?"☑ 선택":"☑ Select");
-  set("lbl-noreviews",       ko?"아직 작성된 리뷰가 없습니다.":"No reviews yet.");
-  set("ms-move-btn",         ko?"이동":"Move");
-  set("ms-del-btn",          ko?"🗑 삭제":"🗑 Delete");
-  set("ms-cancel-btn",       ko?"취소":"Cancel");
-  var ss=document.getElementById("sort-sel");
+  const ko=lang==="ko";
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  const ph=(id,val)=>{ const el=document.getElementById(id); if(el) el.placeholder=val; };
+  set("lbl-myreviews-title",ko?"📋 내 리뷰":"📋 My Reviews");
+  ph("r-search",ko?"리뷰 검색…":"Search your reviews…");
+  set("rtype-all",ko?"전체":"All"); set("rtype-movie",ko?"영화":"Movies"); set("rtype-tv",ko?"TV 프로그램":"TV Shows");
+  set("sel-mode-btn",ko?"☑ 선택":"☑ Select");
+  set("lbl-noreviews",ko?"아직 작성된 리뷰가 없습니다.":"No reviews yet.");
+  set("ms-move-btn",ko?"이동":"Move"); set("ms-del-btn",ko?"🗑 삭제":"🗑 Delete"); set("ms-cancel-btn",ko?"취소":"Cancel");
+  const ss=document.getElementById("sort-sel");
   if(ss&&ss.options[0]) ss.options[0].text=ko?"날짜 (최신)":"Date (Newest)";
   if(ss&&ss.options[1]) ss.options[1].text=ko?"평점 ↓":"Rating ↓";
   if(ss&&ss.options[2]) ss.options[2].text=ko?"평점 ↑":"Rating ↑";
-  var mb=document.getElementById("manage-folders-btn"); if(mb) mb.title=ko?"폴더 관리":"Manage Folders";
-  var fn=document.getElementById("f-name"); if(fn) fn.placeholder=ko?"새 폴더 이름…":"New folder name…";
-  var fc=document.getElementById("f-create-btn"); if(fc) fc.textContent=ko?"+ 추가":"+ Add";
-  var fh=document.getElementById("folder-hint"); if(fh) fh.textContent=ko?"드래그해서 순서 변경 · 이름 클릭해서 수정 · ✕ 눌러 삭제":"Drag to reorder • Click name to rename • ✕ to delete";
-  var mf=document.getElementById("lbl-manage-folders"); if(mf) mf.textContent=ko?"폴더 관리":"Manage Folders";
-  // RDM edit buttons
-  var re=document.getElementById("rdm-edit-btn"); if(re) re.textContent=ko?"✏️ 수정":"✏️ Edit";
-  var rs=document.getElementById("rdm-save-btn"); if(rs) rs.textContent=ko?"💾 저장":"💾 Save";
-  var rc=document.getElementById("rdm-cancel-btn"); if(rc) rc.textContent=ko?"취소":"Cancel";
-  var rd=document.getElementById("rdm-del-btn"); if(rd) rd.textContent=ko?"🗑 삭제":"🗑 Delete";
-  ph("rdm-edit-text", ko?"이 작품에 대한 생각을 적어보세요…":"Write your thoughts…");
+  const mb=document.getElementById("manage-folders-btn"); if(mb) mb.title=ko?"폴더 관리":"Manage Folders";
+  const fn=document.getElementById("f-name"); if(fn) fn.placeholder=ko?"새 폴더 이름…":"New folder name…";
+  const fc=document.getElementById("f-create-btn"); if(fc) fc.textContent=ko?"+ 추가":"+ Add";
+  const fh=document.getElementById("folder-hint"); if(fh) fh.textContent=ko?"드래그해서 순서 변경 · 이름 클릭해서 수정 · ✕ 눌러 삭제":"Drag to reorder • Click name to rename • ✕ to delete";
+  const mf=document.getElementById("lbl-manage-folders"); if(mf) mf.textContent=ko?"폴더 관리":"Manage Folders";
+  const re=document.getElementById("rdm-edit-btn"); if(re) re.textContent=ko?"✏️ 수정":"✏️ Edit";
+  const rs=document.getElementById("rdm-save-btn"); if(rs) rs.textContent=ko?"💾 저장":"💾 Save";
+  const rc=document.getElementById("rdm-cancel-btn"); if(rc) rc.textContent=ko?"취소":"Cancel";
+  const rd=document.getElementById("rdm-del-btn"); if(rd) rd.textContent=ko?"🗑 삭제":"🗑 Delete";
+  ph("rdm-edit-text",ko?"이 작품에 대한 생각을 적어보세요…":"Write your thoughts…");
 }
-
 function applySettingsLang(){
-  var ko = lang === "ko";
-  function set(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
-  function ph(id,val){ var el=document.getElementById(id); if(el) el.placeholder=val; }
-  set("lbl-settings",    ko?"설정":"Settings");
-  set("lbl-profile",     ko?"프로필":"Profile");
-  set("lbl-avatar",      ko?"프로필 사진":"Profile Picture");
-  set("lbl-upload-btn",  ko?"업로드":"Upload");
-  set("av-reset-btn",    ko?"초기화":"Reset");
-  set("lbl-dispname",    ko?"표시 이름":"Display Name");
-  ph("sname",            ko?"이름을 입력하세요…":"Your name…");
-  set("lbl-bio",         ko?"자기소개":"Bio");
-  ph("sbio",             ko?"간단한 소개를 입력하세요…":"A short bio…");
-  set("lbl-appearance",  ko?"화면 설정":"Appearance");
-  var dm=document.getElementById("lbl-darkmode"); if(dm&&dm.childNodes[0]) dm.childNodes[0].nodeValue=ko?"다크 모드":"Dark Mode";
+  const ko=lang==="ko";
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  const ph=(id,val)=>{ const el=document.getElementById(id); if(el) el.placeholder=val; };
+  set("lbl-profile",ko?"프로필":"Profile");
+  set("lbl-avatar",ko?"프로필 사진":"Profile Picture");
+  set("lbl-upload-btn",ko?"업로드":"Upload");
+  set("av-reset-btn",ko?"초기화":"Reset");
+  set("lbl-dispname",ko?"표시 이름":"Display Name");
+  ph("sname",ko?"이름을 입력하세요…":"Your name…");
+  set("lbl-bio",ko?"자기소개":"Bio");
+  ph("sbio",ko?"간단한 소개를 입력하세요…":"A short bio…");
+  set("lbl-appearance",ko?"화면 설정":"Appearance");
+  const dm=document.getElementById("lbl-darkmode"); if(dm&&dm.childNodes[0]) dm.childNodes[0].nodeValue=ko?"다크 모드":"Dark Mode";
   set("lbl-darkmode-sub",ko?"라이트/다크 테마 전환":"Toggle light/dark theme");
-  set("lbl-lang",        ko?"인터페이스 언어":"Interface Language");
-  var at=document.getElementById("lbl-apikey-title"); if(at&&at.childNodes[0]) at.childNodes[0].nodeValue=ko?"TMDB API 키":"TMDB API Key";
-  set("lbl-apikey-desc", ko?"API 키를 재설정하고 새 키 입력":"Reset and enter a new API key");
+  set("lbl-lang",ko?"인터페이스 언어":"Interface Language");
   set("lbl-changekey-btn",ko?"🔑 키 변경":"🔑 Change Key");
-  set("lbl-data-backup", ko?"데이터 및 백업":"Data & Backup");
-  var ex=document.getElementById("lbl-export-title"); if(ex&&ex.childNodes[0]) ex.childNodes[0].nodeValue=ko?"리뷰 내보내기":"Export Reviews";
-  set("lbl-export-sub",  ko?"모든 리뷰를 JSON 파일로 다운로드":"Download all your reviews as a JSON file");
-  var im=document.getElementById("lbl-import-title"); if(im&&im.childNodes[0]) im.childNodes[0].nodeValue=ko?"리뷰 가져오기":"Import Reviews";
-  set("lbl-import-sub",  ko?"이전에 내보낸 파일로 복원":"Restore from a previously exported file");
-  var st=document.getElementById("lbl-storage-title"); if(st&&st.childNodes[0]) st.childNodes[0].nodeValue=ko?"사용 중인 저장 공간":"Storage Used";
-  set("storage-used-lbl",ko?"계산 중…":"Calculating…");
-  set("export-btn",      ko?"⬇ 내보내기":"⬇ Export");
-  set("import-btn",      ko?"⬆ 가져오기":"⬆ Import");
-  set("calc-storage-btn",ko?"확인":"Check");
-  set("save-settings-btn",ko?"설정 저장":"Save Settings");
+  set("save-settings-btn",ko?"저장":"Save");
+  const an=document.getElementById("lbl-account-name"); if(an&&an.childNodes[0]) an.childNodes[0].nodeValue=ko?"로그인된 계정":"Signed in as";
+  set("lbl-account",ko?"계정":"ACCOUNT");
+  set("lbl-change-pwd",ko?"비밀번호 변경":"Change Password");
+  set("lbl-signout",ko?"로그아웃":"Sign Out");
+  const da=document.getElementById("lbl-del-account"); if(da&&da.childNodes[0]) da.childNodes[0].nodeValue=ko?"계정 삭제":"Delete Account";
+  set("lbl-del-account-sub",ko?"모든 데이터가 영구적으로 삭제됩니다":"Permanently deletes all your data");
+  set("change-pw-btn",ko?"🔒 변경":"🔒 Change");
+  set("signout-btn2",ko?"↩ 로그아웃":"↩ Sign Out");
+  set("delete-account-btn",ko?"🗑 삭제":"🗑 Delete");
+  set("chg-pwd-lbl-title",ko?"🔒 비밀번호 변경":"🔒 Change Password");
+  set("chg-pwd-lbl-curr_pwd",ko?"현재 비밀번호":"Current Password");
+  ph("pw-current",ko?"현재 비밀번호 입력":"Current password");
+  set("chg-pwd-lbl-new_pwd",ko?"새 비밀번호":"New Password");
+  ph("pw-new",ko?"새 비밀번호 입력 (최소 6자)":"New password (min 6 chars)");
+  set("chg-pwd-lbl-confirm",ko?"새 비밀번호 확인":"Confirm New Password");
+  ph("pw-confirm",ko?"새 비밀번호 다시 입력":"Confirm new password");
+  set("pw-cancel-btn",ko?"취소":"Cancel");
+  set("pw-save-btn",ko?"비밀번호 변경하기":"Update Password");
 }
 
 // ── SETTINGS ──────────────────────────────────────────
-function saveCfg(){ localStorage.setItem("cl:cfg", JSON.stringify(cfg)); saveToCloud(); }
+function saveCfg(){ localStorage.setItem("cl:cfg",JSON.stringify(cfg)); saveToCloud(); }
 function loadProfileUI(){
-  document.getElementById("sname").value = cfg.name || "";
-  document.getElementById("sbio").value  = cfg.bio  || "";
-  var av = document.getElementById("av-preview");
-  av.innerHTML = cfg.avatar ? "<img src='"+cfg.avatar+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>" : "🎬";
-  document.getElementById("lang-sel").value = lang;
+  document.getElementById("sname").value=cfg.name||"";
+  document.getElementById("sbio").value=cfg.bio||"";
+  const av=document.getElementById("av-preview");
+  av.innerHTML=cfg.avatar?`<img src="${cfg.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`:"🎬";
+  document.getElementById("lang-sel").value=lang;
+  const emailEl=document.getElementById("account-email");
+  if(emailEl&&auth.currentUser) emailEl.textContent=auth.currentUser.email;
   applyTheme(); applySettingsLang(); applyReviewsLang(); applyBrowseLang();
 }
-document.getElementById("av-file").onchange = function(){
-  var file=this.files[0]; if(!file) return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    cfg.avatar=e.target.result;
-    document.getElementById("av-preview").innerHTML="<img src='"+e.target.result+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'/>";
-  };
+document.getElementById("av-file").onchange=function(){
+  const file=this.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ cfg.avatar=e.target.result; document.getElementById("av-preview").innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`; };
   reader.readAsDataURL(file);
 };
-document.getElementById("av-reset-btn").onclick = function(){
-  cfg.avatar=""; document.getElementById("av-preview").innerHTML="🎬";
+document.getElementById("av-reset-btn").onclick=function(){ cfg.avatar=""; document.getElementById("av-preview").innerHTML="🎬"; };
+document.getElementById("save-settings-btn").onclick=function(){
+  cfg.name=document.getElementById("sname").value.trim();
+  cfg.bio=document.getElementById("sbio").value.trim();
+  const prevLang=lang;
+  cfg.lang=document.getElementById("lang-sel").value;
+  cfg.dark=dark; lang=cfg.lang; saveCfg();
+  applyTheme(); applySettingsLang(); applyReviewsLang(); applyBrowseLang();
+  // If language changed, clear the cache so everything re-fetches in the new language
+  if(lang!==prevLang){
+    Object.keys(tmdbCache).forEach(k=>delete tmdbCache[k]);
+    renderReviews();
+  }
+  initGenres(); loadContent(bPage);
+  this.textContent=lang==="ko"?"저장됨 ✓":"Saved ✓";
+  const self=this; setTimeout(()=>self.textContent=lang==="ko"?"저장":"Save",1500);
 };
 
-document.getElementById("save-settings-btn").onclick = function(){
-  cfg.name = document.getElementById("sname").value.trim();
-  cfg.bio  = document.getElementById("sbio").value.trim();
-  cfg.lang = document.getElementById("lang-sel").value;
-  cfg.dark = dark;
-  lang = cfg.lang;
-  saveCfg();
-  applyTheme();
-  applySettingsLang();
-  applyReviewsLang();
-  applyBrowseLang();
-  initGenres();
-  loadContent(bPage);
-  this.textContent = lang==="ko"?"저장됨 ✓":"Saved ✓";
-  var self = this;
-  setTimeout(function(){ self.textContent = lang==="ko"?"설정 저장":"Save Settings"; }, 1500);
-};
-
-// ── PWA SETUP ─────────────────────────────────────────
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js").catch(function(e){ console.warn("SW:", e); });
-}
-
-// ── EXPORT / IMPORT / STORAGE ─────────────────────────
-document.getElementById("export-btn").onclick = function(){
-  var data={version:1,exportedAt:new Date().toISOString(),reviews:reviews,folders:folders,cfg:cfg};
-  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  var url=URL.createObjectURL(blob); var a=document.createElement("a");
-  a.href=url; a.download="cinelog-backup-"+new Date().toISOString().slice(0,10)+".json";
-  a.click(); URL.revokeObjectURL(url);
-};
-document.getElementById("import-btn").onclick = function(){ document.getElementById("import-file").click(); };
-document.getElementById("import-file").onchange = function(){
-  var file=this.files[0]; if(!file) return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      var data=JSON.parse(e.target.result); if(!data.reviews) throw new Error("Invalid backup file.");
-      var msg=lang==="ko"?"기존 리뷰를 불러온 데이터로 교체할까요? 현재 데이터는 사라집니다.":"Replace all current data with the imported backup? This cannot be undone.";
-      if(!confirm(msg)) return;
-      reviews=data.reviews||{}; folders=data.folders||[];
-      if(data.cfg){ cfg=data.cfg; dark=cfg.dark!==false; lang=cfg.lang||"en"; }
-      localStorage.setItem("cl:reviews",JSON.stringify(reviews));
-      localStorage.setItem("cl:folders",JSON.stringify(folders));
-      localStorage.setItem("cl:cfg",JSON.stringify(cfg));
-      applyTheme(); loadProfileUI();
-      alert(lang==="ko"?"가져오기 완료!":"Import successful!");
-    } catch(err){ alert((lang==="ko"?"가져오기 실패: ":"Import failed: ")+err.message); }
-  };
-  reader.readAsText(file); this.value="";
-};
-document.getElementById("calc-storage-btn").onclick = function(){
-  var total=0; for(var k in localStorage) if(localStorage.hasOwnProperty(k)) total+=(localStorage[k].length+k.length)*2;
-  var kb=(total/1024).toFixed(1), mb=(total/1048576).toFixed(2), pct=((total/(5*1024*1024))*100).toFixed(1);
-  var lbl=document.getElementById("storage-used-lbl");
-  lbl.textContent=kb+" KB ("+mb+" MB) — "+pct+"% of 5MB used · "+Object.keys(reviews).length+" reviews";
-};
+// ── PWA ───────────────────────────────────────────────
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("SW:",e));
 
 // ── INIT ──────────────────────────────────────────────
 applyTheme();
-document.addEventListener("DOMContentLoaded", function(){
-  var authScreen = document.getElementById("auth-screen");
-  var appEl      = document.getElementById("app");
-  var apiScreen  = document.getElementById("api-screen");
-  if(authScreen) authScreen.style.display = "flex";
-  if(appEl)      appEl.style.display      = "none";
-  if(apiScreen)  apiScreen.style.display  = "none";
-});
+(async()=>{
+  const user=await new Promise(resolve=>{
+    const unsub=auth.onAuthStateChanged(u=>{ unsub(); resolve(u); });
+  });
+  if(user){
+    let loaded=false;
+    try{ loaded=await Promise.race([loadFromCloud(),new Promise((_,r)=>setTimeout(()=>r(),5000))]); } catch(e){}
+    if(!loaded){ reviews={}; folders=[]; cfg={}; dark=true; lang="en"; }
+    await startApp();
+  } else {
+    showScreen("auth");
+  }
+})();
 </script>
 </body>
 </html>
